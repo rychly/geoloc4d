@@ -19,7 +19,7 @@ public class AssetService extends DefaultService {
     // Namespace for services
     public static final String NAMESPACE = "http://www.fit.vutbr.cz/~rychly/geoloc4d";
     // Location coordinates
-    private Location3D location;
+    private Vector3D location;
     // Scan of neighbouring nodes
     private ScanList neighboursScan;
 
@@ -31,7 +31,7 @@ public class AssetService extends DefaultService {
         this.addOperation(new GetLocation(this));
         this.addOperation(new SetLocation(this));
         // Init properties
-        this.location = new Location3D();
+        this.location = new Vector3D();
         this.neighboursScan = new ScanList();
     }
 
@@ -39,7 +39,7 @@ public class AssetService extends DefaultService {
         this.location.set(x, y, z);
     }
 
-    public void setLocation(Location3D location) {
+    public void setLocation(Vector3D location) {
         this.location.set(location);
     }
 
@@ -47,8 +47,8 @@ public class AssetService extends DefaultService {
         this.location.set(location);
     }
 
-    public Location3D getLocation() {
-        return new Location3D(location);
+    public Vector3D getLocation() {
+        return new Vector3D(location);
     }
 
     public void setNeighboursScan(ScanList neighboursScan) {
@@ -76,7 +76,7 @@ public class AssetService extends DefaultService {
             super(ScanNeighbours.class.getSimpleName(), new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE));
             // This defines the format of the output and input.
             Element out = new Element(
-                    new QName(Location3D.class.getSimpleName(), AssetService.NAMESPACE),
+                    new QName(Vector3D.class.getSimpleName(), AssetService.NAMESPACE),
                     SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
             this.setOutput(out);
         }
@@ -102,7 +102,7 @@ public class AssetService extends DefaultService {
             super(GetLocation.class.getSimpleName(), new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE));
             // This defines the format of the output and input.
             Element out = new Element(
-                    new QName(Location3D.class.getSimpleName(), AssetService.NAMESPACE),
+                    new QName(Vector3D.class.getSimpleName(), AssetService.NAMESPACE),
                     SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
             this.setOutput(out);
         }
@@ -128,7 +128,7 @@ public class AssetService extends DefaultService {
             super(SetLocation.class.getSimpleName(), new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE));
             // This defines the format of the output and input.
             Element in = new Element(
-                    new QName(Location3D.class.getSimpleName(), AssetService.NAMESPACE),
+                    new QName(Vector3D.class.getSimpleName(), AssetService.NAMESPACE),
                     SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING));
             this.setInput(in);
         }

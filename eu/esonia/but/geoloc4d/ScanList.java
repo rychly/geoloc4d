@@ -17,10 +17,18 @@ public class ScanList extends HashMap<String, Integer> {
         this.set(scanList);
     }
 
+    /**
+     * Add content of scan list from another.
+     * @param scanList source scan list
+     */
     public void set(ScanList scanList) {
         this.putAll(scanList);
     }
 
+    /**
+     * Set scan list from string (e.g. "ScanList:NodeA(123);NodeB(345);NodeC(678)").
+     * @param scanList string with scan list
+     */
     public void set(String scanList) {
         String[] tokens = scanList.split(" *[:();] *");
         for (int position = 1; position < tokens.length; position = position + 3) {

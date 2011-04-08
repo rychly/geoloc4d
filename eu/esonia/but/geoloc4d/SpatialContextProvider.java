@@ -36,7 +36,7 @@ public class SpatialContextProvider {
         ScanList scanList = new ScanList(ParameterUtil.getString(result, null));
         // do trilateration...
         // TODO
-        Location3D location = new Location3D(10, 20, 30);
+        Vector3D location = new Vector3D(10, 20, 30);
 
         // We need to get the operation AssetService.SetLocation from the service.
         // getAnyOperation returns the first Operation that fits the specification in the parameters.
@@ -49,7 +49,7 @@ public class SpatialContextProvider {
         result = operation.invoke(input);
     }
 
-    public static Location3D getLocation(Service service) throws InvocationException, TimeoutException {
+    public static Vector3D getLocation(Service service) throws InvocationException, TimeoutException {
         // We need to get the operation AssetService.GetLocation from the service.
         // getAnyOperation returns the first Operation that fits the specification in the parameters.
         Operation operation = service.getAnyOperation(
@@ -58,7 +58,7 @@ public class SpatialContextProvider {
         // now lets invoke the operation
         ParameterValue result = operation.invoke(null);
         // location
-        return new Location3D(ParameterUtil.getString(result, null));
+        return new Vector3D(ParameterUtil.getString(result, null));
     }
 
     public static void main(String[] args) throws InterruptedException {
