@@ -54,22 +54,22 @@ public class AssetServiceSimulator {
     }
 
     public static void main(String[] args) {
-        //*
+        /*
         {
-            final String directory = (new File(AssetServiceSimulator.class.getResource(
-                    AssetServiceSimulator.class.getSimpleName() + ".class").
-                    toString().substring(5))).getParent();
-            args = new String[]{
-                        // To enable multicast on loopback interface do "ifconfig lo multicast"
-                        "localhost", "4321", "/testing/",
-                        directory + "/" + AssetService.class.getSimpleName() + "-testing.properties"
-                    };
+        final String directory = (new File(AssetServiceSimulator.class.getResource(
+        AssetServiceSimulator.class.getSimpleName() + ".class").
+        toString().substring(5))).getParent();
+        args = new String[]{
+        // To enable multicast on loopback interface do "ifconfig lo multicast"
+        "localhost", "4321", "/testing/",
+        directory + "/" + AssetService.class.getSimpleName() + "-testing.properties"
+        };
         }
         //*/
 
         // Check parameters
         if (args.length != 4) {
-            System.err.println("Usage: java AssetServiceSimulator <hostname> <port> <path/> <services.properties>");
+            System.err.println("Usage: java " + AssetServiceSimulator.class.getName() + " <hostname> <port> <path/> <services.properties>");
             System.exit(-1);
         }
 

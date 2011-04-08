@@ -52,15 +52,15 @@ public class Vector3D {
     }
 
     public Double getX() {
-        return this.undefined ? this.x : null;
+        return this.undefined ? null : this.x;
     }
 
     public Double getY() {
-        return this.undefined ? this.y : null;
+        return this.undefined ? null : this.y;
     }
 
     public Double getZ() {
-        return this.undefined ? this.z : null;
+        return this.undefined ? null : this.z;
     }
 
     /**

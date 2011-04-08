@@ -62,18 +62,18 @@ public class SpatialContextProvider {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        //*
+        /*
         {
-            args = new String[]{
-                        // To enable multicast on loopback interface do "ifconfig lo multicast"
-                        "localhost", "4421", "/testing/"
-                    };
+        args = new String[]{
+        // To enable multicast on loopback interface do "ifconfig lo multicast"
+        "localhost", "4421", "/testing/"
+        };
         }
         //*/
 
         // Check parameters
         if (args.length != 3) {
-            System.err.println("Usage: java SpatialContextProvider <hostname> <port> <path/>");
+            System.err.println("Usage: java " + SpatialContextProvider.class.getName() + " SpatialContextProvider <hostname> <port> <path/>");
             System.exit(-1);
         }
 
