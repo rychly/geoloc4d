@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>eu.esonia.but</groupId>
+  <artifactId>geoloc4d</artifactId>
+  <packaging>jar</packaging>
+  <version>0.1-svn</version>
+  <name>geoloc4d</name>
+  <url>http://maven.apache.org</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.ws4d.java</groupId>
+        <artifactId>ws4d-java-se-full</artifactId>
+        <version>2.0.0-beta4a</version>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>fit-geoloc4d</id>
+      <name>Geoloc4D repository (eu.esonia.but.geoloc4d and its extraordinary dependencies)</name>
+      <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
+    </repository>
+  </repositories>
+</project>
+
