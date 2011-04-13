@@ -1,12 +1,61 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>eu.esonia.but</groupId>
-  <artifactId>geoloc4d</artifactId>
-  <packaging>jar</packaging>
-  <version>0.1-svn</version>
-  <name>geoloc4d</name>
-  <url>http://maven.apache.org</url>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- POM Relationships -->
+    <groupId>eu.esonia.but</groupId>
+    <artifactId>geoloc4d</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ws4d.java</groupId>
+            <artifactId>ws4d-java-se-full</artifactId>
+            <version>2.0.0-beta4a</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Project Information -->
+    <name>geoloc4d</name>
+    <description>Testing environment for geolocation algorithms in a network of devices, which provides a DPWS service for simulation of a group of network devices and a standalone DPWS service providing the individual devices with their spatial context information.</description>
+    <url>http://geoloc4d.sf.net/</url>
+    <inceptionYear>2010</inceptionYear>
+    <licenses>
+        <license>
+            <name>GPLv3</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>rychly</id>
+            <name>Marek Rychly</name>
+            <email>marek.rychly@gmail.com</email>
+            <roles>
+                <role>Project Manager</role>
+                <role>Architect</role>
+            </roles>
+            <organization>BUT FIT</organization>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <organization>
+        <name>Brno University of Technology, Faculty of Information Technology</name>
+        <url>http://www.fit.vutbr.cz/.en</url>
+    </organization>
+
+    <!-- Build Settings -->
+    <packaging>jar</packaging>
+    <properties>
+        <targetJdk>1.6</targetJdk>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -14,30 +63,92 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <showDeprecation>true</showDeprecation>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.ws4d.java</groupId>
-        <artifactId>ws4d-java-se-full</artifactId>
-        <version>2.0.0-beta4a</version>
-    </dependency>
-  </dependencies>
-  <repositories>
-    <repository>
-      <id>fit-geoloc4d</id>
-      <name>Geoloc4D repository (eu.esonia.but.geoloc4d and its extraordinary dependencies)</name>
-      <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
-    </repository>
-  </repositories>
+    <reporting>
+        <plugins>
+            <plugin><!-- tracker at sourceforge -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <inherited>false</inherited>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+                </configuration>
+            </plugin>
+            <plugin><!-- classes Javadocs -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin><!-- indexed and cross-referenced HTML version of source code -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+            <plugin><!-- unit-test reports -->
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin><!-- test coverage -->
+                <artifactId>maven-clover-plugin</artifactId>
+            </plugin>
+            <plugin><!-- automatic code analysis -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetjdk>1.6</targetjdk>
+                </configuration>
+            </plugin>
+            <plugin><!-- changelog reports from src/changes/changes.xml -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>changelog-maven-plugin</artifactId>
+            </plugin>
+            <plugin><!-- generate a list of all the items marked @todo or TODO -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- Build Environment -->
+    <!-- Environment Information -->
+    <issueManagement>
+        <system>sourceforge</system>
+        <url>http://sourceforge.net/tracker/?group_id=531139</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:svn:https://geoloc4d.svn.sourceforge.net/svnroot/geoloc4d/trunk</connection>
+        <developerConnection>scm:svn:https://geoloc4d.svn.sourceforge.net/svnroot/geoloc4d/trunk</developerConnection>
+        <url>http://geoloc4d.svn.sourceforge.net/viewvc/geoloc4d/trunk</url>
+    </scm>
+    <!-- Maven Environment -->
+    <repositories>
+        <repository>
+            <id>fit-geoloc4d</id>
+            <name>Geoloc4D repository (eu.esonia.but.geoloc4d and its extraordinary dependencies)</name>
+            <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <site>
+            <id>geoloc4d.sf.net</id>
+            <url>scp://shell.sourceforge.net/home/project-web/geoloc4d/htdocs</url>
+            <!-- ssh -t rychly,geoloc4d@shell.sourceforge.net create -->
+        </site>
+        <repository>
+            <id>fit-geoloc4d</id>
+            <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
+        </repository>
+    </distributionManagement>
 </project>

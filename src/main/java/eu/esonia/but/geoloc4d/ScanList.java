@@ -40,7 +40,7 @@ public class ScanList extends HashMap<String, Integer> {
     public String toString() {
         String result = ScanList.class.getSimpleName() + ":";
         for (Map.Entry<String, Integer> pair : this.entrySet()) {
-            result.concat(pair.getKey() + "(" + pair.getValue() + ");");
+            result = result.concat(pair.getKey() + "(" + pair.getValue() + ");");
         }
         return result.substring(0, result.length() - 1);
     }
