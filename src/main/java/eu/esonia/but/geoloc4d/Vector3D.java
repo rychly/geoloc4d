@@ -17,7 +17,9 @@ public class Vector3D {
 
     Vector3D() {
         this.undefined = true;
-        this.x = this.y = this.z = 0;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
     }
 
     Vector3D(double x, double y, double z) {
@@ -81,7 +83,7 @@ public class Vector3D {
      * @param vector vector of original coordinates
      */
     public void set(final Vector3D vector) {
-        this.set(vector.x, vector.y, vector.z);
+        this.set(vector.getX(), vector.getY(), vector.getZ());
     }
 
     /**

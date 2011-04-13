@@ -104,8 +104,8 @@ public class WirelessMetric {
      * @param distanceB distance of node B and the blind node
      * @param nodeC location of node C
      * @param distanceC distance of node C and the blind node
-     * @param nodeC location of node D
-     * @param distanceC distance of node D and the blind node
+     * @param nodeD location of node D
+     * @param distanceD distance of node D and the blind node
      * @return location of the blind node
      */
     public static Vector3D trilateration3D(final Vector3D nodeA, float distanceA,

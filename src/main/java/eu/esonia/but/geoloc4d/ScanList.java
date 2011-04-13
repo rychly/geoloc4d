@@ -31,7 +31,7 @@ public class ScanList extends HashMap<String, Integer> {
      */
     public void set(String scanList) {
         String[] tokens = scanList.split(" *[:();] *");
-        for (int position = 1; position < tokens.length; position = position + 3) {
+        for (int position = 1; position < tokens.length; position += 3) {
             this.put(tokens[position], Integer.parseInt(tokens[position + 1]));
         }
     }
