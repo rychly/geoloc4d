@@ -12,7 +12,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
                 <configuration>
                     <showDeprecation>true</showDeprecation>
                     <source>1.5</source>
@@ -42,5 +41,3 @@
     </repository>
   </repositories>
 </project>
-
-

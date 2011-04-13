@@ -97,10 +97,11 @@ public class Vector3D {
 
     @Override
     public String toString() {
-        return new String(Vector3D.class.getSimpleName() + "("
-                + this.getX().toString() + ";"
-                + this.getY().toString() + ";"
-                + this.getZ().toString() + ")");
+        return Vector3D.class.getSimpleName()
+                + "(" + this.getX().toString()
+                + ";" + this.getY().toString()
+                + ";" + this.getZ().toString()
+                + ")";
     }
 
     public boolean equals(final Vector3D vector) {

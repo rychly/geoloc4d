@@ -32,7 +32,7 @@ public class ScanList extends HashMap<String, Integer> {
     public void set(String scanList) {
         String[] tokens = scanList.split(" *[:();] *");
         for (int position = 1; position < tokens.length; position = position + 3) {
-            this.put(tokens[position], Integer.parseInt(tokens[position+1]));
+            this.put(tokens[position], Integer.parseInt(tokens[position + 1]));
         }
     }
 
@@ -42,6 +42,6 @@ public class ScanList extends HashMap<String, Integer> {
         for (Map.Entry<String, Integer> pair : this.entrySet()) {
             result.concat(pair.getKey() + "(" + pair.getValue() + ");");
         }
-        return result.substring(0, result.length()-1);
+        return result.substring(0, result.length() - 1);
     }
 }

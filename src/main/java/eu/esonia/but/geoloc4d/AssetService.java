@@ -24,7 +24,7 @@ public class AssetService extends DefaultService {
     private ScanList neighboursScan;
 
     AssetService(int id) {
-	// if (id == -1) then do not use properties for configuration
+        // if (id == -1) then do not use properties for configuration
         super(id);
         // Add operations
         this.addOperation(new ScanNeighbours(this));
