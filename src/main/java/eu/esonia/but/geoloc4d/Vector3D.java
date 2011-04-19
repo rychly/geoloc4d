@@ -91,7 +91,7 @@ public class Vector3D {
      * @param vector string with coordinates of vector
      */
     public void set(final String vector) {
-        String[] tokens = vector.split(" *[(,)] *", 5);
+        String[] tokens = vector.split("\\s*[(,)]\\s*", 5);
         this.set(Double.parseDouble(tokens[1]),
                 Double.parseDouble(tokens[2]),
                 Double.parseDouble(tokens[3]));
@@ -99,8 +99,7 @@ public class Vector3D {
 
     @Override
     public String toString() {
-        return Vector3D.class.getSimpleName()
-                + "(" + this.getX().toString()
+        return "(" + this.getX().toString()
                 + "," + this.getY().toString()
                 + "," + this.getZ().toString()
                 + ")";
