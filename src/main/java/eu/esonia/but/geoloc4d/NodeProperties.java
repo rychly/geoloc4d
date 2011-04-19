@@ -4,20 +4,12 @@ package eu.esonia.but.geoloc4d;
  * Properties of a node as seen from its neighbouring node.
  * @author rychly
  */
-public final class NodeProperties {
+public final class NodeProperties extends NodeData {
 
-    /**
-     * Identificator of the node (e.g. its name).
-     */
-    private String id;
     /**
      * Distance of a node from an active node.
      */
     public Double distance;
-    /**
-     * Absolute location of the node.
-     */
-    public Vector3D locationAbsolute;
     /**
      * Relative location of a node from an active node.
      */
@@ -39,8 +31,7 @@ public final class NodeProperties {
      * @exception NodePropertiesException fail to parse the string representation
      */
     NodeProperties(final String id, final String representation) throws NodePropertiesException {
-        this.set(representation);
-        this.id = id;
+        super(id, representation);
     }
 
     /**
@@ -49,7 +40,7 @@ public final class NodeProperties {
      * @exception NodePropertiesException fail to parse the string representation
      */
     NodeProperties(final String representation) throws NodePropertiesException {
-        this.set(representation);
+        super(representation);
     }
 
     /**
@@ -57,25 +48,16 @@ public final class NodeProperties {
      * @param source source to copy from
      */
     NodeProperties(final NodeProperties source) {
-        this.id = source.getID();
+        super(source);
         this.distance = source.distance;
-        this.locationAbsolute = source.locationAbsolute;
         this.locationRelative = source.locationRelative;
         this.rssi = source.rssi;
         this.rtt = source.rtt;
     }
 
-    /**
-     * Get identificator of the node (e.g. its name).
-     * @return identificator of the node
-     */
-    public String getID() {
-        return this.id;
-    }
-
     @Override
     public String toString() {
-        String result = id + " { ";
+        String result = this.getID() + " { ";
         if (this.distance != null) {
             result = result.concat("distance=" + this.distance.toString() + "; ");
         }
@@ -99,10 +81,11 @@ public final class NodeProperties {
      * @param representation string representation of the node properties
      * @exception NodePropertiesException fail to parse the string representation
      */
+    @Override
     public void set(final String representation) throws NodePropertiesException {
         String[] tokens = representation.split("\\s*([{=;}]\\s*)+");
         if (!tokens[0].isEmpty()) {
-            this.id = tokens[0];
+            this.setID(tokens[0]);
         }
         for (int i = 1; i < tokens.length; i += 2) {
             if (tokens[i].equalsIgnoreCase("distance")) {

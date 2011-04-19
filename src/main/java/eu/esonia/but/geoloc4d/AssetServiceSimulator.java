@@ -1,11 +1,7 @@
 package eu.esonia.but.geoloc4d;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 import org.ws4d.java.DPWSFramework;
 import org.ws4d.java.communication.HTTPBinding;
 import org.ws4d.java.service.DefaultDevice;
@@ -18,39 +14,6 @@ import org.ws4d.java.util.Log;
  * @author rychly
  */
 public class AssetServiceSimulator {
-
-    private static Map<String, ServiceDescription> readServicesDescription(String filename) throws FileNotFoundException, IOException {
-        Map<String, ServiceDescription> result = new HashMap<String, ServiceDescription>();
-        // open file and read properties
-        Properties servicesProperties = new Properties();
-        FileInputStream servicesIniFile = new FileInputStream(filename);
-        try {
-            servicesProperties.load(servicesIniFile);
-        } finally {
-            servicesIniFile.close();
-        }
-        // go throught the properties and add services' descriptions into the map
-        for (Map.Entry<Object, Object> pair : servicesProperties.entrySet()) {
-            ServiceDescription serviceDescription;
-            String[] serviceNameTokens = pair.getKey().toString().split("\\.", 2);
-            // find a related service description if exists, create new otherwise
-            if (result.containsKey(serviceNameTokens[0])) {
-                serviceDescription = result.get(serviceNameTokens[0]);
-            } else {
-                serviceDescription = new ServiceDescription();
-            }
-            // fill the service description
-            serviceDescription.name = serviceNameTokens[0];
-            if (serviceNameTokens[1].equalsIgnoreCase("location")) {
-                serviceDescription.location = new Vector3D(pair.getValue().toString());
-            } else if (serviceNameTokens[1].equalsIgnoreCase("scan")) {
-                serviceDescription.scanList = new MapOfNodes(pair.getValue().toString());
-            }
-            // put the service description into the map
-            result.put(serviceDescription.name, serviceDescription);
-        }
-        return result;
-    }
 
     public static void main(String[] args) {
         /*
@@ -89,12 +52,12 @@ public class AssetServiceSimulator {
 
         // Read services.properties for services, prepare and add the services to the device
         try {
-            for (ServiceDescription serviceDescription : AssetServiceSimulator.readServicesDescription(args[3]).values()) {
+            for (Node node : Node.readNodes(args[3]).values()) {
                 // Create service
-                LocalService service = new AssetService(-1);
+                LocalService service = new AssetService(-1, node);
                 // Set binding for the service, i.e. the address it will accept
                 //service.addBinding(new HTTPBinding(new URI(args[0] + "/" + AssetService.class.getSimpleName() + "/" + serviceDescription.name))); // BUG
-                service.addBinding(new HTTPBinding(args[0], Integer.parseInt(args[1]), args[2] + AssetService.class.getSimpleName() + "/" + serviceDescription.name));
+                service.addBinding(new HTTPBinding(args[0], Integer.parseInt(args[1]), args[2] + AssetService.class.getSimpleName() + "/" + node.self.getID()));
                 // Add the service to the device
                 device.addService(service);
             }
@@ -110,18 +73,5 @@ public class AssetServiceSimulator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-}
-
-class ServiceDescription {
-
-    String name;
-    Vector3D location;
-    MapOfNodes scanList;
-
-    ServiceDescription() {
-        this.name = "Unknown";
-        this.location = new Vector3D();
-        this.scanList = new MapOfNodes();
     }
 }

@@ -16,14 +16,16 @@ import org.ws4d.java.util.ParameterUtil;
  */
 public class AssetService extends DefaultService {
 
-    // Namespace for services
+    /**
+     * Namespace for services
+     */
     public static final String NAMESPACE = "http://www.fit.vutbr.cz/~rychly/geoloc4d";
-    // Location coordinates
-    private Vector3D location;
-    // Scan of neighbouring nodes
-    private MapOfNodes neighboursScan;
+    /**
+     * Data of node where is service
+     */
+    private Node node;
 
-    AssetService(int id) {
+    AssetService(int id, Node node) {
         // if (id == -1) then do not use properties for configuration
         super(id);
         // Add operations
@@ -31,41 +33,40 @@ public class AssetService extends DefaultService {
         this.addOperation(new GetLocation(this));
         this.addOperation(new SetLocation(this));
         // Init properties
-        this.location = new Vector3D();
-        this.neighboursScan = new MapOfNodes();
+        this.node = node;
     }
 
     public void setLocation(int x, int y, int z) {
-        this.location.set(x, y, z);
+        this.node.self.locationAbsolute.set(x, y, z);
     }
 
     public void setLocation(Vector3D location) {
-        this.location.set(location);
+        this.node.self.locationAbsolute.set(location);
     }
 
     public void setLocation(String location) {
-        this.location.set(location);
+        this.node.self.locationAbsolute.set(location);
     }
 
     public Vector3D getLocation() {
-        return new Vector3D(location);
+        return new Vector3D(this.node.self.locationAbsolute);
     }
 
     public void setNeighboursScan(MapOfNodes neighboursScan) {
-        this.neighboursScan.set(neighboursScan);
+        this.node.scan.set(neighboursScan);
     }
 
     public void setNeighboursScan(String neighboursScan) {
-        this.neighboursScan.set(neighboursScan);
+        this.node.scan.set(neighboursScan);
     }
 
     public MapOfNodes getNeighboursScan() {
-        return this.neighboursScan;
+        return this.node.scan;
     }
 
     class ScanNeighbours extends Operation {
 
-        AssetService assetService;
+        private AssetService assetService;
 
         ScanNeighbours(AssetService assetService) {
             this();
@@ -82,6 +83,7 @@ public class AssetService extends DefaultService {
         }
 
         // If the method is invoked by the client this method will be called. The returned ParameterValue is the answer. It will be sent to the client.
+        @Override
         public ParameterValue invoke(ParameterValue parameterValues) throws InvocationException, TimeoutException {
             ParameterValue returnValue = createOutputValue();
             ParameterUtil.setString(returnValue, null, this.assetService.getNeighboursScan().toString());
@@ -91,7 +93,7 @@ public class AssetService extends DefaultService {
 
     class GetLocation extends Operation {
 
-        AssetService assetService;
+        private AssetService assetService;
 
         GetLocation(AssetService assetService) {
             this();
@@ -108,6 +110,7 @@ public class AssetService extends DefaultService {
         }
 
         // If the method is invoked by the client this method will be called. The returned ParameterValue is the answer. It will be sent to the client.
+        @Override
         public ParameterValue invoke(ParameterValue parameterValues) throws InvocationException, TimeoutException {
             ParameterValue returnValue = createOutputValue();
             ParameterUtil.setString(returnValue, null, this.assetService.getLocation().toString());
@@ -117,7 +120,7 @@ public class AssetService extends DefaultService {
 
     class SetLocation extends Operation {
 
-        AssetService assetService;
+        private AssetService assetService;
 
         SetLocation(AssetService assetService) {
             this();
@@ -134,6 +137,7 @@ public class AssetService extends DefaultService {
         }
 
         // If the method is invoked by the client this method will be called. The returned ParameterValue is the answer. It will be sent to the client.
+        @Override
         public ParameterValue invoke(ParameterValue parameterValues) throws InvocationException, TimeoutException {
             this.assetService.setLocation(ParameterUtil.getString(parameterValues, null));
             return null;
