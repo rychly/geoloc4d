@@ -19,9 +19,9 @@ public class WirelessMetric {
      * @param distanceToB distance of node B from the reference node
      * @return the received signal strength at 1 meter distance
      */
-    public static float compSignalStrengthAtMeter(short rssiToA, short rssiToB, float distanceToA, float distanceToB) {
-        return (float) ((rssiToA * Math.log10(distanceToB) - rssiToB * Math.log10(distanceToA))
-                / (Math.log10(distanceToA) - Math.log10(distanceToB)));
+    public static double compSignalStrengthAtMeter(short rssiToA, short rssiToB, double distanceToA, double distanceToB) {
+        return (rssiToA * Math.log10(distanceToB) - rssiToB * Math.log10(distanceToA))
+                / (Math.log10(distanceToA) - Math.log10(distanceToB));
     }
 
     /**
@@ -32,9 +32,9 @@ public class WirelessMetric {
      * @param distanceToB distance of node B from the reference node
      * @return the propagation constant
      */
-    public static float compPropagationConstant(short rssiToA, short rssiToB, float distanceToA, float distanceToB) {
-        return (float) ((rssiToA - rssiToB)
-                / (10 * (Math.log10(distanceToB) - Math.log10(distanceToA))));
+    public static double compPropagationConstant(short rssiToA, short rssiToB, double distanceToA, double distanceToB) {
+        return (rssiToA - rssiToB)
+                / (10 * (Math.log10(distanceToB) - Math.log10(distanceToA)));
     }
 
     /**
@@ -44,7 +44,7 @@ public class WirelessMetric {
      * @param propagationConstant propagation constant
      * @return received signal RSSI value
      */
-    public static short compRssiFromDistance(float distance, float signalStrengthAtMeter, float propagationConstant) {
+    public static short compRssiFromDistance(double distance, double signalStrengthAtMeter, double propagationConstant) {
         return (short) Math.round(-1 * (10 * propagationConstant * Math.log10(distance) + signalStrengthAtMeter));
     }
 
@@ -55,8 +55,8 @@ public class WirelessMetric {
      * @param propagationConstant propagation constant
      * @return the distance
      */
-    public static float compDistanceFromRssi(short rssi, float signalStrengthAtMeter, float propagationConstant) {
-        return (float) Math.pow(10, (rssi + signalStrengthAtMeter)
+    public static double compDistanceFromRssi(short rssi, double signalStrengthAtMeter, double propagationConstant) {
+        return Math.pow(10, (rssi + signalStrengthAtMeter)
                 / (-10 * propagationConstant));
     }
 
@@ -70,9 +70,9 @@ public class WirelessMetric {
      * @param distanceC distance of node C and the blind node
      * @return location of the blind node
      */
-    public static Vector3D[] trilateration3D(final Vector3D nodeA, float distanceA,
-            final Vector3D nodeB, float distanceB,
-            final Vector3D nodeC, float distanceC) {
+    public static Vector3D[] trilateration3D(final Vector3D nodeA, double distanceA,
+            final Vector3D nodeB, double distanceB,
+            final Vector3D nodeC, double distanceC) {
         // step 1: we have Cartesian coordinates, so no transformation from lat/long coordinates is needed
         // step 2: translating the points to nodeA be at the origin
         Vector3D tmpB = nodeB.sub(nodeA);
@@ -108,10 +108,10 @@ public class WirelessMetric {
      * @param distanceD distance of node D and the blind node
      * @return location of the blind node
      */
-    public static Vector3D trilateration3D(final Vector3D nodeA, float distanceA,
-            final Vector3D nodeB, float distanceB,
-            final Vector3D nodeC, float distanceC,
-            final Vector3D nodeD, float distanceD) {
+    public static Vector3D trilateration3D(final Vector3D nodeA, double distanceA,
+            final Vector3D nodeB, double distanceB,
+            final Vector3D nodeC, double distanceC,
+            final Vector3D nodeD, double distanceD) {
         // perform trilateration on two triplets of nodes
         Vector3D[] trilateratedABC = WirelessMetric.trilateration3D(
                 nodeA, distanceA, nodeB, distanceB, nodeC, distanceC);

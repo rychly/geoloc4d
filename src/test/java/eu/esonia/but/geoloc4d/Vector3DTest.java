@@ -1,39 +1,51 @@
 package eu.esonia.but.geoloc4d;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Test of class for vector coordinates in 3D (without algebraical operations).
  * @author rychly
  */
-public class Vector3DTest extends TestCase {
+public class Vector3DTest {
 
     private Vector3D vector3D;
 
-    public Vector3DTest(String testName) {
-        super(testName);
+    public Vector3DTest() {
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         this.vector3D = new Vector3D(1.2, 3.4, 5.6);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() {
         this.vector3D = null;
+    }
+
+    /**
+     * Test of equals method, of class Vector3D.
+     */
+    @Test
+    public void testEquals() {
+        assertTrue(this.vector3D.equals(new Vector3D(1.2, 3.4, 5.6)));
     }
 
     /**
      * Test of isUndefined method, of class Vector3D.
      */
+    @Test
     public void testIsUndefined() {
-        assertEquals(this.vector3D.isUndefined(), false);
+        assertFalse(this.vector3D.isUndefined());
     }
 
     /**
      * Test of toString method, of class Vector3D.
      */
+    @Test
     public void testToString() {
         assertEquals(this.vector3D.toString(), "("
                 + this.vector3D.getX() + ","
@@ -44,6 +56,7 @@ public class Vector3DTest extends TestCase {
     /**
      * Test of set method, of class Vector3D.
      */
+    @Test
     public void testSet_String() {
         Vector3D newVector3D = new Vector3D();
         newVector3D.set("("

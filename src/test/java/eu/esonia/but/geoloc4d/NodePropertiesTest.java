@@ -1,22 +1,24 @@
 package eu.esonia.but.geoloc4d;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Test of class for properties of a node as seen from its neighbouring node.
  * @author rychly
  */
-public class NodePropertiesTest extends TestCase {
+public class NodePropertiesTest {
 
     private NodeProperties nodeProperties;
     private static final String nodeID = "TestNode";
 
-    public NodePropertiesTest(String testName) {
-        super(testName);
+    public NodePropertiesTest() {
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() {
         this.nodeProperties = new NodeProperties(nodeID);
         this.nodeProperties.distance = 1.23;
         this.nodeProperties.locationAbsolute = new Vector3D(1.2, 3.4, 5.6);
@@ -25,14 +27,15 @@ public class NodePropertiesTest extends TestCase {
         this.nodeProperties.rtt = 123.123;
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() {
         this.nodeProperties = null;
     }
 
     /**
      * Test of getID method, of class NodeProperties.
      */
+    @Test
     public void testGetID() {
         assertEquals(this.nodeProperties.getID(), nodeID);
     }
@@ -40,6 +43,7 @@ public class NodePropertiesTest extends TestCase {
     /**
      * Test of toString method, of class NodeProperties.
      */
+    @Test
     public void testToString() {
         assertEquals(this.nodeProperties.toString(), nodeID + " { "
                 + "distance=" + this.nodeProperties.distance.toString() + "; "
@@ -53,6 +57,7 @@ public class NodePropertiesTest extends TestCase {
     /**
      * Test of set method, of class NodeProperties.
      */
+    @Test
     public void testSet() {
         NodeProperties newNodeProperties = new NodeProperties(nodeID);
         newNodeProperties.set(nodeID + " { "

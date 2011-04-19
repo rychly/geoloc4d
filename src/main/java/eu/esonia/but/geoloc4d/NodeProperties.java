@@ -33,12 +33,36 @@ public final class NodeProperties {
     public Double rtt;
 
     /**
-     * Default constructor of a node from its string representation.
+     * Constructor of a node from its identificator and string representation.
+     * @param id identificator of the node properties
+     * @param representation string representation of the node properties
+     * @exception NodePropertiesException fail to parse the string representation
+     */
+    NodeProperties(final String id, final String representation) throws NodePropertiesException {
+        this.set(representation);
+        this.id = id;
+    }
+
+    /**
+     * Constructor of a node from its string representation.
      * @param representation string representation of the node properties
      * @exception NodePropertiesException fail to parse the string representation
      */
     NodeProperties(final String representation) throws NodePropertiesException {
         this.set(representation);
+    }
+
+    /**
+     * Copy constructor.
+     * @param source source to copy from
+     */
+    NodeProperties(final NodeProperties source) {
+        this.id = source.getID();
+        this.distance = source.distance;
+        this.locationAbsolute = source.locationAbsolute;
+        this.locationRelative = source.locationRelative;
+        this.rssi = source.rssi;
+        this.rtt = source.rtt;
     }
 
     /**
@@ -77,7 +101,9 @@ public final class NodeProperties {
      */
     public void set(final String representation) throws NodePropertiesException {
         String[] tokens = representation.split("\\s*([{=;}]\\s*)+");
-        this.id = tokens[0];
+        if (!tokens[0].isEmpty()) {
+            this.id = tokens[0];
+        }
         for (int i = 1; i < tokens.length; i += 2) {
             if (tokens[i].equalsIgnoreCase("distance")) {
                 this.distance = Double.parseDouble(tokens[i + 1]);
