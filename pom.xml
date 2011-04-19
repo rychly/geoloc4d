@@ -143,12 +143,12 @@
     <distributionManagement>
         <site>
             <id>geoloc4d.sf.net</id>
-            <url>scp://shell.sourceforge.net/home/project-web/geoloc4d/htdocs</url>
+            <url>scp://rychly,geoloc4d@shell.sourceforge.net/home/project-web/geoloc4d/htdocs</url>
             <!-- ssh -t rychly,geoloc4d@shell.sourceforge.net create -->
         </site>
         <repository>
             <id>fit-geoloc4d</id>
-            <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
+            <url>scp://rychly@kazi.fit.vutbr.cz/home/users/rychly/public_html/geoloc4d/mvn-repo</url>
         </repository>
     </distributionManagement>
 </project>
