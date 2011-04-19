@@ -21,7 +21,7 @@ public class AssetService extends DefaultService {
     // Location coordinates
     private Vector3D location;
     // Scan of neighbouring nodes
-    private ScanList neighboursScan;
+    private MapOfNodes neighboursScan;
 
     AssetService(int id) {
         // if (id == -1) then do not use properties for configuration
@@ -32,7 +32,7 @@ public class AssetService extends DefaultService {
         this.addOperation(new SetLocation(this));
         // Init properties
         this.location = new Vector3D();
-        this.neighboursScan = new ScanList();
+        this.neighboursScan = new MapOfNodes();
     }
 
     public void setLocation(int x, int y, int z) {
@@ -51,7 +51,7 @@ public class AssetService extends DefaultService {
         return new Vector3D(location);
     }
 
-    public void setNeighboursScan(ScanList neighboursScan) {
+    public void setNeighboursScan(MapOfNodes neighboursScan) {
         this.neighboursScan.set(neighboursScan);
     }
 
@@ -59,7 +59,7 @@ public class AssetService extends DefaultService {
         this.neighboursScan.set(neighboursScan);
     }
 
-    public ScanList getNeighboursScan() {
+    public MapOfNodes getNeighboursScan() {
         return this.neighboursScan;
     }
 

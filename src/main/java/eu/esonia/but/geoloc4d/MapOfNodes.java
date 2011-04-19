@@ -7,13 +7,13 @@ import java.util.Map;
  * Scan-list as a hash-map.
  * @author rychly
  */
-public class ScanList extends HashMap<String, Integer> {
+public final class MapOfNodes extends HashMap<String, Integer> {
 
-    ScanList() {
+    MapOfNodes() {
         super();
     }
 
-    ScanList(String scanList) {
+    MapOfNodes(String scanList) {
         this.set(scanList);
     }
 
@@ -21,12 +21,12 @@ public class ScanList extends HashMap<String, Integer> {
      * Add content of scan list from another.
      * @param scanList source scan list
      */
-    public void set(ScanList scanList) {
+    public void set(MapOfNodes scanList) {
         this.putAll(scanList);
     }
 
     /**
-     * Set scan list from string (e.g. "ScanList:NodeA(123);NodeB(345);NodeC(678)").
+     * Set scan list from string (e.g. "MapOfNodes:NodeA(123);NodeB(345);NodeC(678)").
      * @param scanList string with scan list
      */
     public void set(String scanList) {
@@ -38,7 +38,7 @@ public class ScanList extends HashMap<String, Integer> {
 
     @Override
     public String toString() {
-        String result = ScanList.class.getSimpleName() + ":";
+        String result = MapOfNodes.class.getSimpleName() + ":";
         for (Map.Entry<String, Integer> pair : this.entrySet()) {
             result = result.concat(pair.getKey() + "(" + pair.getValue() + ");");
         }

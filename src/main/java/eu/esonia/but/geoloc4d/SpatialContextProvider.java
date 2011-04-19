@@ -33,7 +33,7 @@ public class SpatialContextProvider {
         result = operation.invoke(null);
 
         // Trilateration algorithm.
-        ScanList scanList = new ScanList(ParameterUtil.getString(result, null));
+        MapOfNodes scanList = new MapOfNodes(ParameterUtil.getString(result, null));
         // do trilateration...
         // TODO
         Vector3D location = new Vector3D(10, 20, 30);

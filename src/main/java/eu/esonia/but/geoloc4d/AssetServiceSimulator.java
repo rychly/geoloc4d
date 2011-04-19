@@ -44,7 +44,7 @@ public class AssetServiceSimulator {
             if (serviceNameTokens[1].equalsIgnoreCase("location")) {
                 serviceDescription.location = new Vector3D(pair.getValue().toString());
             } else if (serviceNameTokens[1].equalsIgnoreCase("scan")) {
-                serviceDescription.scanList = new ScanList(pair.getValue().toString());
+                serviceDescription.scanList = new MapOfNodes(pair.getValue().toString());
             }
             // put the service description into the map
             result.put(serviceDescription.name, serviceDescription);
@@ -117,11 +117,11 @@ class ServiceDescription {
 
     String name;
     Vector3D location;
-    ScanList scanList;
+    MapOfNodes scanList;
 
     ServiceDescription() {
         this.name = "Unknown";
         this.location = new Vector3D();
-        this.scanList = new ScanList();
+        this.scanList = new MapOfNodes();
     }
 }
