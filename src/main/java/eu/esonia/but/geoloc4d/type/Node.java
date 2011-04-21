@@ -2,8 +2,11 @@ package eu.esonia.but.geoloc4d.type;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -33,30 +36,37 @@ public class Node {
         this.scan = new MapOfNodes();
     }
 
+    @Override
+    public String toString() {
+        String id = self.getID();
+        return id + "=" + self.toString().substring(id.length() + 1) + "\n"
+                + id + ".scan=" + scan.toString();
+    }
+
     /**
-     * Reads a list of nodes from a file.
+     * Loads a list of nodes from a file.
      * @param filename the file to read from
-     * @return the list of nodes
      * @throws FileNotFoundException the file not found
      * @throws IOException a read error of the file
+     * @return the list of nodes
      */
-    public static Map<String, Node> readNodes(final String filename)
+    public static Map<String, Node> loadNodes(final String filename)
             throws FileNotFoundException, IOException {
         InputStream stream = new FileInputStream(filename);
         try {
-            return readNodes(stream);
+            return loadNodes(stream);
         } finally {
             stream.close();
         }
     }
 
     /**
-     * Reads a list of nodes from an input stream.
+     * Loads a list of nodes from an input stream.
      * @param stream the input stream to read from
      * @return the list of nodes
      * @throws IOException a read error of the input stream
      */
-    public static Map<String, Node> readNodes(final InputStream stream)
+    public static Map<String, Node> loadNodes(final InputStream stream)
             throws IOException {
         Map<String, Node> result = new HashMap<String, Node>();
         // open file and read properties
@@ -78,5 +88,33 @@ public class Node {
             result.put(tokens[0], node);
         }
         return result;
+    }
+
+    /**
+     * Save a list of nodes into a file.
+     * @param filename the file to save into
+     * @param listOfNodes the list of nodes
+     * @throws IOException a write error to the file
+     */
+    public static void saveNodes(final String filename, final Map<String, Node> listOfNodes)
+            throws IOException {
+        OutputStream stream = new FileOutputStream(filename);
+        try {
+            saveNodes(stream, listOfNodes);
+        } finally {
+            stream.close();
+        }
+    }
+
+    /**
+     * Save a list of nodes into an output stream.
+     * @param stream the output stream to save into
+     * @param listOfNodes the list of nodes
+     */
+    public static void saveNodes(final OutputStream stream, final Map<String, Node> listOfNodes) {
+        PrintWriter printWriter = new PrintWriter(stream);
+        for (Node node : listOfNodes.values()) {
+            printWriter.println(node.toString());
+        }
     }
 }
