@@ -286,4 +286,24 @@ public final class Vector3D {
         }
         return result;
     }
+
+    /**
+     * Select two most different vectors from group of vectors (based on their distance).
+     * @param vectors group of vectors
+     * @return pair of the most different vectors
+     */
+    public static Vector3D[] selectTwoMostDifferent(final Vector3D[] vectors) {
+        Vector3D[] result = new Vector3D[2];
+        double maxDistance = Double.MIN_VALUE;
+        for (int i = 0; i < vectors.length; i++) {
+            for (int j = i + 1; j < vectors.length; j++) {
+                if (!vectors[i].isUndefined() && !vectors[j].isUndefined()
+                        && (vectors[i].distance(vectors[j]) > maxDistance)) {
+                    result[0] = vectors[i];
+                    result[1] = vectors[j];
+                }
+            }
+        }
+        return result;
+    }
 }
