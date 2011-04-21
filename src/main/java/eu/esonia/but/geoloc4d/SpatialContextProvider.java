@@ -1,5 +1,7 @@
 package eu.esonia.but.geoloc4d;
 
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.ws4d.java.DPWSFramework;
 import org.ws4d.java.client.SearchParameter;
 import org.ws4d.java.communication.HTTPBinding;

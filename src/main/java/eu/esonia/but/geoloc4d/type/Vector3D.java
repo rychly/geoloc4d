@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 /**
  * Vector coordinates in 3D.
@@ -15,22 +15,22 @@ public final class Vector3D {
      */
     public static final Vector3D NULL = new Vector3D(0, 0, 0);
 
-    Vector3D() {
+    public Vector3D() {
         this.undefined = true;
         this.x = 0;
         this.y = 0;
         this.z = 0;
     }
 
-    Vector3D(double x, double y, double z) {
+    public Vector3D(double x, double y, double z) {
         this.set(x, y, z);
     }
 
-    Vector3D(final Vector3D vector) {
+    public Vector3D(final Vector3D vector) {
         this.set(vector);
     }
 
-    Vector3D(final String vector) {
+    public Vector3D(final String vector) {
         this.set(vector);
     }
 

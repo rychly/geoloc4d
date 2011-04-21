@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 /**
  * Exception NodeProperties.set of when fail to parse the string representation.

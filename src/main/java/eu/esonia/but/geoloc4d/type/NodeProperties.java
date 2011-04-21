@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 /**
  * Properties of a node as seen from its neighbouring node.
@@ -30,7 +30,7 @@ public final class NodeProperties extends NodeData {
      * @param representation string representation of the node properties
      * @exception NodePropertiesException fail to parse the string representation
      */
-    NodeProperties(final String id, final String representation) throws NodePropertiesException {
+    public NodeProperties(final String id, final String representation) throws NodePropertiesException {
         super(id, representation);
     }
 
@@ -39,7 +39,7 @@ public final class NodeProperties extends NodeData {
      * @param representation string representation of the node properties
      * @exception NodePropertiesException fail to parse the string representation
      */
-    NodeProperties(final String representation) throws NodePropertiesException {
+    public NodeProperties(final String representation) throws NodePropertiesException {
         super(representation);
     }
 
@@ -47,7 +47,7 @@ public final class NodeProperties extends NodeData {
      * Copy constructor.
      * @param source source to copy from
      */
-    NodeProperties(final NodeProperties source) {
+    public NodeProperties(final NodeProperties source) {
         super(source);
         this.distance = source.distance;
         this.locationRelative = source.locationRelative;

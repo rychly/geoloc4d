@@ -1,5 +1,6 @@
 package eu.esonia.but.geoloc4d;
 
+import eu.esonia.but.geoloc4d.type.Node;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.ws4d.java.DPWSFramework;

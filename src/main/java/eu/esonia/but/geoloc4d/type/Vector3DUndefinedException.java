@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 /**
  * Exception on operation with undefined Vector3D.

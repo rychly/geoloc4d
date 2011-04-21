@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public final class MapOfNodes extends HashMap<String, NodeProperties> {
     /**
      * Default constructor of an empty map.
      */
-    MapOfNodes() {
+    public MapOfNodes() {
         super();
     }
 
@@ -20,7 +20,7 @@ public final class MapOfNodes extends HashMap<String, NodeProperties> {
      * Default constructor of a map from its string representation.
      * @param representation string representation of the map
      */
-    MapOfNodes(final String representation) {
+    public MapOfNodes(final String representation) {
         this.set(representation);
     }
 
@@ -28,7 +28,7 @@ public final class MapOfNodes extends HashMap<String, NodeProperties> {
      * Copy constructor.
      * @param source source to copy from
      */
-    MapOfNodes(final MapOfNodes source) {
+    public MapOfNodes(final MapOfNodes source) {
         this.set(source);
     }
 

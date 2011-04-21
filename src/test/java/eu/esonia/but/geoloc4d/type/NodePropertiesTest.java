@@ -1,5 +1,7 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
+import eu.esonia.but.geoloc4d.type.NodeProperties;
+import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

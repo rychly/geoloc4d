@@ -1,5 +1,8 @@
 package eu.esonia.but.geoloc4d;
 
+import eu.esonia.but.geoloc4d.type.Node;
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.schema.Element;
 import org.ws4d.java.schema.SchemaUtil;

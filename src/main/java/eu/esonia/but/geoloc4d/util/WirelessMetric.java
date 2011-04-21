@@ -1,5 +1,6 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.util;
 
+import eu.esonia.but.geoloc4d.type.Vector3D;
 import java.util.Arrays;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Arrays;
  * Trilateration is based on Wikipedia.
  * @author rychly
  */
-public class WirelessMetric {
+public final class WirelessMetric {
 
     /**
      * Compute a received signal strength at 1 meter distance according to a reference node and its RSSIs and actual distances to nodes A and B.

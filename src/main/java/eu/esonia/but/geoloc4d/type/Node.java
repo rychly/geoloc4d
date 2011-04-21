@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,15 +14,21 @@ import java.util.Properties;
  */
 public class Node {
 
+    /**
+     * Data about the node (itself).
+     */
     public NodeData self;
+    /**
+     * Data about neighbouring nodes (from scan).
+     */
     public MapOfNodes scan;
 
-    Node(final String representation) {
+    public Node(final String representation) {
         this.self = new NodeData(representation);
         this.scan = new MapOfNodes();
     }
 
-    Node(final String id, final String representation) {
+    public Node(final String id, final String representation) {
         this.self = new NodeData(id, representation);
         this.scan = new MapOfNodes();
     }

@@ -1,4 +1,4 @@
-package eu.esonia.but.geoloc4d;
+package eu.esonia.but.geoloc4d.type;
 
 /**
  * Basic data of a node.
@@ -19,9 +19,9 @@ public class NodeData {
      * Constructor of a node from its identificator and string representation.
      * @param id identificator of the node properties
      * @param representation string representation of the node properties
-     * @exception NodePropertiesException fail to parse the string representation
+     * @throws NodeDataException fail to parse the string representation
      */
-    NodeData(final String id, final String representation) throws NodeDataException {
+    public NodeData(final String id, final String representation) throws NodeDataException {
         this.set(representation);
         this.id = id;
     }
@@ -29,9 +29,9 @@ public class NodeData {
     /**
      * Constructor of a node from its string representation.
      * @param representation string representation of the node properties
-     * @exception NodePropertiesException fail to parse the string representation
+     * @throws NodeDataException fail to parse the string representation
      */
-    NodeData(final String representation) throws NodeDataException {
+    public NodeData(final String representation) throws NodeDataException {
         this.set(representation);
     }
 
@@ -39,7 +39,7 @@ public class NodeData {
      * Copy constructor.
      * @param source source to copy from
      */
-    NodeData(final NodeData source) {
+    public NodeData(final NodeData source) {
         this.id = source.getID();
         this.locationAbsolute = source.locationAbsolute;
     }
