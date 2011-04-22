@@ -10,9 +10,19 @@ import eu.esonia.but.geoloc4d.type.Vector3D;
  */
 public class StrategyWithRTT implements TrilaterationStrategy {
 
-    @Override
-    public TrilaterationStrategy makeTrilaterationStrategy() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Correction factor for conversion of RTT into actual distance.
+     * Can be computed by {@link WirelessMetric#compCorrectionFactorFromRttForDistance(double, double)}, predefined estimated value for routed networks.
+     */
+    private double correctionFactor = 0.4;
+
+    /**
+     * Get correction factor for conversion of RTT into actual distance.
+     * For better precision, should be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNodes)}.
+     * @return the correction factor
+     */
+    public double getCorrectionFactor() {
+        return this.correctionFactor;
     }
 
     @Override
@@ -32,5 +42,4 @@ public class StrategyWithRTT implements TrilaterationStrategy {
             throws TrilaterationStrategyException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

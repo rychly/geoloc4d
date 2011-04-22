@@ -12,11 +12,27 @@ import eu.esonia.but.geoloc4d.type.Vector3D;
 public interface TrilaterationStrategy {
 
     /**
-     * Make a new instance of a specific trilateration strategy.
+     * To create new instances of specific trilateration strategies.
      * Factory design pattern.
-     * @return the trilateration strategy
      */
-    public TrilaterationStrategy makeTrilaterationStrategy();
+    public static final class Factory {
+
+        /**
+         * Make a new instance of a specific trilateration strategy based on RSSI.
+         * @return the trilateration strategy
+         */
+        public static TrilaterationStrategy newStrategyWithRSSI() {
+            return new StrategyWithRSSI();
+        }
+
+        /**
+         * Make a new instance of a specific trilateration strategy based on RTT.
+         * @return the trilateration strategy
+         */
+        public static TrilaterationStrategy newStrategyWithRTT() {
+            return new StrategyWithRTT();
+        }
+    }
 
     /**
      * Calibrate metric used by the trilateration strategy (e.g. transformation of RSSI/RTT to distance) for a reference node and its neighbours.
