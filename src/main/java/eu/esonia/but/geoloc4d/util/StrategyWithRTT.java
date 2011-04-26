@@ -5,13 +5,13 @@ import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.NeighbourProperties;
 import eu.esonia.but.geoloc4d.type.Node;
 import eu.esonia.but.geoloc4d.type.NodeData;
-import eu.esonia.but.geoloc4d.type.Vector3D;
+import java.util.Map;
 
 /**
  * The algorithm for selection of neighbouring nodes and computation of their distanecs from RTT.
  * @author rychly
  */
-public class StrategyWithRTT implements TrilaterationStrategy {
+public class StrategyWithRTT extends TrilaterationStrategy {
 
     /**
      * Correction factor for conversion of RTT into actual distance.
@@ -44,7 +44,7 @@ public class StrategyWithRTT implements TrilaterationStrategy {
             }
         }
         if (count == 0) {
-            throw new TrilaterationStrategyException("Not enought nodes for this strategy! "
+            throw new TrilaterationStrategyException("Not enought nodes for calibration of metric in this strategy! "
                     + "We need at the least one node with at the least one neighbour with set distance and RTT value.");
         } else {
             // the result is avarange form computed value
@@ -53,14 +53,28 @@ public class StrategyWithRTT implements TrilaterationStrategy {
     }
 
     @Override
-    public MapOfNeighbours selectNodesForTrilateration(final NodeData node, final MapOfNeighbours neighbours)
+    public MapOfNeighbours prepareNodesForTrilateration(final NodeData node, final MapOfNeighbours neighbours)
             throws TrilaterationStrategyException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Vector3D doTrilateration(final MapOfNeighbours selectedNodes)
-            throws TrilaterationStrategyException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (this.correctionFactor == null) {
+            throw new TrilaterationStrategyException("Strategy has not calibrated metric!");
+        }
+        MapOfNeighbours result = new MapOfNeighbours();
+        // walk through mapOfNeighbours with set location and RTT
+        for (Map.Entry<String, NeighbourProperties> pair : neighbours.getNodesWithLocation(node.locationAbsolute, false, true).entrySet()) {
+            // for each create a copy with the node's distance computed from RTT and put it into result
+            NeighbourProperties neighbourWithDistance = new NeighbourProperties(pair.getValue());
+            neighbourWithDistance.distance = WirelessMetric.compDistanceFromRtt(
+                    neighbourWithDistance.rtt, this.correctionFactor);
+            result.put(pair.getKey(), neighbourWithDistance);
+        }
+        // we need at the leatest four prepared nodes
+        if (result.size() < 4) {
+            throw new TrilaterationStrategyException("Not enought neighbouring nodes to prepare for this strategy! "
+                    + "We need at the least four neighbours with set distances and RTT values.");
+        } else {
+            // sort to have the most distant neighbouring nodes first positions
+            // idea is that with greater distance there is greater precision of RTT-to-distance transformation (RTT for near distances is too small)
+            return result.sortByDistance(true);
+        }
     }
 }

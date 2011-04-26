@@ -1,8 +1,5 @@
 package eu.esonia.but.geoloc4d.type;
 
-import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.NeighbourProperties;
-import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

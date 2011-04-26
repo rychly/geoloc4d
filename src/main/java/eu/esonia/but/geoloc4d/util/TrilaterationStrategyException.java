@@ -6,6 +6,8 @@ package eu.esonia.but.geoloc4d.util;
  */
 public class TrilaterationStrategyException extends IllegalArgumentException {
 
+    private static final long serialVersionUID = 1L;
+
     TrilaterationStrategyException(String message) {
         super(message);
     }

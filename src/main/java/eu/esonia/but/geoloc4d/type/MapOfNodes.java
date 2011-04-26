@@ -19,6 +19,8 @@ import java.util.Properties;
  */
 public final class MapOfNodes extends LinkedHashMap<String, Node> {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Default constructor of an empty map.
      */

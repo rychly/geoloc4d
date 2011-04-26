@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProperties> {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Default constructor of an empty map.
      */
@@ -195,7 +197,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
 
     /**
      * Get a map of nodes sorted by isolation (the most isolated node is a node with the highes distances from its neighbouring nodes).
-     * @return the sorted map of nodes (the most isolated nodes are first)
+     * @return the sorted map of nodes (the most isolated nodes are last)
      */
     public MapOfNeighbours sortByIsolation() {
         return sortByIsolation(false);
@@ -204,7 +206,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     /**
      * Get a map of nodes sorted by isolation (the most isolated node is a node with the highes distances from its neighbouring nodes).
      * @param reverseOrder true for reverse ordering of the resulting map of nodes
-     * @return the sorted map of nodes (the most isolated nodes are first in standard order)
+     * @return the sorted map of nodes (the most isolated nodes are last in standard order)
      */
     public MapOfNeighbours sortByIsolation(boolean reverseOrder) {
         // nested class for isolated node and its comparator
@@ -251,7 +253,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
 
     /**
      * Get a map of nodes sorted by distance.
-     * @return the sorted map of nodes (the most closed nodes are first)
+     * @return the sorted map of nodes (the most distant nodes are last)
      */
     public MapOfNeighbours sortByDistance() {
         return sortByDistance(false);
@@ -260,7 +262,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     /**
      * Get a map of nodes sorted by distance.
      * @param reverseOrder true for reverse ordering of the resulting map of nodes
-     * @return the sorted map of nodes (the most closed nodes are first in standard order)
+     * @return the sorted map of nodes (the most distant nodes are last in standard order)
      */
     public MapOfNeighbours sortByDistance(boolean reverseOrder) {
         // nested class for comparator

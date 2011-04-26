@@ -6,6 +6,8 @@ package eu.esonia.but.geoloc4d.type;
  */
 public class NodeDataException extends IllegalArgumentException {
 
+    private static final long serialVersionUID = 1L;
+
     NodeDataException(String message) {
         super(message);
     }

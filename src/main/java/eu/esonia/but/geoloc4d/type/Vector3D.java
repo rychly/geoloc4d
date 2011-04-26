@@ -87,7 +87,11 @@ public final class Vector3D {
      * @param vector vector of original coordinates
      */
     public void set(final Vector3D vector) {
-        this.set(vector.getX(), vector.getY(), vector.getZ());
+        if ((vector == null) || vector.isUndefined()) {
+            this.undefined = true;
+        } else {
+            this.set(vector.getX(), vector.getY(), vector.getZ());
+        }
     }
 
     /**

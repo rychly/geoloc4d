@@ -49,10 +49,14 @@ public final class NeighbourProperties extends NodeData {
      */
     public NeighbourProperties(final NeighbourProperties source) {
         super(source);
-        this.distance = source.distance;
-        this.locationRelative = source.locationRelative;
-        this.rssi = source.rssi;
-        this.rtt = source.rtt;
+        this.distance = (source.distance != null)
+                ? new Double(source.distance) : null;
+        this.locationRelative = (source.locationRelative != null)
+                ? new Vector3D(source.locationRelative) : null;
+        this.rssi = (source.rssi != null)
+                ? new Short(source.rssi) : null;
+        this.rtt = (source.rtt != null)
+                ? new Double(source.rtt) : null;
     }
 
     @Override

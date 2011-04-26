@@ -41,7 +41,8 @@ public class NodeData {
      */
     public NodeData(final NodeData source) {
         this.id = source.getID();
-        this.locationAbsolute = source.locationAbsolute;
+        this.locationAbsolute = (source.locationAbsolute != null)
+                ? new Vector3D(source.locationAbsolute) : null;
     }
 
     /**
@@ -87,5 +88,4 @@ public class NodeData {
             }
         }
     }
-
 }
