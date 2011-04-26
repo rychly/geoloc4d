@@ -17,12 +17,12 @@ public class StrategyWithRSSI implements TrilaterationStrategy {
      * Received signal strength at 1 meter distance.
      * Have to be computed by {@link WirelessMetric#compSignalStrengthAtMeter(short, short, double, double)}, no predefined value.
      */
-    private double signalStrengthAtMeter = Double.NaN;
+    private Double signalStrengthAtMeter = null;
     /**
      * Propagation constant.
      * Have to be computed by {@link WirelessMetric#compPropagationConstant(short, short, double, double)}, no predefined value.
      */
-    private double propagationConstant = Double.NaN;
+    private Double propagationConstant = null;
 
     /**
      * Get received signal strength at 1 meter distance for this strategy.
@@ -67,8 +67,8 @@ public class StrategyWithRSSI implements TrilaterationStrategy {
                     + "We need at the least one node with at the least two neighbours with set distances and RSSI values.");
         } else {
             // the result is avarange form computed values
-            this.signalStrengthAtMeter = signalStrengthAtMeterSum / count;
-            this.propagationConstant = propagationConstantSum / count;
+            this.signalStrengthAtMeter = new Double(signalStrengthAtMeterSum / count);
+            this.propagationConstant = new Double(propagationConstantSum / count);
         }
     }
 
