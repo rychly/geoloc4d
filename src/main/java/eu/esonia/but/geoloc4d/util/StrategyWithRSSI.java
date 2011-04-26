@@ -1,10 +1,9 @@
 package eu.esonia.but.geoloc4d.util;
 
 import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.Node;
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
-import java.util.Collection;
 
 /**
  * The algorithm for selection of neighbouring nodes and computation of their distanecs from RSSI.
@@ -42,7 +41,7 @@ public class StrategyWithRSSI implements TrilaterationStrategy {
     }
 
     @Override
-    public void calibrateMetric(Collection<Node> nodes)
+    public void calibrateMetric(final MapOfNodes mapOfNodes)
             throws TrilaterationStrategyException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Map of nodes as a hash-map.
+ * Map of neighbouring nodes as a hash-map.
  * @author rychly
  */
 public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProperties> {
@@ -21,19 +21,19 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     }
 
     /**
-     * Default constructor of a map from its string representation.
-     * @param representation string representation of the map
-     */
-    public MapOfNeighbours(final String representation) {
-        this.set(representation);
-    }
-
-    /**
      * Copy constructor.
      * @param source source to copy from
      */
     public MapOfNeighbours(final MapOfNeighbours source) {
         this.set(source);
+    }
+
+    /**
+     * Default constructor of a map from its string representation.
+     * @param representation string representation of the map
+     */
+    public MapOfNeighbours(final String representation) {
+        this.set(representation);
     }
 
     /**

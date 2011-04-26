@@ -1,5 +1,6 @@
 package eu.esonia.but.geoloc4d;
 
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.Node;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class AssetServiceSimulator {
 
         // Read services.properties for services, prepare and add the services to the device
         try {
-            for (Node node : Node.loadNodes(args[3]).values()) {
+            for (Node node : MapOfNodes.loadNodes(args[3]).values()) {
                 // Create service
                 LocalService service = new AssetService(-1, node);
                 // Set binding for the service, i.e. the address it will accept

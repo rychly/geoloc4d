@@ -1,10 +1,9 @@
 package eu.esonia.but.geoloc4d.util;
 
 import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.Node;
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
-import java.util.Collection;
 
 /**
  * Interface of algorithms for selection of neighbouring nodes and computation of their distanecs for trilateration.
@@ -37,11 +36,11 @@ public interface TrilaterationStrategy {
     }
 
     /**
-     * Calibrate metric used by the trilateration strategy (e.g. transformation of RSSI/RTT to distance) for a collection of reference nodes.
-     * @param nodes the collection of reference nodes
+     * Calibrate metric used by the trilateration strategy (e.g. transformation of RSSI/RTT to distance) for a map of reference nodes.
+     * @param nodes the map of reference nodes
      * @throws TrilaterationStrategyException in case of incomplete data for the calibration
      */
-    public abstract void calibrateMetric(Collection<Node> nodes)
+    public abstract void calibrateMetric(final MapOfNodes mapOfNodes)
             throws TrilaterationStrategyException;
 
     /**
