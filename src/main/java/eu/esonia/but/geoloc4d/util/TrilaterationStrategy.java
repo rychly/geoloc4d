@@ -1,8 +1,10 @@
 package eu.esonia.but.geoloc4d.util;
 
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
+import eu.esonia.but.geoloc4d.type.Node;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
+import java.util.Collection;
 
 /**
  * Interface of algorithms for selection of neighbouring nodes and computation of their distanecs for trilateration.
@@ -35,12 +37,11 @@ public interface TrilaterationStrategy {
     }
 
     /**
-     * Calibrate metric used by the trilateration strategy (e.g. transformation of RSSI/RTT to distance) for a reference node and its neighbours.
-     * @param node the reference node
-     * @param neighbours the neighbours of the reference node
+     * Calibrate metric used by the trilateration strategy (e.g. transformation of RSSI/RTT to distance) for a collection of reference nodes.
+     * @param nodes the collection of reference nodes
      * @throws TrilaterationStrategyException in case of incomplete data for the calibration
      */
-    public void calibrateMetric(final NodeData node, final MapOfNodes neighbours)
+    public abstract void calibrateMetric(Collection<Node> nodes)
             throws TrilaterationStrategyException;
 
     /**
@@ -51,7 +52,7 @@ public interface TrilaterationStrategy {
      * @return the group of selected nodes (as a map)
      * @throws TrilaterationStrategyException in case of incomplete data for the further trilateration
      */
-    public MapOfNodes selectNodesForTrilateration(final NodeData node, final MapOfNodes neighbours)
+    public MapOfNeighbours selectNodesForTrilateration(final NodeData node, final MapOfNeighbours neighbours)
             throws TrilaterationStrategyException;
 
     /**
@@ -60,6 +61,6 @@ public interface TrilaterationStrategy {
      * @return result of the trilateration, i.e. location of blind node
      * @throws TrilaterationStrategyException in case of incomplete data for the trilateration
      */
-    public Vector3D doTrilateration(final MapOfNodes selectedNodes)
+    public Vector3D doTrilateration(final MapOfNeighbours selectedNodes)
             throws TrilaterationStrategyException;
 }

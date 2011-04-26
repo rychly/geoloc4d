@@ -11,12 +11,12 @@ import java.util.Map;
  * Map of nodes as a hash-map.
  * @author rychly
  */
-public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
+public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProperties> {
 
     /**
      * Default constructor of an empty map.
      */
-    public MapOfNodes() {
+    public MapOfNeighbours() {
         super();
     }
 
@@ -24,7 +24,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * Default constructor of a map from its string representation.
      * @param representation string representation of the map
      */
-    public MapOfNodes(final String representation) {
+    public MapOfNeighbours(final String representation) {
         this.set(representation);
     }
 
@@ -32,7 +32,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * Copy constructor.
      * @param source source to copy from
      */
-    public MapOfNodes(final MapOfNodes source) {
+    public MapOfNeighbours(final MapOfNeighbours source) {
         this.set(source);
     }
 
@@ -40,7 +40,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * Add to map content from another map.
      * @param source source scan list
      */
-    public void set(final MapOfNodes source) {
+    public void set(final MapOfNeighbours source) {
         this.putAll(source);
     }
 
@@ -51,7 +51,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
     public void set(final String representation) {
         String[] tokens = representation.split("\\s\\+\\s");
         for (int i = 0; i < tokens.length; i++) {
-            NodeProperties nodeProperties = new NodeProperties(tokens[i]);
+            NeighbourProperties nodeProperties = new NeighbourProperties(tokens[i]);
             this.put(nodeProperties.getID(), nodeProperties);
         }
     }
@@ -60,7 +60,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
     public String toString() {
         String result = new String();
         if (!this.isEmpty()) {
-            for (Map.Entry<String, NodeProperties> pair : this.entrySet()) {
+            for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
                 result = result.concat(pair.getValue() + " + ");
             }
             result = result.substring(0, result.length() - 3);
@@ -72,7 +72,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * Get only nodes with absolute location.
      * @return map of nodes which have set thier absolute location
      */
-    public MapOfNodes getNodesWithLocation() {
+    public MapOfNeighbours getNodesWithLocation() {
         return getNodesWithLocation(false, false);
     }
 
@@ -82,9 +82,9 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * @param isSetRtt  resulting nodes must have set Rtt
      * @return map of nodes which have set thier absolute location
      */
-    public MapOfNodes getNodesWithLocation(final boolean isSetRssi, final boolean isSetRtt) {
-        MapOfNodes result = new MapOfNodes();
-        for (Map.Entry<String, NodeProperties> pair : this.entrySet()) {
+    public MapOfNeighbours getNodesWithLocation(final boolean isSetRssi, final boolean isSetRtt) {
+        MapOfNeighbours result = new MapOfNeighbours();
+        for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
             if (pair.getValue().locationAbsolute != null
                     && (!isSetRssi || (pair.getValue().rssi != null))
                     && (!isSetRtt || (pair.getValue().rtt != null))) {
@@ -101,7 +101,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * @param referenceLocation reference location
      * @return map of nodes which have set thier absolute location (or computed from relative)
      */
-    public MapOfNodes getNodesWithLocation(final Vector3D referenceLocation) {
+    public MapOfNeighbours getNodesWithLocation(final Vector3D referenceLocation) {
         return getNodesWithLocation(referenceLocation, false, false);
     }
 
@@ -114,17 +114,17 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * @param isSetRtt  resulting nodes must have set Rtt
      * @return map of nodes which have set thier absolute location (or computed from relative)
      */
-    public MapOfNodes getNodesWithLocation(final Vector3D referenceLocation,
+    public MapOfNeighbours getNodesWithLocation(final Vector3D referenceLocation,
             final boolean isSetRssi, final boolean isSetRtt) {
-        MapOfNodes result = new MapOfNodes();
-        for (Map.Entry<String, NodeProperties> pair : this.entrySet()) {
+        MapOfNeighbours result = new MapOfNeighbours();
+        for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
             if ((isSetRssi && (pair.getValue().rssi == null))
                     || (isSetRtt && (pair.getValue().rtt == null))) {
                 continue;
             } else if (pair.getValue().locationAbsolute != null) {
                 result.put(pair.getKey(), pair.getValue());
             } else if (pair.getValue().locationRelative != null) {
-                NodeProperties nodeProperties = new NodeProperties(pair.getValue());
+                NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
                 nodeProperties.locationAbsolute = referenceLocation.add(nodeProperties.locationRelative);
                 result.put(pair.getKey(), nodeProperties);
             }
@@ -136,7 +136,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * Get a map of nodes sorted by isolation (the most isolated node is a node with the highes distances from its neighbouring nodes).
      * @return the sorted map of nodes (the most isolated nodes are first)
      */
-    public MapOfNodes sortByIsolation() {
+    public MapOfNeighbours sortByIsolation() {
         return sortByIsolation(false);
     }
 
@@ -145,15 +145,15 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
      * @param reverseOrder true for reverse ordering of the resulting map of nodes
      * @return the sorted map of nodes
      */
-    public MapOfNodes sortByIsolation(boolean reverseOrder) {
+    public MapOfNeighbours sortByIsolation(boolean reverseOrder) {
         // nested class for isolated node and its comparator
         class IsolatedNode {
 
             private String id;
-            private NodeProperties nodeProperties;
+            private NeighbourProperties nodeProperties;
             private Double isolation;
 
-            public IsolatedNode(final String id, final NodeProperties nodeProperties, final Double isolation) {
+            public IsolatedNode(final String id, final NeighbourProperties nodeProperties, final Double isolation) {
                 this.id = id;
                 this.nodeProperties = nodeProperties;
                 this.isolation = isolation;
@@ -168,9 +168,9 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
         };
         // compute isolation values for each node and sort them
         List<IsolatedNode> isolatedNodes = new LinkedList<IsolatedNode>();
-        for (Map.Entry<String, NodeProperties> firstNodeEntry : this.entrySet()) {
+        for (Map.Entry<String, NeighbourProperties> firstNodeEntry : this.entrySet()) {
             double isolation = 0;
-            for (NodeProperties secondNode : this.values()) {
+            for (NeighbourProperties secondNode : this.values()) {
                 if (firstNodeEntry.getValue() != secondNode) {
                     isolation += firstNodeEntry.getValue().locationAbsolute.distance(
                             secondNode.locationAbsolute);
@@ -181,7 +181,7 @@ public final class MapOfNodes extends LinkedHashMap<String, NodeProperties> {
         Collections.sort(isolatedNodes,
                 reverseOrder ? Collections.reverseOrder(isolationComparator) : isolationComparator);
         // prepare resulting map of nodes
-        MapOfNodes result = new MapOfNodes();
+        MapOfNeighbours result = new MapOfNeighbours();
         for (IsolatedNode isolatedNode : isolatedNodes) {
             result.put(isolatedNode.id, isolatedNode.nodeProperties);
         }

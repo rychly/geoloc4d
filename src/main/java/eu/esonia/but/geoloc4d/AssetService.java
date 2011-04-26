@@ -1,7 +1,7 @@
 package eu.esonia.but.geoloc4d;
 
 import eu.esonia.but.geoloc4d.type.Node;
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.schema.Element;
@@ -55,7 +55,7 @@ public class AssetService extends DefaultService {
         return new Vector3D(this.node.self.locationAbsolute);
     }
 
-    public void setNeighboursScan(MapOfNodes neighboursScan) {
+    public void setNeighboursScan(MapOfNeighbours neighboursScan) {
         this.node.scan.set(neighboursScan);
     }
 
@@ -63,7 +63,7 @@ public class AssetService extends DefaultService {
         this.node.scan.set(neighboursScan);
     }
 
-    public MapOfNodes getNeighboursScan() {
+    public MapOfNeighbours getNeighboursScan() {
         return this.node.scan;
     }
 

@@ -4,7 +4,7 @@ package eu.esonia.but.geoloc4d.type;
  * Properties of a node as seen from its neighbouring node.
  * @author rychly
  */
-public final class NodeProperties extends NodeData {
+public final class NeighbourProperties extends NodeData {
 
     /**
      * Distance of a node from an active node.
@@ -28,18 +28,18 @@ public final class NodeProperties extends NodeData {
      * Constructor of a node from its identificator and string representation.
      * @param id identificator of the node properties
      * @param representation string representation of the node properties
-     * @exception NodePropertiesException fail to parse the string representation
+     * @exception NeighbourPropertiesException fail to parse the string representation
      */
-    public NodeProperties(final String id, final String representation) throws NodePropertiesException {
+    public NeighbourProperties(final String id, final String representation) throws NeighbourPropertiesException {
         super(id, representation);
     }
 
     /**
      * Constructor of a node from its string representation.
      * @param representation string representation of the node properties
-     * @exception NodePropertiesException fail to parse the string representation
+     * @exception NeighbourPropertiesException fail to parse the string representation
      */
-    public NodeProperties(final String representation) throws NodePropertiesException {
+    public NeighbourProperties(final String representation) throws NeighbourPropertiesException {
         super(representation);
     }
 
@@ -47,7 +47,7 @@ public final class NodeProperties extends NodeData {
      * Copy constructor.
      * @param source source to copy from
      */
-    public NodeProperties(final NodeProperties source) {
+    public NeighbourProperties(final NeighbourProperties source) {
         super(source);
         this.distance = source.distance;
         this.locationRelative = source.locationRelative;
@@ -79,10 +79,10 @@ public final class NodeProperties extends NodeData {
     /**
      * Set node properties from its string representation. It's reverese operation to toString method.
      * @param representation string representation of the node properties
-     * @exception NodePropertiesException fail to parse the string representation
+     * @exception NeighbourPropertiesException fail to parse the string representation
      */
     @Override
-    public void set(final String representation) throws NodePropertiesException {
+    public void set(final String representation) throws NeighbourPropertiesException {
         String[] tokens = representation.split("\\s*([{=;}]\\s*)+");
         if (!tokens[0].isEmpty()) {
             this.setID(tokens[0]);
@@ -99,7 +99,7 @@ public final class NodeProperties extends NodeData {
             } else if (tokens[i].equalsIgnoreCase("rtt")) {
                 this.rtt = Double.parseDouble(tokens[i + 1]);
             } else {
-                throw new NodePropertiesException("Unknown property " + tokens[i]);
+                throw new NeighbourPropertiesException("Unknown property " + tokens[i]);
             }
         }
     }

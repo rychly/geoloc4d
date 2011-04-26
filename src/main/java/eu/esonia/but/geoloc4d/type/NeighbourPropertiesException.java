@@ -4,9 +4,9 @@ package eu.esonia.but.geoloc4d.type;
  * Exception NodeProperties.set of when fail to parse the string representation.
  * @author rychly
  */
-public class NodePropertiesException extends IllegalArgumentException {
+public class NeighbourPropertiesException extends IllegalArgumentException {
 
-    NodePropertiesException(String message) {
+    NeighbourPropertiesException(String message) {
         super(message);
     }
 }

@@ -24,16 +24,16 @@ public class Node {
     /**
      * Data about neighbouring nodes (from scan).
      */
-    public MapOfNodes scan;
+    public MapOfNeighbours scan;
 
     public Node(final String representation) {
         this.self = new NodeData(representation);
-        this.scan = new MapOfNodes();
+        this.scan = new MapOfNeighbours();
     }
 
     public Node(final String id, final String representation) {
         this.self = new NodeData(id, representation);
-        this.scan = new MapOfNodes();
+        this.scan = new MapOfNeighbours();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package eu.esonia.but.geoloc4d.type;
 
-import eu.esonia.but.geoloc4d.type.NodeProperties;
+import eu.esonia.but.geoloc4d.type.NeighbourProperties;
 import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class NodePropertiesTest {
 
-    private NodeProperties nodeProperties;
+    private NeighbourProperties nodeProperties;
     private static final String nodeID = "TestNode";
 
     public NodePropertiesTest() {
@@ -21,7 +21,7 @@ public class NodePropertiesTest {
 
     @Before
     public void setUp() {
-        this.nodeProperties = new NodeProperties(nodeID);
+        this.nodeProperties = new NeighbourProperties(nodeID);
         this.nodeProperties.distance = 1.23;
         this.nodeProperties.locationAbsolute = new Vector3D(1.2, 3.4, 5.6);
         this.nodeProperties.locationRelative = new Vector3D(7.8, 9.0, 1.2);
@@ -35,7 +35,7 @@ public class NodePropertiesTest {
     }
 
     /**
-     * Test of getID method, of class NodeProperties.
+     * Test of getID method, of class NeighbourProperties.
      */
     @Test
     public void testGetID() {
@@ -43,7 +43,7 @@ public class NodePropertiesTest {
     }
 
     /**
-     * Test of toString method, of class NodeProperties.
+     * Test of toString method, of class NeighbourProperties.
      */
     @Test
     public void testToString() {
@@ -57,11 +57,11 @@ public class NodePropertiesTest {
     }
 
     /**
-     * Test of set method, of class NodeProperties.
+     * Test of set method, of class NeighbourProperties.
      */
     @Test
     public void testSet() {
-        NodeProperties newNodeProperties = new NodeProperties(nodeID);
+        NeighbourProperties newNodeProperties = new NeighbourProperties(nodeID);
         newNodeProperties.set(nodeID + " { "
                 + "distance=" + this.nodeProperties.distance.toString() + "; "
                 + "locationAbsolute=" + this.nodeProperties.locationAbsolute.toString() + "; "

@@ -1,6 +1,6 @@
 package eu.esonia.but.geoloc4d;
 
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.ws4d.java.DPWSFramework;
 import org.ws4d.java.client.SearchParameter;
@@ -35,7 +35,7 @@ public class SpatialContextProvider {
         result = operation.invoke(null);
 
         // Trilateration algorithm.
-        MapOfNodes scanList = new MapOfNodes(ParameterUtil.getString(result, null));
+        MapOfNeighbours scanList = new MapOfNeighbours(ParameterUtil.getString(result, null));
         // do trilateration...
         // TODO
         Vector3D location = new Vector3D(10, 20, 30);

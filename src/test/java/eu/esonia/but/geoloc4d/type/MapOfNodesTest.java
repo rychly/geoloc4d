@@ -1,7 +1,7 @@
 package eu.esonia.but.geoloc4d.type;
 
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
-import eu.esonia.but.geoloc4d.type.NodeProperties;
+import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
+import eu.esonia.but.geoloc4d.type.NeighbourProperties;
 import eu.esonia.but.geoloc4d.type.Vector3D;
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class MapOfNodesTest {
 
-    private MapOfNodes mapOfNodes;
+    private MapOfNeighbours mapOfNodes;
     private static final String nodeID1 = "TestNode1";
     private static final String nodeID2 = "TestNode2";
     private static final String nodeID3 = "TestNode3";
@@ -24,12 +24,12 @@ public class MapOfNodesTest {
 
     @Before
     public void setUp() {
-        this.mapOfNodes = new MapOfNodes();
-        this.mapOfNodes.put(nodeID1, new NodeProperties(nodeID1
+        this.mapOfNodes = new MapOfNeighbours();
+        this.mapOfNodes.put(nodeID1, new NeighbourProperties(nodeID1
                 + "{ locationAbsolute=(1,2,3); locationRelative=(3,2,1); }"));
-        this.mapOfNodes.put(nodeID2, new NodeProperties(nodeID2
+        this.mapOfNodes.put(nodeID2, new NeighbourProperties(nodeID2
                 + "{ locationRelative=(1,2,3); }"));
-        this.mapOfNodes.put(nodeID3, new NodeProperties(nodeID3
+        this.mapOfNodes.put(nodeID3, new NeighbourProperties(nodeID3
                 + "{ distance=123; }"));
     }
 
@@ -39,7 +39,7 @@ public class MapOfNodesTest {
     }
 
     /**
-     * Test of toString method, of class MapOfNodes.
+     * Test of toString method, of class MapOfNeighbours.
      */
     @Test
     public void testToString() {
@@ -50,11 +50,11 @@ public class MapOfNodesTest {
     }
 
     /**
-     * Test of set method, of class MapOfNodes.
+     * Test of set method, of class MapOfNeighbours.
      */
     @Test
     public void testSet_String() {
-        MapOfNodes newMapOfNodes = new MapOfNodes();
+        MapOfNeighbours newMapOfNodes = new MapOfNeighbours();
         newMapOfNodes.set(this.mapOfNodes.get(nodeID1) + " + "
                 + this.mapOfNodes.get(nodeID2) + " + "
                 + this.mapOfNodes.get(nodeID3));
@@ -62,20 +62,20 @@ public class MapOfNodesTest {
     }
 
     /**
-     * Test of getNodesWithLocation method, of class MapOfNodes.
+     * Test of getNodesWithLocation method, of class MapOfNeighbours.
      */
     @Test
     public void testGetNodesWithLocation_0args() {
-        MapOfNodes result = this.mapOfNodes.getNodesWithLocation();
+        MapOfNeighbours result = this.mapOfNodes.getNodesWithLocation();
         assertEquals(1, result.size());
     }
 
     /**
-     * Test of getNodesWithLocation method, of class MapOfNodes.
+     * Test of getNodesWithLocation method, of class MapOfNeighbours.
      */
     @Test
     public void testGetNodesWithLocation_Vector3D() {
-        MapOfNodes result = this.mapOfNodes.getNodesWithLocation(
+        MapOfNeighbours result = this.mapOfNodes.getNodesWithLocation(
                 new Vector3D(10, 10, 10));
         assertEquals(2, result.size());
         assertEquals(new Vector3D(11.0, 12.0, 13.0), result.get(nodeID2).locationAbsolute);

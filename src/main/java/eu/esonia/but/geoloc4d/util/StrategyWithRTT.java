@@ -1,8 +1,10 @@
 package eu.esonia.but.geoloc4d.util;
 
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
+import eu.esonia.but.geoloc4d.type.Node;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
+import java.util.Collection;
 
 /**
  * The algorithm for selection of neighbouring nodes and computation of their distanecs from RTT.
@@ -18,7 +20,7 @@ public class StrategyWithRTT implements TrilaterationStrategy {
 
     /**
      * Get correction factor for conversion of RTT into actual distance.
-     * For better precision, should be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNodes)}.
+     * For better precision, should be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
      * @return the correction factor
      */
     public double getCorrectionFactor() {
@@ -26,19 +28,19 @@ public class StrategyWithRTT implements TrilaterationStrategy {
     }
 
     @Override
-    public void calibrateMetric(final NodeData node, final MapOfNodes neighbours)
+    public void calibrateMetric(Collection<Node> nodes)
             throws TrilaterationStrategyException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public MapOfNodes selectNodesForTrilateration(final NodeData node, final MapOfNodes neighbours)
+    public MapOfNeighbours selectNodesForTrilateration(final NodeData node, final MapOfNeighbours neighbours)
             throws TrilaterationStrategyException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Vector3D doTrilateration(final MapOfNodes selectedNodes)
+    public Vector3D doTrilateration(final MapOfNeighbours selectedNodes)
             throws TrilaterationStrategyException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
