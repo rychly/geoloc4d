@@ -34,6 +34,10 @@ public final class Vector3D {
         this.set(vector);
     }
 
+    public boolean isDefined() {
+        return !this.undefined;
+    }
+
     public boolean isUndefined() {
         return this.undefined;
     }
@@ -122,9 +126,9 @@ public final class Vector3D {
         } else {
             Vector3D vector = (Vector3D) object;
             return !(this.isUndefined() || vector.isUndefined())
-                    && (Double.compare(this.getX(), vector.getX()) == 0)
-                    && (Double.compare(this.getY(), vector.getY()) == 0)
-                    && (Double.compare(this.getZ(), vector.getZ()) == 0);
+                    && this.getX().equals(vector.getX())
+                    && this.getY().equals(vector.getY())
+                    && this.getZ().equals(vector.getZ());
         }
     }
 

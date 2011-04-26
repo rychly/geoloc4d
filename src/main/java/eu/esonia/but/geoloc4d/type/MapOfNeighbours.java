@@ -69,26 +69,31 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     }
 
     /**
-     * Get only nodes with absolute location.
-     * @return map of nodes which have set thier absolute location
-     */
-    public MapOfNeighbours getNodesWithLocation() {
-        return getNodesWithLocation(false, false);
-    }
-
-    /**
-     * Get only nodes with absolute location.
+     * Get only nodes with absolute location or relative location to reference.
+     * Nodes with relative location only will have computed and set their absolute location
+     * (in such case, the original nodes will not be modified, i.e. result contains their copies).
+     * @param referenceLocation reference location (null if cannot be used in computations)
      * @param isSetRssi resulting nodes must have set Rssi
      * @param isSetRtt  resulting nodes must have set Rtt
-     * @return map of nodes which have set thier absolute location
+     * @return map of nodes which have set thier absolute location (or computed from relative)
      */
-    public MapOfNeighbours getNodesWithLocation(final boolean isSetRssi, final boolean isSetRtt) {
+    public MapOfNeighbours getNodesWithLocation(final Vector3D referenceLocation,
+            final boolean isSetRssi, final boolean isSetRtt) {
         MapOfNeighbours result = new MapOfNeighbours();
         for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
-            if (pair.getValue().locationAbsolute != null
-                    && (!isSetRssi || (pair.getValue().rssi != null))
-                    && (!isSetRtt || (pair.getValue().rtt != null))) {
+            if ((isSetRssi && (pair.getValue().rssi == null))
+                    || (isSetRtt && (pair.getValue().rtt == null))) {
+                // test for RSSI and RTT values
+                continue;
+            } else if ((pair.getValue().locationAbsolute != null) && pair.getValue().locationAbsolute.isDefined()) {
+                // test for absolute location
                 result.put(pair.getKey(), pair.getValue());
+            } else if ((pair.getValue().locationRelative != null) && pair.getValue().locationRelative.isDefined()
+                    && (referenceLocation != null) && referenceLocation.isDefined()) {
+                // test for absolute location as relative from reference location
+                NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
+                nodeProperties.locationAbsolute = referenceLocation.add(nodeProperties.locationRelative);
+                result.put(pair.getKey(), nodeProperties);
             }
         }
         return result;
@@ -102,34 +107,90 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
      * @return map of nodes which have set thier absolute location (or computed from relative)
      */
     public MapOfNeighbours getNodesWithLocation(final Vector3D referenceLocation) {
-        return getNodesWithLocation(referenceLocation, false, false);
+        return this.getNodesWithLocation(referenceLocation, false, false);
     }
 
     /**
-     * Get only nodes with absolute location or relative location to reference.
-     * Nodes with relative location only will have computed and set their absolute location
-     * (in such case, the original nodes will not be modified, i.e. result contains their copies).
-     * @param referenceLocation reference location
+     * Get only nodes with absolute location.
      * @param isSetRssi resulting nodes must have set Rssi
      * @param isSetRtt  resulting nodes must have set Rtt
-     * @return map of nodes which have set thier absolute location (or computed from relative)
+     * @return map of nodes which have set thier absolute location
      */
-    public MapOfNeighbours getNodesWithLocation(final Vector3D referenceLocation,
+    public MapOfNeighbours getNodesWithLocation(final boolean isSetRssi, final boolean isSetRtt) {
+        return this.getNodesWithLocation(null, isSetRssi, isSetRtt);
+    }
+
+    /**
+     * Get only nodes with absolute location.
+     * @return map of nodes which have set thier absolute location
+     */
+    public MapOfNeighbours getNodesWithLocation() {
+        return this.getNodesWithLocation(null, false, false);
+    }
+
+    /**
+     * Get only nodes with set distance.
+     * Nodes with relative location only or with absolute location and and defined reference location will have computed and set their distance values
+     * (in such case, the original nodes will not be modified, i.e. result contains their copies).
+     * @param referenceLocation reference location (null if cannot be used in computations)
+     * @param isSetRssi resulting nodes must have set Rssi
+     * @param isSetRtt  resulting nodes must have set Rtt
+     * @return map of nodes which have set thier distance (or computed from locations)
+     */
+    public MapOfNeighbours getNodesWithDistance(final Vector3D referenceLocation,
             final boolean isSetRssi, final boolean isSetRtt) {
         MapOfNeighbours result = new MapOfNeighbours();
         for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
             if ((isSetRssi && (pair.getValue().rssi == null))
                     || (isSetRtt && (pair.getValue().rtt == null))) {
+                // test for RSSI and RTT values
                 continue;
-            } else if (pair.getValue().locationAbsolute != null) {
+            } else if (pair.getValue().distance != null) {
+                // test for distance value
                 result.put(pair.getKey(), pair.getValue());
-            } else if (pair.getValue().locationRelative != null) {
+            } else if ((pair.getValue().locationRelative != null) && pair.getValue().locationRelative.isDefined()) {
+                // test for distance of relative location from its origin
                 NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
-                nodeProperties.locationAbsolute = referenceLocation.add(nodeProperties.locationRelative);
+                nodeProperties.distance = nodeProperties.locationRelative.norm();
+                result.put(pair.getKey(), nodeProperties);
+            } else if ((pair.getValue().locationAbsolute != null) && pair.getValue().locationAbsolute.isDefined()
+                    && (referenceLocation != null) && referenceLocation.isDefined()) {
+                // test for distance of absolute location to reference location
+                NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
+                nodeProperties.distance = nodeProperties.locationAbsolute.distance(referenceLocation);
                 result.put(pair.getKey(), nodeProperties);
             }
         }
         return result;
+    }
+
+    /**
+     * Get only nodes with set distance.
+     * Nodes with relative location only or with absolute location and and defined reference location will have computed and set their distance values
+     * (in such case, the original nodes will not be modified, i.e. result contains their copies).
+     * @param referenceLocation reference location (null if cannot be used in computations)
+     * @return map of nodes which have set thier distance (or computed from locations)
+     */
+    public MapOfNeighbours getNodesWithDistance(final Vector3D referenceLocation) {
+        return this.getNodesWithDistance(referenceLocation, false, false);
+    }
+
+    /**
+     * Get only nodes with set distance.
+     * @param isSetRssi resulting nodes must have set Rssi
+     * @param isSetRtt  resulting nodes must have set Rtt
+     * @return map of nodes which have set thier distance (or computed from locations)
+     */
+    public MapOfNeighbours getNodesWithDistance(final boolean isSetRssi, final boolean isSetRtt) {
+        return this.getNodesWithDistance(null, isSetRssi, isSetRtt);
+    }
+
+    /**
+     * Get only nodes with set distance.
+     * @return map of nodes which have set thier distance (or computed from locations)
+     */
+    public MapOfNeighbours getNodesWithDistance() {
+        return this.getNodesWithDistance(null, false, false);
     }
 
     /**
@@ -143,7 +204,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     /**
      * Get a map of nodes sorted by isolation (the most isolated node is a node with the highes distances from its neighbouring nodes).
      * @param reverseOrder true for reverse ordering of the resulting map of nodes
-     * @return the sorted map of nodes
+     * @return the sorted map of nodes (the most isolated nodes are first in standard order)
      */
     public MapOfNeighbours sortByIsolation(boolean reverseOrder) {
         // nested class for isolated node and its comparator
@@ -184,6 +245,40 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
         MapOfNeighbours result = new MapOfNeighbours();
         for (IsolatedNode isolatedNode : isolatedNodes) {
             result.put(isolatedNode.id, isolatedNode.nodeProperties);
+        }
+        return result;
+    }
+
+    /**
+     * Get a map of nodes sorted by distance.
+     * @return the sorted map of nodes (the most closed nodes are first)
+     */
+    public MapOfNeighbours sortByDistance() {
+        return sortByDistance(false);
+    }
+
+    /**
+     * Get a map of nodes sorted by distance.
+     * @param reverseOrder true for reverse ordering of the resulting map of nodes
+     * @return the sorted map of nodes (the most closed nodes are first in standard order)
+     */
+    public MapOfNeighbours sortByDistance(boolean reverseOrder) {
+        // nested class for comparator
+        Comparator<NeighbourProperties> distanceComparator = new Comparator<NeighbourProperties>() {
+
+            @Override
+            public int compare(final NeighbourProperties np1, final NeighbourProperties np2) {
+                return np1.distance.compareTo(np2.distance);
+            }
+        };
+        // sort list of nodes from the map of nodes
+        List<NeighbourProperties> nodesByDistance = new LinkedList<NeighbourProperties>(this.values());
+        Collections.sort(nodesByDistance,
+                reverseOrder ? Collections.reverseOrder(distanceComparator) : distanceComparator);
+        // prepare resulting map of nodes
+        MapOfNeighbours result = new MapOfNeighbours();
+        for (NeighbourProperties nodeProperties : nodesByDistance) {
+            result.put(nodeProperties.getID(), nodeProperties);
         }
         return result;
     }

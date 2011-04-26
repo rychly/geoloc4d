@@ -2,6 +2,8 @@ package eu.esonia.but.geoloc4d.util;
 
 import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.NeighbourProperties;
+import eu.esonia.but.geoloc4d.type.Node;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
 
@@ -43,7 +45,31 @@ public class StrategyWithRSSI implements TrilaterationStrategy {
     @Override
     public void calibrateMetric(final MapOfNodes mapOfNodes)
             throws TrilaterationStrategyException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int count = 0;
+        double signalStrengthAtMeterSum = 0;
+        double propagationConstantSum = 0;
+        // walk through mapOfNodes
+        for (Node node : mapOfNodes.values()) {
+            // select neighbours with set distance and RSSI values
+            MapOfNeighbours mapOfNeighbours = node.scan.getNodesWithDistance(node.self.locationAbsolute, true, false);
+            // if there exist at the least two such nodes, sort them by distance and for compute constants
+            if (mapOfNeighbours.size() >= 2) {
+                NeighbourProperties arrayOfNeighbours[] = (NeighbourProperties[]) mapOfNeighbours.sortByDistance().values().toArray();
+                signalStrengthAtMeterSum += WirelessMetric.compSignalStrengthAtMeter(
+                        arrayOfNeighbours[0].rssi, arrayOfNeighbours[1].rssi, arrayOfNeighbours[0].distance, arrayOfNeighbours[1].distance);
+                propagationConstantSum += WirelessMetric.compPropagationConstant(
+                        arrayOfNeighbours[0].rssi, arrayOfNeighbours[1].rssi, arrayOfNeighbours[0].distance, arrayOfNeighbours[1].distance);
+                count++;
+            }
+        }
+        if (count == 0) {
+            throw new TrilaterationStrategyException("Not enought nodes for this strategy! "
+                    + "We need at the least one node with at the least two neighbours with set distances and RSSI values.");
+        } else {
+            // the result is avarange form computed values
+            this.signalStrengthAtMeter = signalStrengthAtMeterSum / count;
+            this.propagationConstant = propagationConstantSum / count;
+        }
     }
 
     @Override
@@ -57,5 +83,4 @@ public class StrategyWithRSSI implements TrilaterationStrategy {
             throws TrilaterationStrategyException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }
