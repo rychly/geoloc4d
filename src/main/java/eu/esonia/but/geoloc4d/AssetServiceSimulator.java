@@ -1,5 +1,6 @@
 package eu.esonia.but.geoloc4d;
 
+import eu.esonia.but.geoloc4d.service.NodeService;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.Node;
 import java.io.FileNotFoundException;
@@ -26,7 +27,7 @@ public class AssetServiceSimulator {
         args = new String[]{
         // To enable multicast on loopback interface do "ifconfig lo multicast"
         "localhost", "4321", "/testing/",
-        directory + "/" + AssetService.class.getSimpleName() + "-testing.properties"
+        directory + "/" + NodeService.class.getSimpleName() + "-testing.properties"
         };
         }
         //*/
@@ -56,10 +57,10 @@ public class AssetServiceSimulator {
         try {
             for (Node node : MapOfNodes.loadNodes(args[3]).values()) {
                 // Create service
-                LocalService service = new AssetService(-1, node);
+                LocalService service = new NodeService(node);
                 // Set binding for the service, i.e. the address it will accept
-                //service.addBinding(new HTTPBinding(new URI(args[0] + "/" + AssetService.class.getSimpleName() + "/" + serviceDescription.name))); // BUG
-                service.addBinding(new HTTPBinding(args[0], Integer.parseInt(args[1]), args[2] + AssetService.class.getSimpleName() + "/" + node.self.getID()));
+                //service.addBinding(new HTTPBinding(new URI(args[0] + "/" + NodeService.class.getSimpleName() + "/" + serviceDescription.name))); // BUG
+                service.addBinding(new HTTPBinding(args[0], Integer.parseInt(args[1]), args[2] + NodeService.class.getSimpleName() + "/" + node.self.getID()));
                 // Add the service to the device
                 device.addService(service);
             }

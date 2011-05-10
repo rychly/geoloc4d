@@ -1,67 +1,25 @@
 package eu.esonia.but.geoloc4d;
 
-import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.Vector3D;
+import eu.esonia.but.geoloc4d.service.NodeService;
+import eu.esonia.but.geoloc4d.service.NodeServiceDetector;
+import eu.esonia.but.geoloc4d.service.NodeServiceInterface;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ws4d.java.DPWSFramework;
 import org.ws4d.java.client.SearchParameter;
 import org.ws4d.java.communication.HTTPBinding;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.DefaultDevice;
 import org.ws4d.java.service.InvocationException;
-import org.ws4d.java.service.Operation;
-import org.ws4d.java.service.Service;
-import org.ws4d.java.service.parameter.ParameterValue;
 import org.ws4d.java.types.QName;
 import org.ws4d.java.types.QNameSet;
 import org.ws4d.java.util.Log;
-import org.ws4d.java.util.ParameterUtil;
 
 /**
  * Spatial context provider (DPWS client).
  * @author rychly
  */
 public class SpatialContextProvider {
-
-    public static void provideSpatialContext(Service service) throws InvocationException, TimeoutException {
-        Operation operation;
-        ParameterValue input, result;
-
-        // We need to get the operation AssetService.ScanNeighbours from the service.
-        // getAnyOperation returns the first Operation that fits the specification in the parameters.
-        operation = service.getAnyOperation(
-                new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE),
-                AssetService.ScanNeighbours.class.getSimpleName());
-        // now lets invoke the operation
-        result = operation.invoke(null);
-
-        // Trilateration algorithm.
-        MapOfNeighbours scanList = new MapOfNeighbours(ParameterUtil.getString(result, null));
-        // do trilateration...
-        // TODO
-        Vector3D location = new Vector3D(10, 20, 30);
-
-        // We need to get the operation AssetService.SetLocation from the service.
-        // getAnyOperation returns the first Operation that fits the specification in the parameters.
-        operation = service.getAnyOperation(
-                new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE),
-                AssetService.SetLocation.class.getSimpleName());
-        input = operation.createInputValue();
-        ParameterUtil.setString(input, null, location.toString());
-        // now lets invoke the operation
-        result = operation.invoke(input);
-    }
-
-    public static Vector3D getLocation(Service service) throws InvocationException, TimeoutException {
-        // We need to get the operation AssetService.GetLocation from the service.
-        // getAnyOperation returns the first Operation that fits the specification in the parameters.
-        Operation operation = service.getAnyOperation(
-                new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE),
-                AssetService.GetLocation.class.getSimpleName());
-        // now lets invoke the operation
-        ParameterValue result = operation.invoke(null);
-        // location
-        return new Vector3D(ParameterUtil.getString(result, null));
-    }
 
     public static void main(String[] args) throws InterruptedException {
         /*
@@ -95,13 +53,13 @@ public class SpatialContextProvider {
         device.setManufacturerUrl("http://www.fit.vutbr.cz/~rychly");
 
         // Create DPWS client
-        SpatialContextProviderClient client = new SpatialContextProviderClient();
+        NodeServiceDetector client = new NodeServiceDetector();
 
         // Define a service to search and trigger the search
-        QName serviceType = new QName(AssetService.class.getSimpleName(), AssetService.NAMESPACE);
+        QName serviceType = new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE);
         SearchParameter params = new SearchParameter();
         params.setServiceTypes(new QNameSet(serviceType));
-        client.clear();
+        client.clearDetectedServices();
         client.searchService(params);
 
         while (true) {
@@ -109,27 +67,14 @@ public class SpatialContextProvider {
             System.err.println("Waiting...");
             Thread.sleep(3000);
             // Explore available services and provide them with spatial context.
-            for (Service service : client.getAvailableServices()) {
+            for (NodeServiceInterface service : client.getDetectedServices()) {
                 try {
-                    System.err.println("Provide spatial context for service: " + service.toString());
-                    SpatialContextProvider.provideSpatialContext(service);
-                } catch (InvocationException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Print location of available services.
-            for (Service service : client.getAvailableServices()) {
-                try {
-                    System.err.println("Get location of service: " + service.toString());
-                    System.out.println(service.getServiceId().toString() + " = "
-                            + SpatialContextProvider.getLocation(service));
-                } catch (InvocationException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
+                    System.err.println("=== NodeService.node: " + service.getNodeData());
+                    System.err.println("=== NodeService.neighbours: " + service.getNeighbours());
+                } catch (InvocationException ex) {
+                    Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TimeoutException ex) {
+                    Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
