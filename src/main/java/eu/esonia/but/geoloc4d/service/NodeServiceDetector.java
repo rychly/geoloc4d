@@ -11,6 +11,8 @@ import org.ws4d.java.client.SearchParameter;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.InvocationException;
 import org.ws4d.java.service.reference.ServiceReference;
+import org.ws4d.java.types.QName;
+import org.ws4d.java.types.QNameSet;
 import org.ws4d.java.types.URI;
 
 /**
@@ -35,6 +37,26 @@ public class NodeServiceDetector extends DefaultClient {
         this.detectedServices = Collections.synchronizedList(
                 new ArrayList<NodeServiceProxy>());
         this.numberOfTimeOuts = 0;
+    }
+
+    /**
+     * Search for available node services with an optional initial search parameter.
+     * @param initialSearchParameter the initial search parameter to allow additional search criteria (null for empty)
+     */
+    public void searchNodeService(final SearchParameter initialSearchParameter) {
+        SearchParameter searchParameter = (initialSearchParameter == null)
+                ? new SearchParameter() : initialSearchParameter;
+        QName serviceType = new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE);
+        searchParameter.setServiceTypes(new QNameSet(serviceType));
+        this.detectedServices.clear();
+        this.searchService(searchParameter);
+    }
+
+    /**
+     * Search for available node services.
+     */
+    public void searchNodeService() {
+        this.searchNodeService(null);
     }
 
     /**

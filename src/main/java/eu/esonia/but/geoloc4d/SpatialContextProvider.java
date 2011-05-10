@@ -1,20 +1,15 @@
 package eu.esonia.but.geoloc4d;
 
-import eu.esonia.but.geoloc4d.service.NodeService;
 import eu.esonia.but.geoloc4d.service.NodeServiceDetector;
+import eu.esonia.but.geoloc4d.service.NodeServiceDetectorHeartbeat;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
-import eu.esonia.but.geoloc4d.type.Node;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ws4d.java.DPWSFramework;
-import org.ws4d.java.client.SearchParameter;
 import org.ws4d.java.communication.HTTPBinding;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.DefaultDevice;
 import org.ws4d.java.service.InvocationException;
-import org.ws4d.java.types.QName;
-import org.ws4d.java.types.QNameSet;
 import org.ws4d.java.util.Log;
 
 /**
@@ -54,20 +49,17 @@ public class SpatialContextProvider {
         device.addManufacturer(null, "Marek Rychly");
         device.setManufacturerUrl("http://www.fit.vutbr.cz/~rychly");
 
-        // Create DPWS client
-        NodeServiceDetector client = new NodeServiceDetector();
+        // Create DPWS client, its heartbeat and periodically search for available services
+        NodeServiceDetector nodeServiceDetector = new NodeServiceDetector();
+        NodeServiceDetectorHeartbeat nodeServiceDetectorHeartbeat =
+                new NodeServiceDetectorHeartbeat(nodeServiceDetector);
+        nodeServiceDetectorHeartbeat.schedule(10000);
 
-        // Define a service to search and trigger the search
-        QName serviceType = new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE);
-        SearchParameter params = new SearchParameter();
-        params.setServiceTypes(new QNameSet(serviceType));
-        client.clearDetectedServices();
-        client.searchService(params);
-
+        // Periodically get map of nodes of detected services and perform trilateration for blind nodes
         while (true) {
             try {
-                MapOfNodes mapOfNodes = client.getMapOfNodesForDetectedServices();
-                System.err.println("=====\n" + mapOfNodes.toString() + "\n=====");
+                MapOfNodes mapOfNodes = nodeServiceDetector.getMapOfNodesForDetectedServices();
+                System.err.println("=====\n" + mapOfNodes.toString() + "=====");
             } catch (InvocationException ex) {
                 Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
             } catch (TimeoutException ex) {
