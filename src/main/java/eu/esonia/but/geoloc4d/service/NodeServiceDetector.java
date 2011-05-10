@@ -1,11 +1,15 @@
 package eu.esonia.but.geoloc4d.service;
 
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.Node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.ws4d.java.client.DefaultClient;
 import org.ws4d.java.client.SearchParameter;
 import org.ws4d.java.communication.TimeoutException;
+import org.ws4d.java.service.InvocationException;
 import org.ws4d.java.service.reference.ServiceReference;
 import org.ws4d.java.types.URI;
 
@@ -55,7 +59,7 @@ public class NodeServiceDetector extends DefaultClient {
      * @return the list of detected services
      */
     public List<NodeServiceProxy> getDetectedServices() {
-        return Collections.unmodifiableList(this.detectedServices);
+        return new CopyOnWriteArrayList<NodeServiceProxy>(this.detectedServices);
     }
 
     /**
@@ -71,5 +75,21 @@ public class NodeServiceDetector extends DefaultClient {
      */
     public int getNumberOfTimeouts() {
         return this.numberOfTimeOuts;
+    }
+
+    /**
+     * Get a map of all nodes of actually available (detected) services.
+     * @return the map of nodes of detected services
+     * @throws InvocationException thrown to indicate that a declared fault occurred during execution of this operation's business logic; clients can extract further fault-related information from this exception, such as user-defined data attached to it 
+     * @throws TimeoutException in case invoking an operation of a remote service times out
+     */
+    public MapOfNodes getMapOfNodesForDetectedServices() throws InvocationException, TimeoutException {
+        MapOfNodes result = new MapOfNodes();
+        // detectedServices cannot be accessed direcly due to cuncurrency, so we use thread-safe getDetectedServices()
+        for (NodeServiceProxy nodeServiceProxy : this.getDetectedServices()) {
+            Node node = nodeServiceProxy.getNodeObject();
+            result.put(node.self.getID(), node);
+        }
+        return result;
     }
 }

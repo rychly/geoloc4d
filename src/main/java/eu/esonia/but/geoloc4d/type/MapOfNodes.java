@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -33,6 +33,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
      * @param source source to copy from
      */
     public MapOfNodes(final MapOfNodes source) {
+        super();
         this.set(source);
     }
 
@@ -42,6 +43,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
      * @throws IOException a read error from the representation
      */
     public MapOfNodes(final String representation) throws IOException {
+        super();
         this.set(representation);
     }
 
@@ -136,9 +138,13 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
      * @param stream the output stream to save into
      */
     public void saveNodes(final OutputStream stream) {
-        PrintWriter printWriter = new PrintWriter(stream);
-        for (Node node : this.values()) {
-            printWriter.println(node.toString());
+        PrintStream printStream = new PrintStream(stream);
+        try {
+            for (Node node : this.values()) {
+                printStream.println(node.toString());
+            }
+        } finally {
+            printStream.close();
         }
     }
 }

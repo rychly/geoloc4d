@@ -27,6 +27,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
      * @param source source to copy from
      */
     public MapOfNeighbours(final MapOfNeighbours source) {
+        super();
         this.set(source);
     }
 
@@ -35,6 +36,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
      * @param representation string representation of the map
      */
     public MapOfNeighbours(final String representation) {
+        super();
         this.set(representation);
     }
 

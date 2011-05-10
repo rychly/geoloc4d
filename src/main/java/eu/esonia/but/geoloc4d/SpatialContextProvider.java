@@ -2,7 +2,9 @@ package eu.esonia.but.geoloc4d;
 
 import eu.esonia.but.geoloc4d.service.NodeService;
 import eu.esonia.but.geoloc4d.service.NodeServiceDetector;
-import eu.esonia.but.geoloc4d.service.NodeServiceInterface;
+import eu.esonia.but.geoloc4d.type.MapOfNodes;
+import eu.esonia.but.geoloc4d.type.Node;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ws4d.java.DPWSFramework;
@@ -63,20 +65,17 @@ public class SpatialContextProvider {
         client.searchService(params);
 
         while (true) {
+            try {
+                MapOfNodes mapOfNodes = client.getMapOfNodesForDetectedServices();
+                System.err.println("=====\n" + mapOfNodes.toString() + "\n=====");
+            } catch (InvocationException ex) {
+                Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (TimeoutException ex) {
+                Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
+            }
             // Wait (in msec)
             System.err.println("Waiting...");
             Thread.sleep(3000);
-            // Explore available services and provide them with spatial context.
-            for (NodeServiceInterface service : client.getDetectedServices()) {
-                try {
-                    System.err.println("=== NodeService.node: " + service.getNodeData());
-                    System.err.println("=== NodeService.neighbours: " + service.getNeighbours());
-                } catch (InvocationException ex) {
-                    Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TimeoutException ex) {
-                    Logger.getLogger(SpatialContextProvider.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
         }
     }
 }

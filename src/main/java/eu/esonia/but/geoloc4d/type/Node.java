@@ -25,6 +25,11 @@ public class Node {
         this.scan = new MapOfNeighbours();
     }
 
+    public Node(final NodeData self, final MapOfNeighbours scan) {
+        this.self = new NodeData(self);
+        this.scan = new MapOfNeighbours(scan);
+    }
+    
     @Override
     public String toString() {
         String id = self.getID();
