@@ -51,14 +51,14 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
         // walk through mapOfNodes
         for (Node node : mapOfNodes.values()) {
             // select neighbours with set distance and RSSI values
-            MapOfNeighbours mapOfNeighbours = node.scan.getNodesWithDistance(node.self.locationAbsolute, true, false);
+            MapOfNeighbours mapOfNeighbours = node.scan.getNodesWithDistance(node.self.getLocationAbsolute(), true, false);
             // if there exist at the least two such nodes, sort them by distance (the most distant are last) and for compute constants from two most closed
             if (mapOfNeighbours.size() >= 2) {
                 NeighbourProperties arrayOfNeighbours[] = (NeighbourProperties[]) mapOfNeighbours.sortByDistance().values().toArray();
                 signalStrengthAtMeterSum += WirelessMetric.compSignalStrengthAtMeter(
-                        arrayOfNeighbours[0].rssi, arrayOfNeighbours[1].rssi, arrayOfNeighbours[0].distance, arrayOfNeighbours[1].distance);
+                        arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
                 propagationConstantSum += WirelessMetric.compPropagationConstant(
-                        arrayOfNeighbours[0].rssi, arrayOfNeighbours[1].rssi, arrayOfNeighbours[0].distance, arrayOfNeighbours[1].distance);
+                        arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
                 count++;
             }
         }
@@ -69,6 +69,8 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
             // the result is avarange form computed values
             this.signalStrengthAtMeter = new Double(signalStrengthAtMeterSum / count);
             this.propagationConstant = new Double(propagationConstantSum / count);
+            // and the strategy is calibrated
+            this.setAsCalibrated(true);
         }
     }
 
@@ -80,11 +82,10 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
         }
         MapOfNeighbours result = new MapOfNeighbours();
         // walk through mapOfNeighbours with set location and RSSI
-        for (Map.Entry<String, NeighbourProperties> pair : neighbours.getNodesWithLocation(node.locationAbsolute, true, false).entrySet()) {
+        for (Map.Entry<String, NeighbourProperties> pair : neighbours.getNodesWithLocation(node.getLocationAbsolute(), true, false).entrySet()) {
             // for each create a copy with the node's distance computed from RSSI and put it into result
             NeighbourProperties neighbourWithDistance = new NeighbourProperties(pair.getValue());
-            neighbourWithDistance.distance = WirelessMetric.compDistanceFromRssi(
-                    neighbourWithDistance.rssi, this.signalStrengthAtMeter, this.propagationConstant);
+            neighbourWithDistance.setDistance((Double) WirelessMetric.compDistanceFromRssi(neighbourWithDistance.getRssi(), this.signalStrengthAtMeter, this.propagationConstant));
             result.put(pair.getKey(), neighbourWithDistance);
         }
         // we need at the leatest four prepared nodes

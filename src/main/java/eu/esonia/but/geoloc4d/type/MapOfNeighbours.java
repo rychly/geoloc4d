@@ -34,8 +34,9 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     /**
      * Default constructor of a map from its string representation.
      * @param representation string representation of the map
+     * @throws NodeParsingException fail to parse the string representation
      */
-    public MapOfNeighbours(final String representation) {
+    public MapOfNeighbours(final String representation) throws NodeParsingException {
         super();
         this.set(representation);
     }
@@ -51,8 +52,9 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     /**
      * Set map from its string representation. It's reverese operation to toString method.
      * @param representation string representation of map
+     * @throws NodeParsingException fail to parse the string representation
      */
-    public void set(final String representation) {
+    public void set(final String representation) throws NodeParsingException {
         String[] tokens = representation.split("\\s\\+\\s");
         for (int i = 0; i < tokens.length; i++) {
             NeighbourProperties nodeProperties = new NeighbourProperties(tokens[i]);
@@ -85,18 +87,18 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
             final boolean isSetRssi, final boolean isSetRtt) {
         MapOfNeighbours result = new MapOfNeighbours();
         for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
-            if ((isSetRssi && (pair.getValue().rssi == null))
-                    || (isSetRtt && (pair.getValue().rtt == null))) {
+            if ((isSetRssi && (pair.getValue().getRssi() == null))
+                    || (isSetRtt && (pair.getValue().getRtt() == null))) {
                 // test for RSSI and RTT values
                 continue;
-            } else if ((pair.getValue().locationAbsolute != null) && pair.getValue().locationAbsolute.isDefined()) {
+            } else if ((pair.getValue().getLocationAbsolute() != null) && pair.getValue().getLocationAbsolute().isDefined()) {
                 // test for absolute location
                 result.put(pair.getKey(), pair.getValue());
-            } else if ((pair.getValue().locationRelative != null) && pair.getValue().locationRelative.isDefined()
+            } else if ((pair.getValue().getLocationRelative() != null) && pair.getValue().getLocationRelative().isDefined()
                     && (referenceLocation != null) && referenceLocation.isDefined()) {
                 // test for absolute location as relative from reference location
                 NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
-                nodeProperties.locationAbsolute = referenceLocation.add(nodeProperties.locationRelative);
+                nodeProperties.setLocationAbsolute(referenceLocation.add(nodeProperties.getLocationRelative()));
                 result.put(pair.getKey(), nodeProperties);
             }
         }
@@ -145,23 +147,23 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
             final boolean isSetRssi, final boolean isSetRtt) {
         MapOfNeighbours result = new MapOfNeighbours();
         for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
-            if ((isSetRssi && (pair.getValue().rssi == null))
-                    || (isSetRtt && (pair.getValue().rtt == null))) {
+            if ((isSetRssi && (pair.getValue().getRssi() == null))
+                    || (isSetRtt && (pair.getValue().getRtt() == null))) {
                 // test for RSSI and RTT values
                 continue;
-            } else if (pair.getValue().distance != null) {
+            } else if (pair.getValue().getDistance() != null) {
                 // test for distance value
                 result.put(pair.getKey(), pair.getValue());
-            } else if ((pair.getValue().locationRelative != null) && pair.getValue().locationRelative.isDefined()) {
+            } else if ((pair.getValue().getLocationRelative() != null) && pair.getValue().getLocationRelative().isDefined()) {
                 // test for distance of relative location from its origin
                 NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
-                nodeProperties.distance = nodeProperties.locationRelative.norm();
+                nodeProperties.setDistance((Double) nodeProperties.getLocationRelative().norm());
                 result.put(pair.getKey(), nodeProperties);
-            } else if ((pair.getValue().locationAbsolute != null) && pair.getValue().locationAbsolute.isDefined()
+            } else if ((pair.getValue().getLocationAbsolute() != null) && pair.getValue().getLocationAbsolute().isDefined()
                     && (referenceLocation != null) && referenceLocation.isDefined()) {
                 // test for distance of absolute location to reference location
                 NeighbourProperties nodeProperties = new NeighbourProperties(pair.getValue());
-                nodeProperties.distance = nodeProperties.locationAbsolute.distance(referenceLocation);
+                nodeProperties.setDistance((Double) nodeProperties.getLocationAbsolute().distance(referenceLocation));
                 result.put(pair.getKey(), nodeProperties);
             }
         }
@@ -237,8 +239,8 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
             double isolation = 0;
             for (NeighbourProperties secondNode : this.values()) {
                 if (firstNodeEntry.getValue() != secondNode) {
-                    isolation += firstNodeEntry.getValue().locationAbsolute.distance(
-                            secondNode.locationAbsolute);
+                    isolation += firstNodeEntry.getValue().getLocationAbsolute().distance(
+                            secondNode.getLocationAbsolute());
                 }
             }
             isolatedNodes.add(new IsolatedNode(firstNodeEntry.getKey(), firstNodeEntry.getValue(), isolation));
@@ -272,7 +274,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
 
             @Override
             public int compare(final NeighbourProperties np1, final NeighbourProperties np2) {
-                return np1.distance.compareTo(np2.distance);
+                return np1.getDistance().compareTo(np2.getDistance());
             }
         };
         // sort list of nodes from the map of nodes

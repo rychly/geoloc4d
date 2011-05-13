@@ -75,6 +75,6 @@ public class MapOfNodesTest {
         MapOfNeighbours result = this.mapOfNodes.getNodesWithLocation(
                 new Vector3D(10, 10, 10));
         assertEquals(2, result.size());
-        assertEquals(new Vector3D(11.0, 12.0, 13.0), result.get(nodeID2).locationAbsolute);
+        assertEquals(new Vector3D(11.0, 12.0, 13.0), result.get(nodeID2).getLocationAbsolute());
     }
 }

@@ -20,11 +20,11 @@ public class NodePropertiesTest {
     @Before
     public void setUp() {
         this.nodeProperties = new NeighbourProperties(nodeID);
-        this.nodeProperties.distance = 1.23;
-        this.nodeProperties.locationAbsolute = new Vector3D(1.2, 3.4, 5.6);
-        this.nodeProperties.locationRelative = new Vector3D(7.8, 9.0, 1.2);
-        this.nodeProperties.rssi = 123;
-        this.nodeProperties.rtt = 123.123;
+        this.nodeProperties.setDistance(1.23);
+        this.nodeProperties.setLocationAbsolute(new Vector3D(1.2, 3.4, 5.6));
+        this.nodeProperties.setLocationRelative(new Vector3D(7.8, 9.0, 1.2));
+        this.nodeProperties.setRssi((short) 123);
+        this.nodeProperties.setRtt(123.123);
     }
 
     @After
@@ -46,11 +46,11 @@ public class NodePropertiesTest {
     @Test
     public void testToString() {
         assertEquals(this.nodeProperties.toString(), nodeID + " { "
-                + "distance=" + this.nodeProperties.distance.toString() + "; "
-                + "locationAbsolute=" + this.nodeProperties.locationAbsolute.toString() + "; "
-                + "locationRelative=" + this.nodeProperties.locationRelative.toString() + "; "
-                + "rssi=" + this.nodeProperties.rssi.toString() + "; "
-                + "rtt=" + this.nodeProperties.rtt.toString() + "; "
+                + "distance=" + this.nodeProperties.getDistance().toString() + "; "
+                + "locationAbsolute=" + this.nodeProperties.getLocationAbsolute().toString() + "; "
+                + "locationRelative=" + this.nodeProperties.getLocationRelative().toString() + "; "
+                + "rssi=" + this.nodeProperties.getRssi().toString() + "; "
+                + "rtt=" + this.nodeProperties.getRtt().toString() + "; "
                 + "}");
     }
 
@@ -61,11 +61,11 @@ public class NodePropertiesTest {
     public void testSet() {
         NeighbourProperties newNodeProperties = new NeighbourProperties(nodeID);
         newNodeProperties.set(nodeID + " { "
-                + "distance=" + this.nodeProperties.distance.toString() + "; "
-                + "locationAbsolute=" + this.nodeProperties.locationAbsolute.toString() + "; "
-                + "locationRelative=" + this.nodeProperties.locationRelative.toString() + "; "
-                + "rssi=" + this.nodeProperties.rssi.toString() + "; "
-                + "rtt=" + this.nodeProperties.rtt.toString() + "; "
+                + "distance=" + this.nodeProperties.getDistance().toString() + "; "
+                + "locationAbsolute=" + this.nodeProperties.getLocationAbsolute().toString() + "; "
+                + "locationRelative=" + this.nodeProperties.getLocationRelative().toString() + "; "
+                + "rssi=" + this.nodeProperties.getRssi().toString() + "; "
+                + "rtt=" + this.nodeProperties.getRtt().toString() + "; "
                 + "}");
         assertEquals(this.nodeProperties.toString(), newNodeProperties.toString());
     }

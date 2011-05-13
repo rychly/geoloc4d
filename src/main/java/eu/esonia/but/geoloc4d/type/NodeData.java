@@ -13,15 +13,15 @@ public class NodeData {
     /**
      * Absolute location of the node.
      */
-    public Vector3D locationAbsolute;
+    private Vector3D locationAbsolute;
 
     /**
      * Constructor of a node from its identificator and string representation.
      * @param id identificator of the node properties
      * @param representation string representation of the node properties
-     * @throws NodeDataException fail to parse the string representation
+     * @throws NodeParsingException fail to parse the string representation
      */
-    public NodeData(final String id, final String representation) throws NodeDataException {
+    public NodeData(final String id, final String representation) throws NodeParsingException {
         this.set(representation);
         this.id = id;
     }
@@ -29,9 +29,9 @@ public class NodeData {
     /**
      * Constructor of a node from its string representation.
      * @param representation string representation of the node properties
-     * @throws NodeDataException fail to parse the string representation
+     * @throws NodeParsingException fail to parse the string representation
      */
-    public NodeData(final String representation) throws NodeDataException {
+    public NodeData(final String representation) throws NodeParsingException {
         this.set(representation);
     }
 
@@ -41,8 +41,8 @@ public class NodeData {
      */
     public NodeData(final NodeData source) {
         this.id = source.getID();
-        this.locationAbsolute = (source.locationAbsolute != null)
-                ? new Vector3D(source.locationAbsolute) : null;
+        this.locationAbsolute = (source.getLocationAbsolute() != null)
+                ? new Vector3D(source.getLocationAbsolute()) : null;
     }
 
     /**
@@ -64,8 +64,8 @@ public class NodeData {
     @Override
     public String toString() {
         String result = id + " { ";
-        if (this.locationAbsolute != null) {
-            result = result.concat("locationAbsolute=" + this.locationAbsolute.toString() + "; ");
+        if (this.getLocationAbsolute() != null) {
+            result = result.concat("locationAbsolute=" + this.getLocationAbsolute().toString() + "; ");
         }
         return result.concat("}");
     }
@@ -73,19 +73,41 @@ public class NodeData {
     /**
      * Set node properties from its string representation. It's reverese operation to toString method.
      * @param representation string representation of the node properties
-     * @throws NodeDataException fail to parse the string representation
+     * @throws NodeParsingException fail to parse the string representation
      */
-    public void set(final String representation) throws NodeDataException {
+    public void set(final String representation) throws NodeParsingException {
         String[] tokens = representation.split("\\s*([{=;}]\\s*)+");
         if (!tokens[0].isEmpty()) {
             this.id = tokens[0];
         }
         for (int i = 1; i < tokens.length; i += 2) {
             if (tokens[i].equalsIgnoreCase("locationAbsolute")) {
-                this.locationAbsolute = new Vector3D(tokens[i + 1]);
+                this.setLocationAbsolute(new Vector3D(tokens[i + 1]));
             } else {
-                throw new NodeDataException("Unknown property " + tokens[i]);
+                throw new NodeParsingException("Unknown property " + tokens[i]);
             }
         }
+    }
+
+    /**
+     * Check if the node has defined its absolute location.
+     * @return true iff the node has defined its absolute location
+     */
+    public boolean isAbsolutelyLocalised() {
+        return (this.getLocationAbsolute() != null) && this.getLocationAbsolute().isDefined();
+    }
+
+    /**
+     * @return the locationAbsolute
+     */
+    public Vector3D getLocationAbsolute() {
+        return locationAbsolute;
+    }
+
+    /**
+     * @param locationAbsolute the locationAbsolute to set
+     */
+    public void setLocationAbsolute(Vector3D locationAbsolute) {
+        this.locationAbsolute = locationAbsolute;
     }
 }

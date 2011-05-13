@@ -10,6 +10,7 @@ import org.ws4d.java.service.Operation;
 import org.ws4d.java.service.Service;
 import org.ws4d.java.service.parameter.ParameterValue;
 import org.ws4d.java.types.QName;
+import org.ws4d.java.types.URI;
 import org.ws4d.java.util.ParameterUtil;
 
 /**
@@ -99,6 +100,11 @@ public class NodeServiceProxy implements NodeServiceInterface {
      */
     public void setNodeLocation(Vector3D location) throws InvocationException, TimeoutException {
         this.setNodeLocation(location.toString());
+    }
+
+    @Override
+    public String toString() {
+        return remoteService.toString();
     }
 
     /**

@@ -36,10 +36,10 @@ public class StrategyWithRTT extends TrilaterationStrategy {
         // walk through mapOfNodes
         for (Node node : mapOfNodes.values()) {
             // walk through neighbours with set distance and RTT values
-            for (NeighbourProperties neighbourProperties : node.scan.getNodesWithDistance(node.self.locationAbsolute, false, true).values()) {
+            for (NeighbourProperties neighbourProperties : node.scan.getNodesWithDistance(node.self.getLocationAbsolute(), false, true).values()) {
                 // for such neighbour compute the correction
                 correctionFactorSum += WirelessMetric.compCorrectionFactorFromRttForDistance(
-                        neighbourProperties.rtt, neighbourProperties.distance);
+                        neighbourProperties.getRtt(), neighbourProperties.getDistance());
                 count++;
             }
         }
@@ -49,6 +49,8 @@ public class StrategyWithRTT extends TrilaterationStrategy {
         } else {
             // the result is avarange form computed value
             this.correctionFactor = new Double(correctionFactorSum / count);
+            // and the strategy is calibrated
+            this.setAsCalibrated(true);
         }
     }
 
@@ -60,11 +62,10 @@ public class StrategyWithRTT extends TrilaterationStrategy {
         }
         MapOfNeighbours result = new MapOfNeighbours();
         // walk through mapOfNeighbours with set location and RTT
-        for (Map.Entry<String, NeighbourProperties> pair : neighbours.getNodesWithLocation(node.locationAbsolute, false, true).entrySet()) {
+        for (Map.Entry<String, NeighbourProperties> pair : neighbours.getNodesWithLocation(node.getLocationAbsolute(), false, true).entrySet()) {
             // for each create a copy with the node's distance computed from RTT and put it into result
             NeighbourProperties neighbourWithDistance = new NeighbourProperties(pair.getValue());
-            neighbourWithDistance.distance = WirelessMetric.compDistanceFromRtt(
-                    neighbourWithDistance.rtt, this.correctionFactor);
+            neighbourWithDistance.setDistance((Double) WirelessMetric.compDistanceFromRtt(neighbourWithDistance.getRtt(), this.correctionFactor));
             result.put(pair.getKey(), neighbourWithDistance);
         }
         // we need at the leatest four prepared nodes

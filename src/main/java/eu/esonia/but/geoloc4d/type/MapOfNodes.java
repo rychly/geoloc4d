@@ -147,4 +147,31 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
             printStream.close();
         }
     }
+
+    /**
+     * Check if all nodes in the map have set their absolute location.
+     * @return true iff the all nodes in the map are localised
+     */
+    public boolean isCompletelyLocalised() {
+        for (Node node : this.values()) {
+            if (!node.self.isAbsolutelyLocalised()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get a map of the nodes without defined location.
+     * @return the map of the nodes without defined location
+     */
+    public MapOfNodes getNodesWithoutLocation() {
+        MapOfNodes result = new MapOfNodes();
+        for (Map.Entry<String, Node> pair : this.entrySet()) {
+            if (!pair.getValue().self.isAbsolutelyLocalised()) {
+                result.put(pair.getKey(), pair.getValue());
+            }
+        }
+        return result;
+    }
 }

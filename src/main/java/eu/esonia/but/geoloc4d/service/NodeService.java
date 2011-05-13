@@ -94,7 +94,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
 
     @Override
     public void setNodeLocation(String location) {
-        this.node.self.locationAbsolute.set(location);
+        this.node.self.getLocationAbsolute().set(location);
     }
 
     /**
