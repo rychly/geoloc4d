@@ -1,9 +1,9 @@
 package eu.esonia.but.geoloc4d.type;
 
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Test of class for map of nodes as a hash-map.

@@ -1,11 +1,10 @@
 package eu.esonia.but.geoloc4d.util;
 
-import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
-import eu.esonia.but.geoloc4d.type.NeighbourProperties;
-import eu.esonia.but.geoloc4d.type.Node;
-import eu.esonia.but.geoloc4d.type.NodeData;
+import eu.esonia.but.geoloc4d.type.*;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The algorithm for selection of neighbouring nodes and computation of their distanecs from RSSI.
@@ -54,12 +53,17 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
             MapOfNeighbours mapOfNeighbours = node.scan.getNodesWithDistance(node.self.getLocationAbsolute(), true, false);
             // if there exist at the least two such nodes, sort them by distance (the most distant are last) and for compute constants from two most closed
             if (mapOfNeighbours.size() >= 2) {
-                NeighbourProperties arrayOfNeighbours[] = (NeighbourProperties[]) mapOfNeighbours.sortByDistance().values().toArray();
-                signalStrengthAtMeterSum += WirelessMetric.compSignalStrengthAtMeter(
-                        arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
-                propagationConstantSum += WirelessMetric.compPropagationConstant(
-                        arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
-                count++;
+                NeighbourProperties arrayOfNeighbours[] =
+                        Arrays.copyOf(mapOfNeighbours.sortByDistance().values().toArray(), mapOfNeighbours.size(), NeighbourProperties[].class);
+                try {
+                    signalStrengthAtMeterSum += WirelessMetric.compSignalStrengthAtMeter(
+                            arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
+                    propagationConstantSum += WirelessMetric.compPropagationConstant(
+                            arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
+                    count++;
+                } catch (WirelessMetricException ex) {
+                    // skip the neightbouring nodes with uncomputable constants
+                }
             }
         }
         if (count == 0) {
@@ -85,8 +89,12 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
         for (Map.Entry<String, NeighbourProperties> pair : neighbours.getNodesWithLocation(node.getLocationAbsolute(), true, false).entrySet()) {
             // for each create a copy with the node's distance computed from RSSI and put it into result
             NeighbourProperties neighbourWithDistance = new NeighbourProperties(pair.getValue());
-            neighbourWithDistance.setDistance((Double) WirelessMetric.compDistanceFromRssi(neighbourWithDistance.getRssi(), this.signalStrengthAtMeter, this.propagationConstant));
-            result.put(pair.getKey(), neighbourWithDistance);
+            try {
+                neighbourWithDistance.setDistance((Double) WirelessMetric.compDistanceFromRssi(neighbourWithDistance.getRssi(), this.signalStrengthAtMeter, this.propagationConstant));
+                result.put(pair.getKey(), neighbourWithDistance);
+            } catch (WirelessMetricException ex) {
+                // skip the neightbouring nodes with uncomputable distance
+            }
         }
         // we need at the leatest four prepared nodes
         if (result.size() < 4) {

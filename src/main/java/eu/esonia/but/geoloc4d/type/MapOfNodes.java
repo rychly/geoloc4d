@@ -1,14 +1,6 @@
 package eu.esonia.but.geoloc4d.type;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;

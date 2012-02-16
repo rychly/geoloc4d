@@ -1,9 +1,9 @@
 package eu.esonia.but.geoloc4d.type;
 
 import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Test of class for vector coordinates in 3D (without algebraical operations).
@@ -47,10 +47,11 @@ public class Vector3DTest {
      */
     @Test
     public void testToString() {
-        assertEquals(this.vector3D.toString(), "("
+        assertEquals("("
                 + this.vector3D.getX() + ","
                 + this.vector3D.getY() + ","
-                + this.vector3D.getZ() + ")");
+                + this.vector3D.getZ() + ")",
+                this.vector3D.toString());
     }
 
     /**

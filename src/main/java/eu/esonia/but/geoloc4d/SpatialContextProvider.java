@@ -8,11 +8,7 @@ import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
-import eu.esonia.but.geoloc4d.util.StrategyWithRSSI;
-import eu.esonia.but.geoloc4d.util.StrategyWithRTT;
-import eu.esonia.but.geoloc4d.util.TrilaterationStrategy;
-import eu.esonia.but.geoloc4d.util.TrilaterationStrategyException;
-import eu.esonia.but.geoloc4d.util.TrilaterationStrategyFactory;
+import eu.esonia.but.geoloc4d.util.*;
 import java.util.List;
 import org.ws4d.java.DPWSFramework;
 import org.ws4d.java.communication.TimeoutException;
@@ -79,26 +75,27 @@ public class SpatialContextProvider {
         System.out.println("=== The trilateration strategy has calibrated metric:");
         if (trilaterationStrategy instanceof StrategyWithRSSI) {
             System.out.println(
-                    "\n=== received signal strength at 1 meter distance = "
+                    "=== received signal strength at 1 meter distance = "
                     + ((StrategyWithRSSI) trilaterationStrategy).getSignalStrengthAtMeter()
-                    + "\n=== propagation constant ="
+                    + "\n=== propagation constant = "
                     + ((StrategyWithRSSI) trilaterationStrategy).getPropagationConstant());
         } else if (trilaterationStrategy instanceof StrategyWithRTT) {
             System.out.println(
-                    "\n=== correction factor for conversion of RTT into actual distance = "
+                    "=== correction factor for conversion of RTT into actual distance = "
                     + ((StrategyWithRTT) trilaterationStrategy).getCorrectionFactor());
         } else {
             System.out.println(
-                    "\n=== an unknown implementation of the strategy!");
+                    "=== an unknown implementation of the strategy!");
         }
 
         // Localise all detected nodes
-        List<NodeServiceProxy> services = null;
+        List<NodeServiceProxy> services;
         boolean completelyLocalised;
         do {
             System.out.println("=== Performing trilateration of detected nodes...");
             // nodes can be completely localised only if there are some
-            completelyLocalised = !services.isEmpty();
+            //completelyLocalised = !((services == null) || services.isEmpty());
+            completelyLocalised = false; // infinite loop for debuging
             // get actually detected the nodes' services
             services = nodeServiceDetector.getDetectedServices();
             for (NodeServiceInterface service : services) {
@@ -107,7 +104,10 @@ public class SpatialContextProvider {
                     // get data of node and check if it is localised
                     NodeData nodeData = new NodeData(service.getNodeData());
                     System.out.println("=== the service represents node: " + nodeData.getID());
-                    if (!nodeData.isAbsolutelyLocalised()) {
+                    if (nodeData.isAbsolutelyLocalised()) {
+                        // if it is localised, print its location
+                        System.out.println("=== the node is localised as: " + nodeData.getLocationAbsolute().toString());
+                    } else {
                         // if not, get scan of its neighbours and perform trilateration
                         System.out.println("=== the node is not localised, preparing for its trilateration...");
                         MapOfNeighbours nodeNeighbours = new MapOfNeighbours(service.getNeighbours());
@@ -135,7 +135,7 @@ public class SpatialContextProvider {
                 }
             }
             Thread.sleep(3000);
-        } while (completelyLocalised);
+        } while (!completelyLocalised);
         try {
             // Print all nodes including their locations
             System.out.println("=== Localised nodes:\n"

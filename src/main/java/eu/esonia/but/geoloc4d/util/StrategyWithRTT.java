@@ -1,11 +1,9 @@
 package eu.esonia.but.geoloc4d.util;
 
-import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
-import eu.esonia.but.geoloc4d.type.NeighbourProperties;
-import eu.esonia.but.geoloc4d.type.Node;
-import eu.esonia.but.geoloc4d.type.NodeData;
+import eu.esonia.but.geoloc4d.type.*;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The algorithm for selection of neighbouring nodes and computation of their distanecs from RTT.
@@ -37,10 +35,14 @@ public class StrategyWithRTT extends TrilaterationStrategy {
         for (Node node : mapOfNodes.values()) {
             // walk through neighbours with set distance and RTT values
             for (NeighbourProperties neighbourProperties : node.scan.getNodesWithDistance(node.self.getLocationAbsolute(), false, true).values()) {
-                // for such neighbour compute the correction
-                correctionFactorSum += WirelessMetric.compCorrectionFactorFromRttForDistance(
-                        neighbourProperties.getRtt(), neighbourProperties.getDistance());
-                count++;
+                try {
+                    // for such neighbour compute the correction
+                    correctionFactorSum += WirelessMetric.compCorrectionFactorFromRttForDistance(
+                            neighbourProperties.getRtt(), neighbourProperties.getDistance());
+                    count++;
+                } catch (WirelessMetricException ex) {
+                    // skip the neightbouring nodes with uncomputable correction
+                }
             }
         }
         if (count == 0) {

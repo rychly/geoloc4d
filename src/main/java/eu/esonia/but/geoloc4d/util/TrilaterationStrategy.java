@@ -1,10 +1,6 @@
 package eu.esonia.but.geoloc4d.util;
 
-import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
-import eu.esonia.but.geoloc4d.type.MapOfNodes;
-import eu.esonia.but.geoloc4d.type.NeighbourProperties;
-import eu.esonia.but.geoloc4d.type.NodeData;
-import eu.esonia.but.geoloc4d.type.Vector3D;
+import eu.esonia.but.geoloc4d.type.*;
 
 /**
  * Abstract class of algorithms for selection of neighbouring nodes and computation of their distanecs for trilateration.

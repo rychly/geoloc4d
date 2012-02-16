@@ -2,7 +2,6 @@ package eu.esonia.but.geoloc4d.service;
 
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.InvocationException;
-import org.ws4d.java.types.URI;
 
 /**
  * Interface for core methods of proxy and service of DPWS representing a network node and its data (e.g. location).

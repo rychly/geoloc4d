@@ -1,9 +1,9 @@
 package eu.esonia.but.geoloc4d.type;
 
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Test of class for properties of a node as seen from its neighbouring node.
@@ -37,7 +37,7 @@ public class NodePropertiesTest {
      */
     @Test
     public void testGetID() {
-        assertEquals(this.nodeProperties.getID(), nodeID);
+        assertEquals(nodeID, this.nodeProperties.getID());
     }
 
     /**
@@ -45,13 +45,14 @@ public class NodePropertiesTest {
      */
     @Test
     public void testToString() {
-        assertEquals(this.nodeProperties.toString(), nodeID + " { "
+        assertEquals(nodeID + " { "
                 + "distance=" + this.nodeProperties.getDistance().toString() + "; "
                 + "locationAbsolute=" + this.nodeProperties.getLocationAbsolute().toString() + "; "
                 + "locationRelative=" + this.nodeProperties.getLocationRelative().toString() + "; "
                 + "rssi=" + this.nodeProperties.getRssi().toString() + "; "
                 + "rtt=" + this.nodeProperties.getRtt().toString() + "; "
-                + "}");
+                + "}",
+                this.nodeProperties.toString());
     }
 
     /**

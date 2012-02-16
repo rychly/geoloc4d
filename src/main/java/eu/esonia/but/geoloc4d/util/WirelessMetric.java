@@ -5,10 +5,10 @@ import java.util.Arrays;
 
 /**
  * Various functions for measurements in wireless networks.
- * RSSI related computations are based on the formula provided by Texas Instruments, which represented the relationship between RSSI and the estimated 1-D distance.
+ * RSSI related computations are based on <a href="http://www.ti.com/lit/an/swra095/swra095.pdf">the formula provided by Texas Instruments</a>, which represented the relationship between RSSI and the estimated 1-D distance.
  * IEEE 802's RSSI are unitless and in the range 0 to 255, expressible as a one-byte unsigned integer.
- * RTT related computiation are based on the asumption that speed of light in copper or fibre is 0.6*c (velocity of light), i.e. RTT is 1ms/100km, and in routed networks we can correction factor ~0.4 km/ms (depending on landmark and target region).
- * Trilateration is based on Wikipedia.
+ * RTT is in mili-seconds and related computiation are based on the asumption that speed of light in copper or fibre is 0.6*c (velocity of light), i.e. RTT is 1ms/100km, and in routed networks we can correction factor ~400 m/ms (depending on landmark and target region).
+ * Trilateration is <a href="http://en.wikipedia.org/wiki/Trilateration">based on Wikipedia</a>.
  * @author rychly
  */
 public final class WirelessMetric {
@@ -20,8 +20,15 @@ public final class WirelessMetric {
      * @param distanceToA distance of node A from the reference node in meters
      * @param distanceToB distance of node B from the reference node in meters
      * @return the received signal strength at 1 meter distance
+     * @throws WirelessMetricException if cannot perform computation with the such parameters
      */
-    public static double compSignalStrengthAtMeter(final short rssiToA, final short rssiToB, final double distanceToA, double distanceToB) {
+    public static double compSignalStrengthAtMeter(final short rssiToA, final short rssiToB, final double distanceToA, double distanceToB) throws WirelessMetricException {
+        if ((distanceToA <= 0) || Double.isNaN(distanceToA) || (distanceToB <= 0) || Double.isNaN(distanceToB)) {
+            throw new WirelessMetricException("The both distances must be non-zero positive values!");
+        }
+        if (distanceToA == distanceToB) {
+            throw new WirelessMetricException("The distances cannot be the same!");
+        }
         return (rssiToA * Math.log10(distanceToB) - rssiToB * Math.log10(distanceToA))
                 / (Math.log10(distanceToA) - Math.log10(distanceToB));
     }
@@ -33,8 +40,15 @@ public final class WirelessMetric {
      * @param distanceToA distance of node A from the reference node in meters
      * @param distanceToB distance of node B from the reference node in meters
      * @return the propagation constant
+     * @throws WirelessMetricException if cannot perform computation with the such parameters
      */
-    public static double compPropagationConstant(final short rssiToA, final short rssiToB, final double distanceToA, final double distanceToB) {
+    public static double compPropagationConstant(final short rssiToA, final short rssiToB, final double distanceToA, final double distanceToB) throws WirelessMetricException {
+        if ((distanceToA <= 0) || Double.isNaN(distanceToA) || (distanceToB <= 0) || Double.isNaN(distanceToB)) {
+            throw new WirelessMetricException("The both distances must be non-zero positive values!");
+        }
+        if (distanceToA == distanceToB) {
+            throw new WirelessMetricException("The distances cannot be the same!");
+        }
         return (rssiToA - rssiToB)
                 / (10 * (Math.log10(distanceToB) - Math.log10(distanceToA)));
     }
@@ -45,8 +59,15 @@ public final class WirelessMetric {
      * @param signalStrengthAtMeter received signal strength at 1 meter distance
      * @param propagationConstant propagation constant
      * @return received signal RSSI value
+     * @throws WirelessMetricException if cannot perform computation with the such parameters
      */
-    public static short compRssiFromDistance(final double distance, final double signalStrengthAtMeter, final double propagationConstant) {
+    public static short compRssiFromDistance(final double distance, final double signalStrengthAtMeter, final double propagationConstant) throws WirelessMetricException {
+        if (Double.isNaN(signalStrengthAtMeter) || Double.isNaN(propagationConstant)) {
+            throw new WirelessMetricException("The received signal strength at 1 meter distance and the propagation constant must be numbers (NaN now)!");
+        }
+        if ((distance <= 0) || Double.isNaN(distance)) {
+            throw new WirelessMetricException("The distance must be a non-zero positive value!");
+        }
         return (short) Math.round(-1 * (10 * propagationConstant * Math.log10(distance) + signalStrengthAtMeter));
     }
 
@@ -56,30 +77,44 @@ public final class WirelessMetric {
      * @param signalStrengthAtMeter received signal strength at 1 meter distance
      * @param propagationConstant propagation constant
      * @return the distance in meters
+     * @throws WirelessMetricException if cannot perform computation with the such parameters
      */
-    public static double compDistanceFromRssi(final short rssi, final double signalStrengthAtMeter, final double propagationConstant) {
+    public static double compDistanceFromRssi(final short rssi, final double signalStrengthAtMeter, final double propagationConstant) throws WirelessMetricException {
+        if (Double.isNaN(rssi) || Double.isNaN(signalStrengthAtMeter)) {
+            throw new WirelessMetricException("The RSSI and the received signal strength at 1 meter distance must be numbers (NaN now)!");
+        }
+        if ((propagationConstant == 0) || Double.isNaN(propagationConstant)) {
+            throw new WirelessMetricException("The propagation constant must be a non-zero value!");
+        }
         return Math.pow(10, (rssi + signalStrengthAtMeter)
                 / (-10 * propagationConstant));
     }
 
     /**
      * Compute a correction factor according to a reference node and its RTT and actual distance to another node.
-     * @param roundTripTime RTT (round trip time) value
+     * @param roundTripTime RTT (round trip time) value in mili-seconds
      * @param distance distance of the another node from the reference node in meters
-     * @return the correction factor (km/ms)
+     * @return the correction factor (m/ms)
+     * @throws WirelessMetricException if cannot perform computation with the such parameters
      */
-    public static double compCorrectionFactorFromRttForDistance(final double roundTripTime, final double distance) {
-        return distance / (roundTripTime * 100 * 1000);
+    public static double compCorrectionFactorFromRttForDistance(final double roundTripTime, final double distance) throws WirelessMetricException {
+        if ((roundTripTime == 0) || Double.isNaN(roundTripTime)) {
+            throw new WirelessMetricException("The RTT (round trip time) must be a non-zero value!");
+        }
+        if (Double.isNaN(distance)) {
+            throw new WirelessMetricException("The distance must be a number (it is NaN now)!");
+        }
+        return distance / roundTripTime;
     }
 
     /**
      * Compute a distance in meters of a reference node and a blind node from RTT value and a correction factor.
-     * @param roundTripTime RTT (round trip time) value
-     * @param correctionFactor correction factor (for routed networks usually 0.4)
+     * @param roundTripTime RTT (round trip time) value in mili-seconds
+     * @param correctionFactor correction factor (for routed networks usually 400 m/ms)
      * @return the distance in meters
      */
     public static double compDistanceFromRtt(final double roundTripTime, final double correctionFactor) {
-        return correctionFactor * roundTripTime * 100 * 1000;
+        return correctionFactor * roundTripTime;
     }
 
     /**
