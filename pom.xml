@@ -83,77 +83,82 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0-beta-3</version>
+                <configuration>
+                    <reportPlugins>
+                        <plugin><!-- tracker at sourceforge -->
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-changes-plugin</artifactId>
+                            <version>2.6</version>
+                            <inherited>false</inherited>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>changes-report</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                            <configuration>
+                                <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+                            </configuration>
+                        </plugin>
+                        <plugin><!-- classes Javadocs -->
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.8.1</version>
+                        </plugin>
+                        <plugin><!-- unit-test reports -->
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>2.9</version>
+                        </plugin>
+                        <plugin><!-- test coverage -->
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-clover-plugin</artifactId>
+                            <version>2.4</version>
+                        </plugin>
+                        <plugin><!-- automatic code analysis -->
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <version>2.7.1</version>
+                            <configuration>
+                                <linkXref>true</linkXref>
+                                <sourceEncoding>utf-8</sourceEncoding>
+                                <minimumTokens>100</minimumTokens>
+                                <targetjdk>1.6</targetjdk>
+                            </configuration>
+                        </plugin>
+                        <plugin><!-- check-style rules for Java formatting -->
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>2.9</version>
+                            <configuration>
+                                <configLocation>config/sun_checks.xml</configLocation>
+                            </configuration>
+                        </plugin>
+                        <plugin><!-- indexed and cross-referenced HTML version of source code -->
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>jxr-maven-plugin</artifactId>
+                            <version>2.0-beta-1</version>
+                        </plugin>
+                        <plugin><!-- changelog reports from src/changes/changes.xml -->
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>changelog-maven-plugin</artifactId>
+                            <version>2.0-beta-1</version>
+                        </plugin>
+                        <plugin><!-- generate a list of all the items marked @todo or TODO -->
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>taglist-maven-plugin</artifactId>
+                            <version>2.4</version>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin><!-- tracker at sourceforge -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <version>2.6</version>
-                <inherited>false</inherited>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>changes-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
-                </configuration>
-            </plugin>
-            <plugin><!-- classes Javadocs -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8.1</version>
-            </plugin>
-            <plugin><!-- unit-test reports -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.9</version>
-            </plugin>
-            <plugin><!-- test coverage -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clover-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
-            <plugin><!-- automatic code analysis -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.7.1</version>
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <targetjdk>1.6</targetjdk>
-                </configuration>
-            </plugin>
-            <plugin><!-- check-style rules for Java formatting -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <configLocation>config/sun_checks.xml</configLocation>
-                </configuration>
-            </plugin>
-            <plugin><!-- indexed and cross-referenced HTML version of source code -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jxr-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
-            </plugin>
-            <plugin><!-- changelog reports from src/changes/changes.xml -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>changelog-maven-plugin</artifactId>
-                <version>2.0-beta-1</version>
-            </plugin>
-            <plugin><!-- generate a list of all the items marked @todo or TODO -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <!-- Build Environment -->
     <!-- Environment Information -->
