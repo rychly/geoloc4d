@@ -50,6 +50,18 @@ public final class NeighbourProperties extends NodeData {
     }
 
     /**
+     * Constructor of a node from its representation in JSON.
+     *
+     * @param representation representation of the node properties in JSON
+     * @throws NodeParsingException fail to parse a structure of the
+     * representation
+     * @throws JSONException fail to parse a neighbour's representation in JSON
+     */
+    public NeighbourProperties(final JSONObject representation) throws NodeParsingException, JSONException {
+        super(representation);
+    }
+
+    /**
      * Copy constructor.
      *
      * @param source source to copy from
@@ -130,6 +142,39 @@ public final class NeighbourProperties extends NodeData {
             } else {
                 throw new NodeParsingException("Unknown property " + tokens[i]);
             }
+        }
+    }
+
+    /**
+     * Set node properties from its representation in JSON. It's reverese
+     * operation to toJSONString method and JSONObject constructor.
+     *
+     * @param representation representation of the node properties in JSON
+     * @throws NodeParsingException fail to parse a structure of the
+     * representation
+     * @throws JSONException fail to parse a neighbour's representation in JSON
+     */
+    @Override
+    public void set(final JSONObject representation) throws JSONException, NodeParsingException {
+        if (representation.length() != 1) {
+            throw new NodeParsingException("Unset or multiple ID!");
+        }
+        this.setID((String) representation.keys().next());
+        JSONObject properties = representation.getJSONObject(this.getID());
+        if (properties.has("distance")) {
+            this.setDistance(properties.getDouble("distance"));
+        }
+        if (properties.has("locationAbsolute")) {
+            this.setLocationAbsolute(new Vector3D(properties.getJSONArray("locationAbsolute")));
+        }
+        if (properties.has("locationRelative")) {
+            this.setLocationRelative(new Vector3D(properties.getJSONArray("locationRelative")));
+        }
+        if (properties.has("rssi")) {
+            this.setRssi((short) properties.getInt("rssi"));
+        }
+        if (properties.has("rtt")) {
+            this.setRtt(properties.getDouble("rtt"));
         }
     }
 

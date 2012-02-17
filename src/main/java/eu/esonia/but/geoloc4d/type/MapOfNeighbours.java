@@ -2,6 +2,7 @@ package eu.esonia.but.geoloc4d.type;
 
 import java.util.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONString;
 
 /**
@@ -61,6 +62,22 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
         String[] tokens = representation.split("\\s\\+\\s");
         for (int i = 0; i < tokens.length; i++) {
             NeighbourProperties nodeProperties = new NeighbourProperties(tokens[i]);
+            this.put(nodeProperties.getID(), nodeProperties);
+        }
+    }
+
+    /**
+     * Set map from its representation in JSON. It's reverese operation to
+     * toJSONString method and JSONArray constructor.
+     *
+     * @param representation representation of map in JSON
+     * @throws NodeParsingException fail to parse a neighbour's sctructure of
+     * the representation in JSON
+     * @throws JSONException fail to parse a neighbour's representation in JSON
+     */
+    public void set(final JSONArray representation) throws NodeParsingException, JSONException {
+        for (int i = 0; i < representation.length(); i++) {
+            NeighbourProperties nodeProperties = new NeighbourProperties(representation.getJSONObject(i));
             this.put(nodeProperties.getID(), nodeProperties);
         }
     }

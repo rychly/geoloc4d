@@ -1,6 +1,7 @@
 package eu.esonia.but.geoloc4d.type;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONString;
 
 /**
@@ -35,6 +36,10 @@ public final class Vector3D implements JSONString {
     }
 
     public Vector3D(final String vector) {
+        this.set(vector);
+    }
+
+    public Vector3D(final JSONArray vector) throws JSONException {
         this.set(vector);
     }
 
@@ -113,6 +118,22 @@ public final class Vector3D implements JSONString {
             this.set(Double.parseDouble(tokens[1]),
                     Double.parseDouble(tokens[2]),
                     Double.parseDouble(tokens[3]));
+        }
+    }
+
+    /**
+     * Set vector coordinates from JSON.
+     *
+     * @param vector JSON with coordinates of vector
+     * @throws JSONException fail to parse the vector in JSON
+     */
+    public void set(final JSONArray vector) throws JSONException {
+        if (vector.length() != 3) {
+            this.undefined = true;
+        } else {
+            this.set(vector.getDouble(0),
+                    vector.getDouble(1),
+                    vector.getDouble(2));
         }
     }
 

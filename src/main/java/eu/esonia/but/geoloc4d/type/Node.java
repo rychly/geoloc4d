@@ -25,6 +25,11 @@ public class Node implements JSONString {
         this.scan = new MapOfNeighbours();
     }
 
+    public Node(final JSONObject representation) throws JSONException {
+        this.self = new NodeData(representation);
+        this.scan = new MapOfNeighbours();
+    }
+
     public Node(final String id, final String representation) {
         this.self = new NodeData(id, representation);
         this.scan = new MapOfNeighbours();

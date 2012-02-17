@@ -43,6 +43,17 @@ public class NodeData implements JSONString {
     }
 
     /**
+     * Constructor of a node from its representation in JSON.
+     *
+     * @param representation representation of the node properties in JSON
+     * @throws NodeParsingException fail to parse the string representation
+     * @throws JSONException fail to parse the string representation in JSON
+     */
+    public NodeData(final JSONObject representation) throws NodeParsingException, JSONException {
+        this.set(representation);
+    }
+
+    /**
      * Copy constructor.
      *
      * @param source source to copy from
@@ -102,7 +113,7 @@ public class NodeData implements JSONString {
     public void set(final String representation) throws NodeParsingException {
         String[] tokens = representation.split("\\s*([{=;}]\\s*)+");
         if (!tokens[0].isEmpty()) {
-            this.id = tokens[0];
+            this.setID(tokens[0]);
         }
         for (int i = 1; i < tokens.length; i += 2) {
             if (tokens[i].equalsIgnoreCase("locationAbsolute")) {
@@ -110,6 +121,26 @@ public class NodeData implements JSONString {
             } else {
                 throw new NodeParsingException("Unknown property " + tokens[i]);
             }
+        }
+    }
+
+    /**
+     * Set node properties from its representation in JSON. It's reverese
+     * operation to toJSONString method and JSONObject constructor.
+     *
+     * @param representation representation of the node properties in JSON
+     * @throws NodeParsingException fail to parse a structure of the
+     * representation
+     * @throws JSONException fail to parse the string representation in JSON
+     */
+    public void set(final JSONObject representation) throws JSONException, NodeParsingException {
+        if (representation.length() != 1) {
+            throw new NodeParsingException("Unset or multiple ID!");
+        }
+        this.setID((String) representation.keys().next());
+        JSONObject properties = representation.getJSONObject(this.getID());
+        if (properties.has("locationAbsolute")) {
+            this.setLocationAbsolute(new Vector3D(properties.getJSONArray("locationAbsolute")));
         }
     }
 

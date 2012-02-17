@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONString;
 
 /**
@@ -45,6 +46,18 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
     }
 
     /**
+     * Default constructor of a map from its representation in JSON.
+     *
+     * @param representation representation of the map in JSON
+     * @throws JSONException fail to parse a node's string representation in
+     * JSON
+     */
+    public MapOfNodes(final JSONArray representation) throws JSONException {
+        super();
+        this.set(representation);
+    }
+
+    /**
      * Add to map content from another map.
      *
      * @param source source scan list
@@ -62,6 +75,21 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
      */
     public void set(final String representation) throws IOException {
         this.set(loadNodes(new ByteArrayInputStream(representation.getBytes())));
+    }
+
+    /**
+     * Set map from its representation in JSON. It's reverese operation to
+     * toString method and JSONArray constructor.
+     *
+     * @param representation representation of map in JSON
+     * @throws JSONException fail to parse a node's string representation in
+     * JSON
+     */
+    public void set(final JSONArray representation) throws JSONException {
+        for (int i = 0; i < representation.length(); i++) {
+            Node node = new Node(representation.getJSONObject(i));
+            this.put(node.self.getID(), node);
+        }
     }
 
     @Override
