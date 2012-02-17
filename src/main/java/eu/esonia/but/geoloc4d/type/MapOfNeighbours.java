@@ -43,6 +43,18 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     }
 
     /**
+     * Default constructor of a map from its representation in JSON.
+     *
+     * @param representation representation of the map in JSON
+     * @throws NodeParsingException fail to parse the string representation
+     * @throws JSONException fail to parse a neighbour's representation in JSON
+     */
+    public MapOfNeighbours(final JSONArray representation) throws NodeParsingException, JSONException {
+        super();
+        this.set(representation);
+    }
+
+    /**
      * Add to map content from another map.
      *
      * @param source source scan list
@@ -99,7 +111,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
         JSONArray result = new JSONArray();
         if (!this.isEmpty()) {
             for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
-                result = result.put(pair.getValue());
+                result.put((JSONString) pair.getValue());
             }
         }
         return result.toString();

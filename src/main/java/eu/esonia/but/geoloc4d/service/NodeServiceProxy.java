@@ -4,6 +4,9 @@ import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.Node;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.InvocationException;
 import org.ws4d.java.service.Operation;
@@ -57,9 +60,10 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * user-defined data attached to it
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
+     * @throws JSONException fail to parse the string representation in JSON
      */
-    public NodeData getNodeDataObject() throws InvocationException, TimeoutException {
-        return new NodeData(this.getNodeData());
+    public NodeData getNodeDataObject() throws InvocationException, TimeoutException, JSONException {
+        return new NodeData(new JSONObject(this.getNodeData()));
     }
 
     @Override
@@ -85,9 +89,10 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * user-defined data attached to it
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
+     * @throws JSONException fail to parse a neighbour's representation in JSON
      */
-    public MapOfNeighbours getNeighboursObject() throws InvocationException, TimeoutException {
-        return new MapOfNeighbours(this.getNeighbours());
+    public MapOfNeighbours getNeighboursObject() throws InvocationException, TimeoutException, JSONException {
+        return new MapOfNeighbours(new JSONArray(this.getNeighbours()));
     }
 
     @Override
@@ -116,7 +121,7 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * service times out
      */
     public void setNodeLocation(Vector3D location) throws InvocationException, TimeoutException {
-        this.setNodeLocation(location.toString());
+        this.setNodeLocation(location.toJSONString());
     }
 
     @Override
@@ -134,8 +139,9 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * user-defined data attached to it
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
+     * @throws JSONException error in parsing of JSON string representation
      */
-    public Node getNodeObject() throws InvocationException, TimeoutException {
+    public Node getNodeObject() throws InvocationException, TimeoutException, JSONException {
         return new Node(this.getNodeDataObject(), this.getNeighboursObject());
     }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.json.JSONException;
 import org.ws4d.java.client.DefaultClient;
 import org.ws4d.java.client.SearchParameter;
 import org.ws4d.java.communication.TimeoutException;
@@ -120,8 +121,9 @@ public class NodeServiceDetector extends DefaultClient {
      * user-defined data attached to it
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
+     * @throws JSONException error in parsing of JSON string representation
      */
-    public MapOfNodes getMapOfNodesForDetectedServices() throws InvocationException, TimeoutException {
+    public MapOfNodes getMapOfNodesForDetectedServices() throws InvocationException, TimeoutException, JSONException {
         MapOfNodes result = new MapOfNodes();
         // detectedServices cannot be accessed direcly due to cuncurrency, so we use thread-safe getDetectedServices()
         for (NodeServiceProxy nodeServiceProxy : this.getDetectedServices()) {

@@ -44,7 +44,7 @@ public class AssetServiceSimulator {
         System.out.println("=== Loading nodes' definitions from file...");
         try {
             for (Node node : MapOfNodes.loadNodes(args[3]).values()) {
-                System.out.println("=== a service will be created for node:\n" + node.toString());
+                System.out.println("=== a service will be created for node:\n" + node.toJSONString());
                 // Create service
                 LocalService service = new NodeService(node);
                 // Set binding for the service, i.e. the address it will accept

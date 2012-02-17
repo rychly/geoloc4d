@@ -2,6 +2,7 @@ package eu.esonia.but.geoloc4d.type;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONString;
 
 /**
  * Properties of a node as seen from its neighbouring node.
@@ -104,11 +105,12 @@ public final class NeighbourProperties extends NodeData {
         try {
             JSONObject resultProps = new JSONObject();
             resultProps.putOpt("distance", this.getDistance());
-            resultProps.putOpt("locationAbsolute", this.getLocationAbsolute());
-            resultProps.putOpt("locationRelative", this.getLocationRelative());
+            resultProps.putOpt("locationAbsolute", (JSONString) this.getLocationAbsolute());
+            resultProps.putOpt("locationRelative", (JSONString) this.getLocationRelative());
             resultProps.putOpt("rssi", this.getRssi());
             resultProps.putOpt("rtt", this.getRtt());
             return new JSONObject().put(this.getID(), resultProps).toString();
+            // e.g. "FirstNode":{"distance":1414.2,"rssi":175}
         }
         catch (JSONException ex) {
             throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);

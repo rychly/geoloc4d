@@ -1,5 +1,7 @@
 package eu.esonia.but.geoloc4d.type;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -10,12 +12,12 @@ import org.junit.Test;
  *
  * @author rychly
  */
-public class NodePropertiesTest {
+public class NeighbourPropertiesTest {
 
     private NeighbourProperties nodeProperties;
     private static final String nodeID = "TestNode";
 
-    public NodePropertiesTest() {
+    public NeighbourPropertiesTest() {
     }
 
     @Before
@@ -60,7 +62,7 @@ public class NodePropertiesTest {
      * Test of set method, of class NeighbourProperties.
      */
     @Test
-    public void testSet() {
+    public void testSet_String() {
         NeighbourProperties newNodeProperties = new NeighbourProperties(nodeID);
         newNodeProperties.set(nodeID + " { "
                 + "distance=" + this.nodeProperties.getDistance().toString() + "; "
@@ -69,6 +71,17 @@ public class NodePropertiesTest {
                 + "rssi=" + this.nodeProperties.getRssi().toString() + "; "
                 + "rtt=" + this.nodeProperties.getRtt().toString() + "; "
                 + "}");
+        assertEquals(this.nodeProperties.toString(), newNodeProperties.toString());
+    }
+
+    /**
+     * Test of set method, of class NeighbourProperties.
+     * @throws JSONException fail to parse a neighbour's representation in JSON
+     */
+    @Test
+    public void testSet_JSONObject() throws JSONException {
+        NeighbourProperties newNodeProperties = new NeighbourProperties(nodeID);
+        newNodeProperties.set(new JSONObject(this.nodeProperties.toJSONString()));
         assertEquals(this.nodeProperties.toString(), newNodeProperties.toString());
     }
 }

@@ -1,5 +1,6 @@
 package eu.esonia.but.geoloc4d.service;
 
+import org.json.JSONException;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.InvocationException;
 
@@ -14,7 +15,7 @@ public interface NodeServiceInterface {
     /**
      * Get basic data of a node as a string.
      *
-     * @return the basic data of a node as a toString result
+     * @return the basic data of a node as a toJSONString result
      * @throws InvocationException thrown to indicate that a declared fault
      * occurred during execution of this operation's business logic; clients can
      * extract further fault-related information from this exception, such as
@@ -27,7 +28,7 @@ public interface NodeServiceInterface {
     /**
      * Get neighbouring nodes (from scan) as a string.
      *
-     * @return a list of the neighbouring nodes as a toString result
+     * @return a list of the neighbouring nodes as a toJSONString result
      * @throws InvocationException thrown to indicate that a declared fault
      * occurred during execution of this operation's business logic; clients can
      * extract further fault-related information from this exception, such as
@@ -47,8 +48,9 @@ public interface NodeServiceInterface {
      * user-defined data attached to it
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
+     * @throws JSONException fail to parse the location's vector in JSON
      */
-    public void setNodeLocation(String location) throws InvocationException, TimeoutException;
+    public void setNodeLocation(String location) throws InvocationException, TimeoutException, JSONException;
 
     /**
      * Returns a string representation of the service.

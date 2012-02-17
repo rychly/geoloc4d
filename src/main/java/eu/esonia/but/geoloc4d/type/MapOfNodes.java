@@ -103,7 +103,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
     public String toJSONString() {
         JSONArray result = new JSONArray();
         for (Node node : this.values()) {
-            result.put(node);
+            result.put((JSONString) node);
         }
         return result.toString();
     }

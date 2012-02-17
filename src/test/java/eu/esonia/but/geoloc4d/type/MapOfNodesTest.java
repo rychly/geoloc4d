@@ -1,5 +1,7 @@
 package eu.esonia.but.geoloc4d.type;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -56,6 +58,19 @@ public class MapOfNodesTest {
         newMapOfNodes.set(this.mapOfNodes.get(nodeID1) + " + "
                 + this.mapOfNodes.get(nodeID2) + " + "
                 + this.mapOfNodes.get(nodeID3));
+        assertEquals(this.mapOfNodes.toString(), newMapOfNodes.toString());
+    }
+
+    /**
+     * Test of set method, of class MapOfNeighbours.
+     *
+     * @throws JSONException fail to parse a node's string representation in
+     * JSON
+     */
+    @Test
+    public void testSet_JSONArray() throws JSONException {
+        MapOfNeighbours newMapOfNodes = new MapOfNeighbours();
+        newMapOfNodes.set(new JSONArray(this.mapOfNodes.toJSONString()));
         assertEquals(this.mapOfNodes.toString(), newMapOfNodes.toString());
     }
 

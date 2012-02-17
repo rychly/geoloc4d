@@ -95,8 +95,9 @@ public class NodeData implements JSONString {
     public String toJSONString() {
         try {
             JSONObject resultProps = new JSONObject();
-            resultProps.putOpt("locationAbsolute", this.getLocationAbsolute());
+            resultProps.putOpt("locationAbsolute", (JSONString) this.getLocationAbsolute());
             return new JSONObject().put(this.getID(), resultProps).toString();
+            // e.g. "SecondNode":{"locationAbsolute":[0,1000,0]}
         }
         catch (JSONException ex) {
             throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);

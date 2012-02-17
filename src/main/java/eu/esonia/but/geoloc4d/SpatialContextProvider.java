@@ -10,6 +10,9 @@ import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
 import eu.esonia.but.geoloc4d.util.*;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ws4d.java.DPWSFramework;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.service.InvocationException;
@@ -22,7 +25,7 @@ import org.ws4d.java.util.Log;
  */
 public class SpatialContextProvider {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, JSONException {
         // Check parameters
         // To enable multicast on loopback interface do "ifconfig lo multicast"
         if (args.length != 3) {
@@ -51,8 +54,8 @@ public class SpatialContextProvider {
             Thread.sleep(1000);
             try {
                 MapOfNodes mapOfNodes = nodeServiceDetector.getMapOfNodesForDetectedServices();
-                System.out.print("=== the calibration will be performed for nodes:\n"
-                        + mapOfNodes.toString());
+                System.out.println("=== the calibration will be performed for nodes:\n"
+                        + mapOfNodes.toJSONString());
                 trilaterationStrategy.calibrateMetric(mapOfNodes);
             }
             catch (InvocationException ex) {
@@ -98,23 +101,23 @@ public class SpatialContextProvider {
                 System.out.println("=== found a node's service: " + service.toString());
                 try {
                     // get data of node and check if it is localised
-                    NodeData nodeData = new NodeData(service.getNodeData());
+                    NodeData nodeData = new NodeData(new JSONObject(service.getNodeData()));
                     System.out.println("=== the service represents node: " + nodeData.getID());
                     if (nodeData.isAbsolutelyLocalised()) {
                         // if it is localised, print its location
-                        System.out.println("=== the node is localised as: " + nodeData.getLocationAbsolute().toString());
+                        System.out.println("=== the node is localised as: " + nodeData.getLocationAbsolute().toJSONString());
                     } else {
                         // if not, get scan of its neighbours and perform trilateration
                         System.out.println("=== the node is not localised, preparing for its trilateration...");
-                        MapOfNeighbours nodeNeighbours = new MapOfNeighbours(service.getNeighbours());
+                        MapOfNeighbours nodeNeighbours = new MapOfNeighbours(new JSONArray(service.getNeighbours()));
                         MapOfNeighbours selectedNeighbours =
                                 trilaterationStrategy.prepareNodesForTrilateration(nodeData, nodeNeighbours);
-                        System.out.println("=== the trilateration will be performed with nodes: " + selectedNeighbours.toString());
+                        System.out.println("=== the trilateration will be performed with nodes: " + selectedNeighbours.toJSONString());
                         Vector3D newLocation =
                                 trilaterationStrategy.doTrilateration(selectedNeighbours);
-                        System.out.println("=== the node's location will be set to the trilateration's result: " + newLocation.toString());
+                        System.out.println("=== the node's location will be set to the trilateration's result: " + newLocation.toJSONString());
                         // finally, set trilateration result as the node's location
-                        service.setNodeLocation(newLocation.toString());
+                        service.setNodeLocation(newLocation.toJSONString());
                     }
                 }
                 catch (InvocationException ex) {
@@ -138,7 +141,7 @@ public class SpatialContextProvider {
         try {
             // Print all nodes including their locations
             System.out.println("=== Localised nodes:\n"
-                    + nodeServiceDetector.getMapOfNodesForDetectedServices().toString());
+                    + nodeServiceDetector.getMapOfNodesForDetectedServices().toJSONString());
         }
         catch (InvocationException ex) {
             System.err.println("!!! exception: " + ex.toString());

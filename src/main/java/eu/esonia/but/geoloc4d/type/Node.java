@@ -25,14 +25,13 @@ public class Node implements JSONString {
         this.scan = new MapOfNeighbours();
     }
 
-    public Node(final JSONObject representation) throws JSONException {
-        this.self = new NodeData(representation);
-        this.scan = new MapOfNeighbours();
-    }
-
     public Node(final String id, final String representation) {
         this.self = new NodeData(id, representation);
         this.scan = new MapOfNeighbours();
+    }
+
+    public Node(final JSONObject representation) throws NodeParsingException, JSONException {
+        this.set(representation);
     }
 
     public Node(final NodeData self, final MapOfNeighbours scan) {
@@ -51,12 +50,20 @@ public class Node implements JSONString {
     public String toJSONString() {
         JSONObject result = new JSONObject();
         try {
-            result.put("self", self);
-            result.put("scan", scan);
-            return new JSONObject().put(self.getID(), result).toString();
+            result.put("self", (JSONString) self);
+            result.put("scan", (JSONString) scan);
+            return result.toString();
         }
         catch (JSONException ex) {
             throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);
         }
+    }
+
+    public void set(final JSONObject representation) throws NodeParsingException, JSONException {
+        if (!representation.has("self") || !representation.has("scan")) {
+            throw new NodeParsingException("The representation of a node must have 'self' and 'scan' attributes!");
+        }
+        this.self = new NodeData(representation.getJSONObject("self"));
+        this.scan = new MapOfNeighbours(representation.getJSONArray("scan"));
     }
 }
