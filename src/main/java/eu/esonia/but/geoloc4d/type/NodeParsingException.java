@@ -1,7 +1,9 @@
 package eu.esonia.but.geoloc4d.type;
 
 /**
- * Exception {@link NodeData#set(java.lang.String)} of when fail to parse the string representation.
+ * Exception {@link NodeData#set(java.lang.String)} of when fail to parse the
+ * string representation.
+ *
  * @author rychly
  */
 public class NodeParsingException extends IllegalArgumentException {

@@ -1,7 +1,11 @@
 package eu.esonia.but.geoloc4d.type;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Properties of a node as seen from its neighbouring node.
+ *
  * @author rychly
  */
 public final class NeighbourProperties extends NodeData {
@@ -15,8 +19,8 @@ public final class NeighbourProperties extends NodeData {
      */
     private Vector3D locationRelative;
     /**
-     * RSSI network property of the node.
-     * IEEE 802's RSSI are unitless and in the range 0 to 255, expressible as a one-byte unsigned integer.
+     * RSSI network property of the node. IEEE 802's RSSI are unitless and in
+     * the range 0 to 255, expressible as a one-byte unsigned integer.
      */
     private Short rssi;
     /**
@@ -26,6 +30,7 @@ public final class NeighbourProperties extends NodeData {
 
     /**
      * Constructor of a node from its identificator and string representation.
+     *
      * @param id identificator of the node properties
      * @param representation string representation of the node properties
      * @throws NodeParsingException fail to parse the string representation
@@ -36,6 +41,7 @@ public final class NeighbourProperties extends NodeData {
 
     /**
      * Constructor of a node from its string representation.
+     *
      * @param representation string representation of the node properties
      * @throws NodeParsingException fail to parse the string representation
      */
@@ -45,17 +51,18 @@ public final class NeighbourProperties extends NodeData {
 
     /**
      * Copy constructor.
+     *
      * @param source source to copy from
      */
     public NeighbourProperties(final NeighbourProperties source) {
         super(source);
-        this.distance = (source.getDistance() != null)
+        this.distance = ( source.getDistance() != null )
                 ? new Double(source.getDistance()) : null;
-        this.locationRelative = (source.getLocationRelative() != null)
+        this.locationRelative = ( source.getLocationRelative() != null )
                 ? new Vector3D(source.getLocationRelative()) : null;
-        this.rssi = (source.getRssi() != null)
+        this.rssi = ( source.getRssi() != null )
                 ? new Short(source.getRssi()) : null;
-        this.rtt = (source.getRtt() != null)
+        this.rtt = ( source.getRtt() != null )
                 ? new Double(source.getRtt()) : null;
     }
 
@@ -80,8 +87,26 @@ public final class NeighbourProperties extends NodeData {
         return result.concat("}");
     }
 
+    @Override
+    public String toJSONString() {
+        try {
+            JSONObject resultProps = new JSONObject();
+            resultProps.putOpt("distance", this.getDistance());
+            resultProps.putOpt("locationAbsolute", this.getLocationAbsolute());
+            resultProps.putOpt("locationRelative", this.getLocationRelative());
+            resultProps.putOpt("rssi", this.getRssi());
+            resultProps.putOpt("rtt", this.getRtt());
+            return new JSONObject().put(this.getID(), resultProps).toString();
+        }
+        catch (JSONException ex) {
+            throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);
+        }
+    }
+
     /**
-     * Set node properties from its string representation. It's reverese operation to toString method.
+     * Set node properties from its string representation. It's reverese
+     * operation to toString method.
+     *
      * @param representation string representation of the node properties
      * @throws NodeParsingException fail to parse the string representation
      */

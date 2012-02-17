@@ -1,10 +1,14 @@
 package eu.esonia.but.geoloc4d.type;
 
+import org.json.JSONArray;
+import org.json.JSONString;
+
 /**
  * Vector coordinates in 3D.
+ *
  * @author rychly
  */
-public final class Vector3D {
+public final class Vector3D implements JSONString {
 
     private boolean undefined;
     private double x;
@@ -71,6 +75,7 @@ public final class Vector3D {
 
     /**
      * Set vector's coordinates.
+     *
      * @param x X coordinate
      * @param y Y coordinate
      * @param z Z coordinate
@@ -84,10 +89,11 @@ public final class Vector3D {
 
     /**
      * Copy coordinates of vector from another.
+     *
      * @param vector vector of original coordinates
      */
     public void set(final Vector3D vector) {
-        if ((vector == null) || vector.isUndefined()) {
+        if (( vector == null ) || vector.isUndefined()) {
             this.undefined = true;
         } else {
             this.set(vector.getX(), vector.getY(), vector.getZ());
@@ -96,6 +102,7 @@ public final class Vector3D {
 
     /**
      * Set vector coordinates from string (e.g. "(1.23,4.56,7.89)").
+     *
      * @param vector string with coordinates of vector
      */
     public void set(final String vector) {
@@ -122,14 +129,25 @@ public final class Vector3D {
     }
 
     @Override
+    public String toJSONString() {
+        JSONArray result = new JSONArray();
+        if (!this.isUndefined()) {
+            result.put(this.getX());
+            result.put(this.getY());
+            result.put(this.getZ());
+        }
+        return result.toString();
+    }
+
+    @Override
     public boolean equals(final Object object) {
         if (this == object) {
             return true;
-        } else if (!(object instanceof Vector3D)) {
+        } else if (!( object instanceof Vector3D )) {
             return false;
         } else {
             Vector3D vector = (Vector3D) object;
-            return !(this.isUndefined() || vector.isUndefined())
+            return !( this.isUndefined() || vector.isUndefined() )
                     && this.getX().equals(vector.getX())
                     && this.getY().equals(vector.getY())
                     && this.getZ().equals(vector.getZ());
@@ -142,15 +160,16 @@ public final class Vector3D {
             return 0;
         } else {
             int hash = 7;
-            hash = 53 * hash + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));
-            hash = 53 * hash + (int) (Double.doubleToLongBits(this.y) ^ (Double.doubleToLongBits(this.y) >>> 32));
-            hash = 53 * hash + (int) (Double.doubleToLongBits(this.z) ^ (Double.doubleToLongBits(this.z) >>> 32));
+            hash = 53 * hash + (int) ( Double.doubleToLongBits(this.x) ^ ( Double.doubleToLongBits(this.x) >>> 32 ) );
+            hash = 53 * hash + (int) ( Double.doubleToLongBits(this.y) ^ ( Double.doubleToLongBits(this.y) >>> 32 ) );
+            hash = 53 * hash + (int) ( Double.doubleToLongBits(this.z) ^ ( Double.doubleToLongBits(this.z) >>> 32 ) );
             return hash;
         }
     }
 
     /**
      * Addition of another vector.
+     *
      * @param increment increment
      * @return result
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -167,6 +186,7 @@ public final class Vector3D {
 
     /**
      * Substraction of another vector.
+     *
      * @param subtrahend decrement
      * @return result
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -184,6 +204,7 @@ public final class Vector3D {
 
     /**
      * Distance of vector from target.
+     *
      * @param target target vector
      * @return distance
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -200,6 +221,7 @@ public final class Vector3D {
 
     /**
      * Norm of vector.
+     *
      * @return norm
      * @throws Vector3DUndefinedException operation with undefined vector
      */
@@ -213,6 +235,7 @@ public final class Vector3D {
 
     /**
      * Multiplication of vector by scalar value.
+     *
      * @param multiplier multiplier
      * @return result
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -229,6 +252,7 @@ public final class Vector3D {
 
     /**
      * Dot operation on vector and another.
+     *
      * @param vector second vector
      * @return result
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -245,6 +269,7 @@ public final class Vector3D {
 
     /**
      * Cross operation of vector and another.
+     *
      * @param vector second vector
      * @return result
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -261,6 +286,7 @@ public final class Vector3D {
 
     /**
      * Average vector from this and another.
+     *
      * @param vector second vector
      * @return average
      * @throws Vector3DUndefinedException operation with undefined vector
@@ -269,14 +295,16 @@ public final class Vector3D {
         if (this.isUndefined() || vector.isUndefined()) {
             throw new Vector3DUndefinedException();
         } else {
-            return new Vector3D((this.getX() + vector.getX()) / 2,
-                    (this.getY() + vector.getY()) / 2,
-                    (this.getZ() + vector.getZ()) / 2);
+            return new Vector3D(( this.getX() + vector.getX() ) / 2,
+                    ( this.getY() + vector.getY() ) / 2,
+                    ( this.getZ() + vector.getZ() ) / 2);
         }
     }
 
     /**
-     * Select two most similar vectors from group of vectors (based on their distance).
+     * Select two most similar vectors from group of vectors (based on their
+     * distance).
+     *
      * @param vectors group of vectors
      * @return pair of the most similar vectors
      */
@@ -286,7 +314,7 @@ public final class Vector3D {
         for (int i = 0; i < vectors.length; i++) {
             for (int j = i + 1; j < vectors.length; j++) {
                 if (!vectors[i].isUndefined() && !vectors[j].isUndefined()
-                        && (vectors[i].distance(vectors[j]) < minDistance)) {
+                        && ( vectors[i].distance(vectors[j]) < minDistance )) {
                     result[0] = vectors[i];
                     result[1] = vectors[j];
                 }
@@ -296,7 +324,9 @@ public final class Vector3D {
     }
 
     /**
-     * Select two most different vectors from group of vectors (based on their distance).
+     * Select two most different vectors from group of vectors (based on their
+     * distance).
+     *
      * @param vectors group of vectors
      * @return pair of the most different vectors
      */
@@ -306,7 +336,7 @@ public final class Vector3D {
         for (int i = 0; i < vectors.length; i++) {
             for (int j = i + 1; j < vectors.length; j++) {
                 if (!vectors[i].isUndefined() && !vectors[j].isUndefined()
-                        && (vectors[i].distance(vectors[j]) > maxDistance)) {
+                        && ( vectors[i].distance(vectors[j]) > maxDistance )) {
                     result[0] = vectors[i];
                     result[1] = vectors[j];
                 }

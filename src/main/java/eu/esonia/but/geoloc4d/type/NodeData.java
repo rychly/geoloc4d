@@ -1,10 +1,15 @@
 package eu.esonia.but.geoloc4d.type;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONString;
+
 /**
  * Basic data of a node.
+ *
  * @author rychly
  */
-public class NodeData {
+public class NodeData implements JSONString {
 
     /**
      * Identificator of the node (e.g. its name).
@@ -17,6 +22,7 @@ public class NodeData {
 
     /**
      * Constructor of a node from its identificator and string representation.
+     *
      * @param id identificator of the node properties
      * @param representation string representation of the node properties
      * @throws NodeParsingException fail to parse the string representation
@@ -28,6 +34,7 @@ public class NodeData {
 
     /**
      * Constructor of a node from its string representation.
+     *
      * @param representation string representation of the node properties
      * @throws NodeParsingException fail to parse the string representation
      */
@@ -37,16 +44,18 @@ public class NodeData {
 
     /**
      * Copy constructor.
+     *
      * @param source source to copy from
      */
     public NodeData(final NodeData source) {
         this.id = source.getID();
-        this.locationAbsolute = (source.getLocationAbsolute() != null)
+        this.locationAbsolute = ( source.getLocationAbsolute() != null )
                 ? new Vector3D(source.getLocationAbsolute()) : null;
     }
 
     /**
      * Set identificator of the node (e.g. its name).
+     *
      * @param id the identificator to set
      */
     protected void setID(final String id) {
@@ -55,6 +64,7 @@ public class NodeData {
 
     /**
      * Get identificator of the node (e.g. its name).
+     *
      * @return identificator of the node
      */
     public String getID() {
@@ -63,15 +73,29 @@ public class NodeData {
 
     @Override
     public String toString() {
-        String result = id + " { ";
+        String result = this.getID() + " { ";
         if (this.getLocationAbsolute() != null) {
             result = result.concat("locationAbsolute=" + this.getLocationAbsolute().toString() + "; ");
         }
         return result.concat("}");
     }
 
+    @Override
+    public String toJSONString() {
+        try {
+            JSONObject resultProps = new JSONObject();
+            resultProps.putOpt("locationAbsolute", this.getLocationAbsolute());
+            return new JSONObject().put(this.getID(), resultProps).toString();
+        }
+        catch (JSONException ex) {
+            throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);
+        }
+    }
+
     /**
-     * Set node properties from its string representation. It's reverese operation to toString method.
+     * Set node properties from its string representation. It's reverese
+     * operation to toString method.
+     *
      * @param representation string representation of the node properties
      * @throws NodeParsingException fail to parse the string representation
      */
@@ -91,10 +115,11 @@ public class NodeData {
 
     /**
      * Check if the node has defined its absolute location.
+     *
      * @return true iff the node has defined its absolute location
      */
     public boolean isAbsolutelyLocalised() {
-        return (this.getLocationAbsolute() != null) && this.getLocationAbsolute().isDefined();
+        return ( this.getLocationAbsolute() != null ) && this.getLocationAbsolute().isDefined();
     }
 
     /**

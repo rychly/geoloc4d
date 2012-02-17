@@ -4,12 +4,15 @@ import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.json.JSONArray;
+import org.json.JSONString;
 
 /**
  * Map of neighbouring nodes as a hash-map.
+ *
  * @author rychly
  */
-public final class MapOfNodes extends LinkedHashMap<String, Node> {
+public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSONString {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,6 +25,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
 
     /**
      * Copy constructor.
+     *
      * @param source source to copy from
      */
     public MapOfNodes(final MapOfNodes source) {
@@ -31,6 +35,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
 
     /**
      * Default constructor of a map from its string representation.
+     *
      * @param representation string representation of the map
      * @throws IOException a read error from the representation
      */
@@ -41,6 +46,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
 
     /**
      * Add to map content from another map.
+     *
      * @param source source scan list
      */
     public void set(final MapOfNodes source) {
@@ -48,7 +54,9 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
     }
 
     /**
-     * Set map from its string representation. It's reverese operation to toString method.
+     * Set map from its string representation. It's reverese operation to
+     * toString method.
+     *
      * @param representation string representation of map
      * @throws IOException a read error from the representation
      */
@@ -63,8 +71,18 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
         return result.toString();
     }
 
+    @Override
+    public String toJSONString() {
+        JSONArray result = new JSONArray();
+        for (Node node : this.values()) {
+            result.put(node);
+        }
+        return result.toString();
+    }
+
     /**
      * Loads a map of nodes from a file.
+     *
      * @param filename the file to read from
      * @throws FileNotFoundException the file not found
      * @throws IOException a read error of the file
@@ -72,16 +90,14 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
      */
     public static MapOfNodes loadNodes(final String filename)
             throws FileNotFoundException, IOException {
-        InputStream stream = new FileInputStream(filename);
-        try {
+        try (InputStream stream = new FileInputStream(filename)) {
             return loadNodes(stream);
-        } finally {
-            stream.close();
         }
     }
 
     /**
      * Loads a map of nodes from an input stream.
+     *
      * @param stream the input stream to read from
      * @return the map of nodes
      * @throws IOException a read error of the input stream
@@ -96,7 +112,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
         for (Map.Entry<Object, Object> pair : servicesProperties.entrySet()) {
             String[] tokens = pair.getKey().toString().split("\\.", 2);
             // find a related node if exists, create a new otherwise
-            Node node = (result.containsKey(tokens[0]))
+            Node node = ( result.containsKey(tokens[0]) )
                     ? result.get(tokens[0]) : new Node(tokens[0]);
             // fill the node
             if (tokens.length == 1) {
@@ -112,36 +128,33 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
 
     /**
      * Save the map of nodes into a file.
+     *
      * @param filename the file to save into
      * @throws IOException a write error to the file
      */
     public void saveNodes(final String filename)
             throws IOException {
-        OutputStream stream = new FileOutputStream(filename);
-        try {
+        try (OutputStream stream = new FileOutputStream(filename)) {
             saveNodes(stream);
-        } finally {
-            stream.close();
         }
     }
 
     /**
      * Save the map of nodes into an output stream.
+     *
      * @param stream the output stream to save into
      */
     public void saveNodes(final OutputStream stream) {
-        PrintStream printStream = new PrintStream(stream);
-        try {
+        try (PrintStream printStream = new PrintStream(stream)) {
             for (Node node : this.values()) {
                 printStream.println(node.toString());
             }
-        } finally {
-            printStream.close();
         }
     }
 
     /**
      * Check if all nodes in the map have set their absolute location.
+     *
      * @return true iff the all nodes in the map are localised
      */
     public boolean isCompletelyLocalised() {
@@ -155,6 +168,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> {
 
     /**
      * Get a map of the nodes without defined location.
+     *
      * @return the map of the nodes without defined location
      */
     public MapOfNodes getNodesWithoutLocation() {

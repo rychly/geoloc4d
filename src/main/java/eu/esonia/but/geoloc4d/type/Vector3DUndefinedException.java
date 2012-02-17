@@ -2,6 +2,7 @@ package eu.esonia.but.geoloc4d.type;
 
 /**
  * Exception on operation with undefined Vector3D.
+ *
  * @author rychly
  */
 public class Vector3DUndefinedException extends RuntimeException {
