@@ -1,6 +1,6 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,6 +19,11 @@
             <groupId>org.ws4d.java</groupId>
             <artifactId>ws4d-java-se-full</artifactId>
             <version>2.0.0-beta5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>2.1-RC3</version>
         </dependency>
     </dependencies>
 
@@ -55,16 +60,27 @@
     <packaging>jar</packaging>
     <properties>
         <targetJdk>1.6</targetJdk>
+        <project.build.sourceEncoding>US-ASCII</project.build.sourceEncoding>
     </properties>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
                     <showDeprecation>true</showDeprecation>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
         </plugins>
@@ -74,6 +90,7 @@
             <plugin><!-- tracker at sourceforge -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
+                <version>2.6</version>
                 <inherited>false</inherited>
                 <reportSets>
                     <reportSet>
@@ -89,20 +106,22 @@
             <plugin><!-- classes Javadocs -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin><!-- indexed and cross-referenced HTML version of source code -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jxr-maven-plugin</artifactId>
+                <version>2.8.1</version>
             </plugin>
             <plugin><!-- unit-test reports -->
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.9</version>
             </plugin>
             <plugin><!-- test coverage -->
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clover-plugin</artifactId>
+                <version>2.4</version>
             </plugin>
             <plugin><!-- automatic code analysis -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.7.1</version>
                 <configuration>
                     <linkXref>true</linkXref>
                     <sourceEncoding>utf-8</sourceEncoding>
@@ -110,13 +129,28 @@
                     <targetjdk>1.6</targetjdk>
                 </configuration>
             </plugin>
+            <plugin><!-- check-style rules for Java formatting -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+            <plugin><!-- indexed and cross-referenced HTML version of source code -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+                <version>2.0-beta-1</version>
+            </plugin>
             <plugin><!-- changelog reports from src/changes/changes.xml -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changelog-maven-plugin</artifactId>
+                <version>2.0-beta-1</version>
             </plugin>
             <plugin><!-- generate a list of all the items marked @todo or TODO -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
+                <version>2.4</version>
             </plugin>
         </plugins>
     </reporting>
@@ -135,20 +169,29 @@
     <!-- Maven Environment -->
     <repositories>
         <repository>
-            <id>fit-geoloc4d</id>
+            <id>fit-geoloc4d-scp</id>
             <name>Geoloc4D repository (eu.esonia.but.geoloc4d and its extraordinary dependencies)</name>
             <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
         </repository>
+        <repository>  
+            <id>maven-restlet</id>  
+            <name>Public online Restlet repository</name>  
+            <url>http://maven.restlet.org</url>  
+        </repository>      
     </repositories>
     <distributionManagement>
         <site>
             <id>geoloc4d.sf.net</id>
-            <url>scp://rychly,geoloc4d@shell.sourceforge.net/home/project-web/geoloc4d/htdocs</url>
+            <url>scpexe://rychly,geoloc4d@shell.sourceforge.net/home/project-web/geoloc4d/htdocs</url>
             <!-- ssh -t rychly,geoloc4d@shell.sourceforge.net create -->
         </site>
         <repository>
-            <id>fit-geoloc4d</id>
-            <url>scp://rychly@kazi.fit.vutbr.cz/home/users/rychly/public_html/geoloc4d/mvn-repo</url>
+            <id>fit-geoloc4d-scp</id>
+            <url>scpexe://rychly@kazi.fit.vutbr.cz/home/users/rychly/public_html/geoloc4d/mvn-repo</url>
         </repository>
+        <!--repository>
+            <id>fit-geoloc4d-file</id>
+            <url>file:///mnt/auto/net/ssh:cz.vutbr.fit.kazi/home/users/rychly/public_html/geoloc4d/mvn-repo</url>
+        </repository-->
     </distributionManagement>
 </project>
