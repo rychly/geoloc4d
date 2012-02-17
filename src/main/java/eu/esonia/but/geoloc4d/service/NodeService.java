@@ -16,6 +16,7 @@ import org.ws4d.java.util.ParameterUtil;
 
 /**
  * Service of DPWS representing a network node and its data (e.g. location).
+ *
  * @author rychly
  */
 public class NodeService extends DefaultService implements NodeServiceInterface {
@@ -30,7 +31,9 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
     private Node node;
 
     /**
-     * Construct NodeService object from a node of a network with geolocation ability.
+     * Construct NodeService object from a node of a network with geolocation
+     * ability.
+     *
      * @param serviceNode the node to construct from
      */
     public NodeService(Node serviceNode) {
@@ -39,7 +42,9 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
     }
 
     /**
-     * Construct NodeService object from a node of a network with geolocation ability and configuration with given ID.
+     * Construct NodeService object from a node of a network with geolocation
+     * ability and configuration with given ID.
+     *
      * @param serviceConfigID ID of the service's configuration (-1 to ignore)
      * @param serviceNode the node to construct from
      */
@@ -99,6 +104,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
 
     /**
      * Get basic data of a node.
+     *
      * @param operation related web-service operation
      * @param parameterValue input parameters of the operation
      * @return output parameters of the operation
@@ -115,6 +121,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
 
     /**
      * Get neighbouring nodes (from scan).
+     *
      * @param operation related web-service operation
      * @param parameterValue input parameters of the operation
      * @return output parameters of the operation
@@ -130,6 +137,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
 
     /**
      * Set node's location.
+     *
      * @param operation related web-service operation
      * @param parameterValue input parameters of the operation
      * @return output parameters of the operation

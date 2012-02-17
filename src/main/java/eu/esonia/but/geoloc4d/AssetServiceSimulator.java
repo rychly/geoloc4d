@@ -14,25 +14,14 @@ import org.ws4d.java.util.Log;
 
 /**
  * Asset Service(s) Simulator.
+ *
  * @author rychly
  */
 public class AssetServiceSimulator {
 
     public static void main(String[] args) {
-        /*
-        {
-        final String directory = (new File(AssetServiceSimulator.class.getResource(
-        AssetServiceSimulator.class.getSimpleName() + ".class").
-        toString().substring(5))).getParent();
-        args = new String[]{
-        // To enable multicast on loopback interface do "ifconfig lo multicast"
-        "localhost", "4321", "/testing/",
-        directory + "/" + NodeService.class.getSimpleName() + "-testing.properties"
-        };
-        }
-        //*/
-
         // Check parameters
+        // To enable multicast on loopback interface do "ifconfig lo multicast"
         if (args.length != 4) {
             System.err.println("Usage: java " + AssetServiceSimulator.class.getName() + " <hostname> <port> <path/> <services.properties>");
             System.exit(-1);
@@ -68,19 +57,22 @@ public class AssetServiceSimulator {
                 // Add the service to the device
                 device.addService(service);
             }
-        } catch (FileNotFoundException fnfe) {
+        }
+        catch (FileNotFoundException fnfe) {
             System.err.println("!!! exception: The file " + args[1] + " with service descriptions was not found!\n" + fnfe.toString());
             System.exit(-2);
-        } catch (IOException ioe) {
+        }
+        catch (IOException ioe) {
             System.err.println("!!! exception: Problem loading file " + args[0] + " with service descriptions!\n" + ioe.toString());
             System.exit(-3);
         }
-        
+
         // Start the device
         System.out.println("=== Starting the device...");
         try {
             device.start();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.err.println("!!! exception: " + ex.toString());
             System.exit(-4);
         }

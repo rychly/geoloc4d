@@ -5,7 +5,9 @@ import java.util.TimerTask;
 import org.ws4d.java.client.SearchParameter;
 
 /**
- * Allows to run {@link NodeServiceDetector#searchNodeService(org.ws4d.java.client.SearchParameter)} periodically.
+ * Allows to run {@link NodeServiceDetector#searchNodeService(org.ws4d.java.client.SearchParameter)}
+ * periodically.
+ *
  * @author rychly
  */
 public class NodeServiceDetectorHeartbeat extends TimerTask {
@@ -25,16 +27,22 @@ public class NodeServiceDetectorHeartbeat extends TimerTask {
 
     /**
      * Construct a heartbeat for given node service detector.
-     * @param nodeServiceDetector the node service detector to be executed on the heratbeat
+     *
+     * @param nodeServiceDetector the node service detector to be executed on
+     * the heratbeat
      */
     public NodeServiceDetectorHeartbeat(NodeServiceDetector nodeServiceDetector) {
         this(nodeServiceDetector, null);
     }
 
     /**
-     * Construct a heartbeat for given node service detector and optional initial search parameter.
-     * @param nodeServiceDetector the node service detector to be executed on the heratbeat
-     * @param initialSearchParameter the optional initial search parameter (null if empty)
+     * Construct a heartbeat for given node service detector and optional
+     * initial search parameter.
+     *
+     * @param nodeServiceDetector the node service detector to be executed on
+     * the heratbeat
+     * @param initialSearchParameter the optional initial search parameter (null
+     * if empty)
      */
     public NodeServiceDetectorHeartbeat(NodeServiceDetector nodeServiceDetector, SearchParameter initialSearchParameter) {
         this.nodeServiceDetector = nodeServiceDetector;
@@ -48,8 +56,12 @@ public class NodeServiceDetectorHeartbeat extends TimerTask {
     }
 
     /**
-     * Schedules {@link NodeServiceDetector#searchNodeService(org.ws4d.java.client.SearchParameter)} for repeated fixed-delay execution (approximately regular intervals separated by the specified period).
-     * @param timeInterval time in milliseconds between successive task executions.
+     * Schedules {@link NodeServiceDetector#searchNodeService(org.ws4d.java.client.SearchParameter)}
+     * for repeated fixed-delay execution (approximately regular intervals
+     * separated by the specified period).
+     *
+     * @param timeInterval time in milliseconds between successive task
+     * executions.
      */
     public void schedule(int timeInterval) {
         this.stop();

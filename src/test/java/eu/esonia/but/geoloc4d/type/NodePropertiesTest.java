@@ -7,6 +7,7 @@ import org.junit.Test;
 
 /**
  * Test of class for properties of a node as seen from its neighbouring node.
+ *
  * @author rychly
  */
 public class NodePropertiesTest {

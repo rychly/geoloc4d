@@ -17,21 +17,14 @@ import org.ws4d.java.util.Log;
 
 /**
  * Spatial context provider (DPWS client).
+ *
  * @author rychly
  */
 public class SpatialContextProvider {
 
     public static void main(String[] args) throws InterruptedException {
-        /*
-        {
-        args = new String[]{
-        // To enable multicast on loopback interface do "ifconfig lo multicast"
-        "localhost", "4421", "/testing/"
-        };
-        }
-        //*/
-
         // Check parameters
+        // To enable multicast on loopback interface do "ifconfig lo multicast"
         if (args.length != 3) {
             System.err.println("Usage: java " + SpatialContextProvider.class.getName() + " SpatialContextProvider <hostname> <port> <path/>");
             System.exit(-1);
@@ -61,13 +54,16 @@ public class SpatialContextProvider {
                 System.out.print("=== the calibration will be performed for nodes:\n"
                         + mapOfNodes.toString());
                 trilaterationStrategy.calibrateMetric(mapOfNodes);
-            } catch (InvocationException ex) {
+            }
+            catch (InvocationException ex) {
                 // service error will be ignored -- next time, the network may be ready
                 System.err.println("!!! exception: " + ex.toString());
-            } catch (TimeoutException ex) {
+            }
+            catch (TimeoutException ex) {
                 // service error will be ignored -- next time, the network may be ready
                 System.err.println("!!! exception: " + ex.toString());
-            } catch (TrilaterationStrategyException ex) {
+            }
+            catch (TrilaterationStrategyException ex) {
                 // calibration error will be ignored -- next time, there may be enought nodes
                 System.err.println("!!! exception: " + ex.toString());
             }
@@ -76,13 +72,13 @@ public class SpatialContextProvider {
         if (trilaterationStrategy instanceof StrategyWithRSSI) {
             System.out.println(
                     "=== received signal strength at 1 meter distance = "
-                    + ((StrategyWithRSSI) trilaterationStrategy).getSignalStrengthAtMeter()
+                    + ( (StrategyWithRSSI) trilaterationStrategy ).getSignalStrengthAtMeter()
                     + "\n=== propagation constant = "
-                    + ((StrategyWithRSSI) trilaterationStrategy).getPropagationConstant());
+                    + ( (StrategyWithRSSI) trilaterationStrategy ).getPropagationConstant());
         } else if (trilaterationStrategy instanceof StrategyWithRTT) {
             System.out.println(
                     "=== correction factor for conversion of RTT into actual distance = "
-                    + ((StrategyWithRTT) trilaterationStrategy).getCorrectionFactor());
+                    + ( (StrategyWithRTT) trilaterationStrategy ).getCorrectionFactor());
         } else {
             System.out.println(
                     "=== an unknown implementation of the strategy!");
@@ -120,15 +116,18 @@ public class SpatialContextProvider {
                         // finally, set trilateration result as the node's location
                         service.setNodeLocation(newLocation.toString());
                     }
-                } catch (InvocationException ex) {
+                }
+                catch (InvocationException ex) {
                     // service error will be ignored -- we will try it next time
                     System.err.println("!!! exception: " + ex.toString());
                     completelyLocalised = false;
-                } catch (TimeoutException ex) {
+                }
+                catch (TimeoutException ex) {
                     // service error will be ignored -- we will try it next time
                     System.err.println("!!! exception: " + ex.toString());
                     completelyLocalised = false;
-                } catch (TrilaterationStrategyException ex) {
+                }
+                catch (TrilaterationStrategyException ex) {
                     // trilateration error will be ignored -- we will try it next time
                     System.err.println("!!! exception: " + ex.toString());
                     completelyLocalised = false;
@@ -140,10 +139,12 @@ public class SpatialContextProvider {
             // Print all nodes including their locations
             System.out.println("=== Localised nodes:\n"
                     + nodeServiceDetector.getMapOfNodesForDetectedServices().toString());
-        } catch (InvocationException ex) {
+        }
+        catch (InvocationException ex) {
             System.err.println("!!! exception: " + ex.toString());
             System.exit(-2);
-        } catch (TimeoutException ex) {
+        }
+        catch (TimeoutException ex) {
             System.err.println("!!! exception: " + ex.toString());
             System.exit(-3);
         }

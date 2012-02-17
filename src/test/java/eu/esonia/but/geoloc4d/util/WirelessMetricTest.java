@@ -8,6 +8,7 @@ import org.junit.Test;
 
 /**
  * Test of class for wireless metrics.
+ *
  * @author rychly
  */
 public class WirelessMetricTest {
@@ -16,7 +17,7 @@ public class WirelessMetricTest {
     private short rssiA, rssiB, rssiC, rssiD;
     private double rttA, rttB, rttC, rttD;
     private double signalStrengthAtMeter, propagationConstant, correctionFactor;
-    
+
     public WirelessMetricTest() {
     }
 
@@ -51,6 +52,7 @@ public class WirelessMetricTest {
 
     /**
      * Test of compSignalStrengthAtMeter method, of class WirelessMetric.
+     *
      * @throws WirelessMetricException assertion failed with the exception
      */
     @Test
@@ -63,6 +65,7 @@ public class WirelessMetricTest {
 
     /**
      * Test of compPropagationConstant method, of class WirelessMetric.
+     *
      * @throws WirelessMetricException assertion failed with the exception
      */
     @Test
@@ -75,6 +78,7 @@ public class WirelessMetricTest {
 
     /**
      * Test of compRssiFromDistance method, of class WirelessMetric.
+     *
      * @throws WirelessMetricException assertion failed with the exception
      */
     @Test
@@ -86,6 +90,7 @@ public class WirelessMetricTest {
 
     /**
      * Test of compDistanceFromRssi method, of class WirelessMetric.
+     *
      * @throws WirelessMetricException assertion failed with the exception
      */
     @Test
@@ -96,7 +101,9 @@ public class WirelessMetricTest {
     }
 
     /**
-     * Test of compCorrectionFactorFromRttForDistance method, of class WirelessMetric.
+     * Test of compCorrectionFactorFromRttForDistance method, of class
+     * WirelessMetric.
+     *
      * @throws WirelessMetricException assertion failed with the exception
      */
     @Test
@@ -138,7 +145,6 @@ public class WirelessMetricTest {
                 this.nodeA, this.nodeA.distance(this.node0),
                 this.nodeB, this.nodeB.distance(this.node0),
                 this.nodeC, this.nodeC.distance(this.node0),
-                this.nodeD, this.nodeD.distance(this.node0))
-                ), 0.001);
+                this.nodeD, this.nodeD.distance(this.node0))), 0.001);
     }
 }

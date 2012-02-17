@@ -16,7 +16,9 @@ import org.ws4d.java.types.QNameSet;
 import org.ws4d.java.types.URI;
 
 /**
- * DPWS client to detect available NodeService services and create their proxies.
+ * DPWS client to detect available NodeService services and create their
+ * proxies.
+ *
  * @author rychly
  */
 public class NodeServiceDetector extends DefaultClient {
@@ -40,11 +42,14 @@ public class NodeServiceDetector extends DefaultClient {
     }
 
     /**
-     * Search for available node services with an optional initial search parameter.
-     * @param initialSearchParameter the initial search parameter to allow additional search criteria (null for empty)
+     * Search for available node services with an optional initial search
+     * parameter.
+     *
+     * @param initialSearchParameter the initial search parameter to allow
+     * additional search criteria (null for empty)
      */
     public void searchNodeService(final SearchParameter initialSearchParameter) {
-        SearchParameter searchParameter = (initialSearchParameter == null)
+        SearchParameter searchParameter = ( initialSearchParameter == null )
                 ? new SearchParameter() : initialSearchParameter;
         QName serviceType = new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE);
         searchParameter.setServiceTypes(new QNameSet(serviceType));
@@ -60,8 +65,11 @@ public class NodeServiceDetector extends DefaultClient {
     }
 
     /**
-     * This method is called each time a service matching the initial search criteria (as contained within argument search) has been found. 
-     * It is called if there are search-results, after method searchService(new SearchParameter()) is triggered.
+     * This method is called each time a service matching the initial search
+     * criteria (as contained within argument search) has been found. It is
+     * called if there are search-results, after method searchService(new
+     * SearchParameter()) is triggered.
+     *
      * @param serviceRef a reference to the matching service
      * @param search the list of criteria the search was initiated with
      */
@@ -70,7 +78,8 @@ public class NodeServiceDetector extends DefaultClient {
         if (serviceRef.getServiceId().equals(new URI(NodeService.class.getSimpleName()))) {
             try {
                 this.detectedServices.add(new NodeServiceProxy(serviceRef.getService()));
-            } catch (TimeoutException e) {
+            }
+            catch (TimeoutException e) {
                 this.numberOfTimeOuts++;
             }
         }
@@ -78,10 +87,11 @@ public class NodeServiceDetector extends DefaultClient {
 
     /**
      * Get an actual list of detected services.
+     *
      * @return the list of detected services
      */
     public List<NodeServiceProxy> getDetectedServices() {
-        return new CopyOnWriteArrayList<NodeServiceProxy>(this.detectedServices);
+        return new CopyOnWriteArrayList<>(this.detectedServices);
     }
 
     /**
@@ -93,6 +103,7 @@ public class NodeServiceDetector extends DefaultClient {
 
     /**
      * Get an actual number of time-outs.
+     *
      * @return the actual number of time-outs
      */
     public int getNumberOfTimeouts() {
@@ -101,9 +112,14 @@ public class NodeServiceDetector extends DefaultClient {
 
     /**
      * Get a map of all nodes of actually available (detected) services.
+     *
      * @return the map of nodes of detected services
-     * @throws InvocationException thrown to indicate that a declared fault occurred during execution of this operation's business logic; clients can extract further fault-related information from this exception, such as user-defined data attached to it 
-     * @throws TimeoutException in case invoking an operation of a remote service times out
+     * @throws InvocationException thrown to indicate that a declared fault
+     * occurred during execution of this operation's business logic; clients can
+     * extract further fault-related information from this exception, such as
+     * user-defined data attached to it
+     * @throws TimeoutException in case invoking an operation of a remote
+     * service times out
      */
     public MapOfNodes getMapOfNodesForDetectedServices() throws InvocationException, TimeoutException {
         MapOfNodes result = new MapOfNodes();

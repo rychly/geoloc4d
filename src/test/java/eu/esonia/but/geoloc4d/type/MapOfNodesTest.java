@@ -7,6 +7,7 @@ import org.junit.Test;
 
 /**
  * Test of class for map of nodes as a hash-map.
+ *
  * @author rychly
  */
 public class MapOfNodesTest {

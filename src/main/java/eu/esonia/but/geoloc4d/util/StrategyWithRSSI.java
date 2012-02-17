@@ -3,29 +3,30 @@ package eu.esonia.but.geoloc4d.util;
 import eu.esonia.but.geoloc4d.type.*;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * The algorithm for selection of neighbouring nodes and computation of their distanecs from RSSI.
+ * The algorithm for selection of neighbouring nodes and computation of their
+ * distanecs from RSSI.
+ *
  * @author rychly
  */
 public class StrategyWithRSSI extends TrilaterationStrategy {
 
     /**
-     * Received signal strength at 1 meter distance.
-     * Have to be computed by {@link WirelessMetric#compSignalStrengthAtMeter(short, short, double, double)}, no predefined value.
+     * Received signal strength at 1 meter distance. Have to be computed by {@link WirelessMetric#compSignalStrengthAtMeter(short, short, double, double)},
+     * no predefined value.
      */
     private Double signalStrengthAtMeter = null;
     /**
-     * Propagation constant.
-     * Have to be computed by {@link WirelessMetric#compPropagationConstant(short, short, double, double)}, no predefined value.
+     * Propagation constant. Have to be computed by {@link WirelessMetric#compPropagationConstant(short, short, double, double)},
+     * no predefined value.
      */
     private Double propagationConstant = null;
 
     /**
-     * Get received signal strength at 1 meter distance for this strategy.
-     * Can be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
+     * Get received signal strength at 1 meter distance for this strategy. Can
+     * be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
+     *
      * @return the received signal strength at 1 meter distance
      */
     public double getSignalStrengthAtMeter() {
@@ -33,8 +34,8 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
     }
 
     /**
-     * Get propagation constant.
-     * Can be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
+     * Get propagation constant. Can be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
+     *
      * @return the propagation constant
      */
     public double getPropagationConstant() {
@@ -61,7 +62,8 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
                     propagationConstantSum += WirelessMetric.compPropagationConstant(
                             arrayOfNeighbours[0].getRssi(), arrayOfNeighbours[1].getRssi(), arrayOfNeighbours[0].getDistance(), arrayOfNeighbours[1].getDistance());
                     count++;
-                } catch (WirelessMetricException ex) {
+                }
+                catch (WirelessMetricException ex) {
                     // skip the neightbouring nodes with uncomputable constants
                 }
             }
@@ -81,7 +83,7 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
     @Override
     public MapOfNeighbours prepareNodesForTrilateration(final NodeData node, final MapOfNeighbours neighbours)
             throws TrilaterationStrategyException {
-        if ((this.signalStrengthAtMeter == null) || (this.propagationConstant == null)) {
+        if (( this.signalStrengthAtMeter == null ) || ( this.propagationConstant == null )) {
             throw new TrilaterationStrategyException("Strategy has not calibrated metric!");
         }
         MapOfNeighbours result = new MapOfNeighbours();
@@ -92,7 +94,8 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
             try {
                 neighbourWithDistance.setDistance((Double) WirelessMetric.compDistanceFromRssi(neighbourWithDistance.getRssi(), this.signalStrengthAtMeter, this.propagationConstant));
                 result.put(pair.getKey(), neighbourWithDistance);
-            } catch (WirelessMetricException ex) {
+            }
+            catch (WirelessMetricException ex) {
                 // skip the neightbouring nodes with uncomputable distance
             }
         }

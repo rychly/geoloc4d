@@ -7,6 +7,7 @@ import org.junit.Test;
 
 /**
  * Test of class for vector coordinates in 3D (without algebraical operations).
+ *
  * @author rychly
  */
 public class Vector3DTest {

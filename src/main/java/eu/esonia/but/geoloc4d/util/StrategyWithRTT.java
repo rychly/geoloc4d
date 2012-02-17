@@ -2,24 +2,26 @@ package eu.esonia.but.geoloc4d.util;
 
 import eu.esonia.but.geoloc4d.type.*;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * The algorithm for selection of neighbouring nodes and computation of their distanecs from RTT.
+ * The algorithm for selection of neighbouring nodes and computation of their
+ * distanecs from RTT.
+ *
  * @author rychly
  */
 public class StrategyWithRTT extends TrilaterationStrategy {
 
     /**
-     * Correction factor for conversion of RTT into actual distance.
-     * Can be computed by {@link WirelessMetric#compCorrectionFactorFromRttForDistance(double, double)}, predefined estimated value for routed networks.
+     * Correction factor for conversion of RTT into actual distance. Can be
+     * computed by {@link WirelessMetric#compCorrectionFactorFromRttForDistance(double, double)},
+     * predefined estimated value for routed networks.
      */
     private Double correctionFactor = 0.4;
 
     /**
-     * Get correction factor for conversion of RTT into actual distance.
-     * For better precision, should be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
+     * Get correction factor for conversion of RTT into actual distance. For
+     * better precision, should be used after {@link #calibrateMetric(eu.esonia.but.geoloc4d.type.NodeData, eu.esonia.but.geoloc4d.type.MapOfNeighbours)}.
+     *
      * @return the correction factor
      */
     public double getCorrectionFactor() {
@@ -40,7 +42,8 @@ public class StrategyWithRTT extends TrilaterationStrategy {
                     correctionFactorSum += WirelessMetric.compCorrectionFactorFromRttForDistance(
                             neighbourProperties.getRtt(), neighbourProperties.getDistance());
                     count++;
-                } catch (WirelessMetricException ex) {
+                }
+                catch (WirelessMetricException ex) {
                     // skip the neightbouring nodes with uncomputable correction
                 }
             }
