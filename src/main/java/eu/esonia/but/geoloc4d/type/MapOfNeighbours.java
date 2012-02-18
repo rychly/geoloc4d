@@ -28,93 +28,57 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
      */
     public MapOfNeighbours(final MapOfNeighbours source) {
         super();
-        this.set(source);
-    }
-
-    /**
-     * Default constructor of a map from its string representation.
-     *
-     * @param representation string representation of the map
-     * @throws NodeParsingException fail to parse the string representation
-     */
-    public MapOfNeighbours(final String representation) throws NodeParsingException {
-        super();
-        this.set(representation);
-    }
-
-    /**
-     * Default constructor of a map from its representation in JSON.
-     *
-     * @param representation representation of the map in JSON
-     * @throws NodeParsingException fail to parse the string representation
-     * @throws JSONException fail to parse a neighbour's representation in JSON
-     */
-    public MapOfNeighbours(final JSONArray representation) throws NodeParsingException, JSONException {
-        super();
-        this.set(representation);
-    }
-
-    /**
-     * Add to map content from another map.
-     *
-     * @param source source scan list
-     */
-    public void set(final MapOfNeighbours source) {
         this.putAll(source);
     }
 
     /**
-     * Set map from its string representation. It's reverese operation to
-     * toString method.
+     * Default constructor of a map from its string representation in JSON.
      *
-     * @param representation string representation of map
-     * @throws NodeParsingException fail to parse the string representation
+     * @param representation string representation of the map in JSON
+     * @throws JSONException fail to parse a neighbour's string representation
+     * in JSON
      */
-    public void set(final String representation) throws NodeParsingException {
-        String[] tokens = representation.split("\\s\\+\\s");
-        for (int i = 0; i < tokens.length; i++) {
-            NeighbourProperties nodeProperties = new NeighbourProperties(tokens[i]);
-            this.put(nodeProperties.getID(), nodeProperties);
-        }
+    public MapOfNeighbours(final String representation) throws JSONException {
+        this(new JSONArray(representation));
     }
 
     /**
-     * Set map from its representation in JSON. It's reverese operation to
-     * toJSONString method and JSONArray constructor.
+     * Default constructor of a map from its representation in JSONArray.
      *
-     * @param representation representation of map in JSON
-     * @throws NodeParsingException fail to parse a neighbour's sctructure of
-     * the representation in JSON
+     * @param representation representation of the map in JSONArray
      * @throws JSONException fail to parse a neighbour's representation in JSON
      */
-    public void set(final JSONArray representation) throws NodeParsingException, JSONException {
+    public MapOfNeighbours(final JSONArray representation) throws JSONException {
+        super();
         for (int i = 0; i < representation.length(); i++) {
             NeighbourProperties nodeProperties = new NeighbourProperties(representation.getJSONObject(i));
             this.put(nodeProperties.getID(), nodeProperties);
         }
     }
 
-    @Override
-    public String toString() {
-        String result = new String();
+    public JSONArray toJSONArray() {
+        JSONArray result = new JSONArray();
         if (!this.isEmpty()) {
             for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
-                result = result.concat(pair.getValue() + " + ");
+                result.put(pair.getValue().toJSONObject());
             }
-            result = result.substring(0, result.length() - 3);
         }
         return result;
     }
 
     @Override
-    public String toJSONString() {
-        JSONArray result = new JSONArray();
-        if (!this.isEmpty()) {
-            for (Map.Entry<String, NeighbourProperties> pair : this.entrySet()) {
-                result.put((JSONString) pair.getValue());
-            }
+    public String toString() {
+        try {
+            return this.toJSONArray().toString(1);
         }
-        return result.toString();
+        catch (JSONException ex) {
+            throw new RuntimeException("Impossible, the value cannot be an invalid number!", ex);
+        }
+    }
+
+    @Override
+    public String toJSONString() {
+        return this.toJSONArray().toString();
     }
 
     /**

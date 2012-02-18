@@ -3,10 +3,10 @@ package eu.esonia.but.geoloc4d.type;
 import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONString;
+import org.json.JSONTokener;
 
 /**
  * Map of neighbouring nodes as a hash-map.
@@ -31,127 +31,86 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
      */
     public MapOfNodes(final MapOfNodes source) {
         super();
-        this.set(source);
-    }
-
-    /**
-     * Default constructor of a map from its string representation.
-     *
-     * @param representation string representation of the map
-     * @throws IOException a read error from the representation
-     */
-    public MapOfNodes(final String representation) throws IOException {
-        super();
-        this.set(representation);
-    }
-
-    /**
-     * Default constructor of a map from its representation in JSON.
-     *
-     * @param representation representation of the map in JSON
-     * @throws JSONException fail to parse a node's string representation in
-     * JSON
-     */
-    public MapOfNodes(final JSONArray representation) throws JSONException {
-        super();
-        this.set(representation);
-    }
-
-    /**
-     * Add to map content from another map.
-     *
-     * @param source source scan list
-     */
-    public void set(final MapOfNodes source) {
         this.putAll(source);
     }
 
     /**
-     * Set map from its string representation. It's reverese operation to
-     * toString method.
+     * Default constructor of a map from its string representation in JSON.
      *
-     * @param representation string representation of map
-     * @throws IOException a read error from the representation
-     */
-    public void set(final String representation) throws IOException {
-        this.set(loadNodes(new ByteArrayInputStream(representation.getBytes())));
-    }
-
-    /**
-     * Set map from its representation in JSON. It's reverese operation to
-     * toString method and JSONArray constructor.
-     *
-     * @param representation representation of map in JSON
+     * @param representation string representation of the map in JSON
      * @throws JSONException fail to parse a node's string representation in
      * JSON
      */
-    public void set(final JSONArray representation) throws JSONException {
+    public MapOfNodes(final String representation) throws JSONException {
+        this(new JSONArray(representation));
+    }
+
+    /**
+     * Constructor of a map from its representation in JSONArray.
+     *
+     * @param representation representation of the map in JSONArray
+     * @throws JSONException fail to parse a node's representation in JSON
+     */
+    public MapOfNodes(final JSONArray representation) throws JSONException {
+        super();
         for (int i = 0; i < representation.length(); i++) {
             Node node = new Node(representation.getJSONObject(i));
-            this.put(node.self.getID(), node);
+            this.put(node.getSelf().getID(), node);
         }
+    }
+
+    public JSONArray toJSONArray() {
+        JSONArray result = new JSONArray();
+        for (Node node : this.values()) {
+            result.put(node.toJSONObject());
+        }
+        return result;
     }
 
     @Override
     public String toString() {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        this.saveNodes(result);
-        return result.toString();
+        try {
+            return this.toJSONArray().toString(1);
+        }
+        catch (JSONException ex) {
+            throw new RuntimeException("Impossible, the value cannot be an invalid number!", ex);
+        }
     }
 
     @Override
     public String toJSONString() {
-        JSONArray result = new JSONArray();
-        for (Node node : this.values()) {
-            result.put((JSONString) node);
-        }
-        return result.toString();
+        return this.toJSONArray().toString();
     }
 
     /**
-     * Loads a map of nodes from a file.
+     * Loads a map of nodes from a file with its JSON representation.
      *
      * @param filename the file to read from
      * @throws FileNotFoundException the file not found
      * @throws IOException a read error of the file
+     * @throws JSONException parsing error in the JSON represenatation
      * @return the map of nodes
      */
     public static MapOfNodes loadNodes(final String filename)
-            throws FileNotFoundException, IOException {
-        try (InputStream stream = new FileInputStream(filename)) {
+            throws FileNotFoundException, IOException, JSONException {
+        try (FileInputStream stream = new FileInputStream(filename)) {
             return loadNodes(stream);
         }
     }
 
     /**
-     * Loads a map of nodes from an input stream.
+     * Loads a map of nodes from an input stream with its JSON representation.
      *
      * @param stream the input stream to read from
      * @return the map of nodes
      * @throws IOException a read error of the input stream
+     * @throws JSONException parsing error in the JSON represenatation
      */
     public static MapOfNodes loadNodes(final InputStream stream)
-            throws IOException {
-        MapOfNodes result = new MapOfNodes();
-        // open file and read properties
-        Properties servicesProperties = new Properties();
-        servicesProperties.load(stream);
-        // go throught the properties and add nodes into the map
-        for (Map.Entry<Object, Object> pair : servicesProperties.entrySet()) {
-            String[] tokens = pair.getKey().toString().split("\\.", 2);
-            // find a related node if exists, create a new otherwise
-            Node node = ( result.containsKey(tokens[0]) )
-                    ? result.get(tokens[0]) : new Node(tokens[0]);
-            // fill the node
-            if (tokens.length == 1) {
-                node.self.set(pair.getValue().toString());
-            } else if (tokens[1].equalsIgnoreCase("scan")) {
-                node.scan.set(pair.getValue().toString());
-            }
-            // put the node into the map
-            result.put(tokens[0], node);
+            throws IOException, JSONException {
+        try (InputStreamReader streamReader = new InputStreamReader(stream)) {
+            return new MapOfNodes(new JSONArray(new JSONTokener(streamReader)));
         }
-        return result;
     }
 
     /**
@@ -168,14 +127,18 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
     }
 
     /**
-     * Save the map of nodes into an output stream.
+     * Save the map of nodes into an output stream as JSON.
      *
      * @param stream the output stream to save into
+     * @throws IOException a write error to the stream
      */
-    public void saveNodes(final OutputStream stream) {
-        try (PrintStream printStream = new PrintStream(stream)) {
-            for (Node node : this.values()) {
-                printStream.println(node.toString());
+    public void saveNodes(final OutputStream stream) throws IOException {
+        try (OutputStreamWriter outputWriter = new OutputStreamWriter(stream)) {
+            try {
+                this.toJSONArray().write(outputWriter);
+            }
+            catch (JSONException ex) {
+                throw new RuntimeException("Impossible, the value cannot be an invalid number!", ex);
             }
         }
     }
@@ -187,7 +150,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
      */
     public boolean isCompletelyLocalised() {
         for (Node node : this.values()) {
-            if (!node.self.isAbsolutelyLocalised()) {
+            if (!node.getSelf().isAbsolutelyLocalised()) {
                 return false;
             }
         }
@@ -202,7 +165,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
     public MapOfNodes getNodesWithoutLocation() {
         MapOfNodes result = new MapOfNodes();
         for (Map.Entry<String, Node> pair : this.entrySet()) {
-            if (!pair.getValue().self.isAbsolutelyLocalised()) {
+            if (!pair.getValue().getSelf().isAbsolutelyLocalised()) {
                 result.put(pair.getKey(), pair.getValue());
             }
         }

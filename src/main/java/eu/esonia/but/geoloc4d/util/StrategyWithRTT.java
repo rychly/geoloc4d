@@ -36,7 +36,7 @@ public class StrategyWithRTT extends TrilaterationStrategy {
         // walk through mapOfNodes
         for (Node node : mapOfNodes.values()) {
             // walk through neighbours with set distance and RTT values
-            for (NeighbourProperties neighbourProperties : node.scan.getNodesWithDistance(node.self.getLocationAbsolute(), false, true).values()) {
+            for (NeighbourProperties neighbourProperties : node.getScan().getNodesWithDistance(node.getSelf().getLocationAbsolute(), false, true).values()) {
                 try {
                     // for such neighbour compute the correction
                     correctionFactorSum += WirelessMetric.compCorrectionFactorFromRttForDistance(

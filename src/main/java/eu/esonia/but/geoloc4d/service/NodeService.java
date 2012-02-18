@@ -4,7 +4,6 @@ import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.Node;
 import eu.esonia.but.geoloc4d.type.NodeData;
 import eu.esonia.but.geoloc4d.type.Vector3D;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.ws4d.java.communication.TimeoutException;
 import org.ws4d.java.schema.Element;
@@ -22,7 +21,7 @@ import org.ws4d.java.util.ParameterUtil;
  * @author rychly
  */
 public class NodeService extends DefaultService implements NodeServiceInterface {
-    
+
     public static final String NAMESPACE = "http://geoloc4d.sf.net/";
     public static final String OPERATION_getNodeData = "getNodeData";
     public static final String OPERATION_getNeighbours = "getNeighbours";
@@ -58,7 +57,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
         // add operations
         Type xsString = SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING);
         Operation getNodeData = new NodeServiceOperation<NodeService>(OPERATION_getNodeData, this) {
-            
+
             @Override
             public ParameterValue invoke(ParameterValue parameterValue)
                     throws InvocationException, TimeoutException {
@@ -68,7 +67,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
         getNodeData.setOutput(new Element(NodeData.class.getSimpleName(), NodeService.NAMESPACE, xsString));
         this.addOperation(getNodeData);
         Operation getNeighbours = new NodeServiceOperation<NodeService>(OPERATION_getNeighbours, this) {
-            
+
             @Override
             public ParameterValue invoke(ParameterValue parameterValue)
                     throws InvocationException, TimeoutException {
@@ -78,7 +77,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
         getNeighbours.setOutput(new Element(MapOfNeighbours.class.getSimpleName(), NodeService.NAMESPACE, xsString));
         this.addOperation(getNeighbours);
         Operation setNodeLocation = new NodeServiceOperation<NodeService>(OPERATION_setNodeLocation, this) {
-            
+
             @Override
             public ParameterValue invoke(ParameterValue parameterValue)
                     throws InvocationException, TimeoutException {
@@ -93,20 +92,20 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
         setNodeLocation.setInput(new Element(Vector3D.class.getSimpleName(), NodeService.NAMESPACE, xsString));
         this.addOperation(setNodeLocation);
     }
-    
+
     @Override
     public String getNodeData() {
-        return this.node.self.toJSONString();
+        return this.node.getSelf().toJSONString();
     }
-    
+
     @Override
     public String getNeighbours() {
-        return this.node.scan.toJSONString();
+        return this.node.getScan().toJSONString();
     }
-    
+
     @Override
     public void setNodeLocation(String location) throws JSONException {
-        this.node.self.getLocationAbsolute().set(new JSONArray(location));
+        this.node.getSelf().setLocationAbsolute(new Vector3D(location));
     }
 
     /**
@@ -120,7 +119,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
      */
     protected ParameterValue getNodeData(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
             throws InvocationException, TimeoutException {
-        
+
         ParameterValue result = operation.createOutputValue();
         ParameterUtil.setString(result, null, this.getNodeData());
         return result;

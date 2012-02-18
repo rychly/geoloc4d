@@ -50,34 +50,21 @@ public class Vector3DTest {
      */
     @Test
     public void testToString() {
-        assertEquals("("
-                + this.vector3D.getX() + ","
-                + this.vector3D.getY() + ","
-                + this.vector3D.getZ() + ")",
+        JSONArray expected = new JSONArray();
+        expected.put(this.vector3D.getX());
+        expected.put(this.vector3D.getY());
+        expected.put(this.vector3D.getZ());
+        assertEquals(expected.toString(),
                 this.vector3D.toString());
     }
 
     /**
-     * Test of set method, of class Vector3D.
-     */
-    @Test
-    public void testSet_String() {
-        Vector3D newVector3D = new Vector3D();
-        newVector3D.set("("
-                + this.vector3D.getX() + ","
-                + this.vector3D.getY() + ","
-                + this.vector3D.getZ() + ")");
-        assertEquals(this.vector3D.toString(), newVector3D.toString());
-    }
-
-    /**
-     * Test of set method, of class Vector3D.
+     * Test of toJSONArray method, of class Vector3D.
      * @throws JSONException fail to parse the vector in JSON
      */
     @Test
-    public void testSet_JSONArray() throws JSONException {
-        Vector3D newVector3D = new Vector3D();
-        newVector3D.set(new JSONArray(this.vector3D.toJSONString()));
-        assertEquals(this.vector3D.toString(), newVector3D.toString());
+    public void testToJSONArray() throws JSONException {
+        Vector3D newVector3D = new Vector3D(this.vector3D.toJSONArray());
+        assertEquals(this.vector3D, newVector3D);
     }
 }

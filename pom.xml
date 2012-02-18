@@ -94,7 +94,8 @@
                 <version>3.0-beta-3</version>
                 <configuration>
                     <reportPlugins>
-                        <plugin><!-- tracker at sourceforge -->
+                        <!-- tracker at sourceforge -->
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-changes-plugin</artifactId>
                             <version>2.6</version>
@@ -110,22 +111,26 @@
                                 <issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
                             </configuration>
                         </plugin>
-                        <plugin><!-- classes Javadocs -->
+                        <!-- classes Javadocs -->
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-javadoc-plugin</artifactId>
                             <version>2.8.1</version>
                         </plugin>
-                        <plugin><!-- unit-test reports -->
+                        <!-- unit-test reports -->
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-surefire-plugin</artifactId>
                             <version>2.9</version>
                         </plugin>
-                        <plugin><!-- test coverage -->
+                        <!-- test coverage -->
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-clover-plugin</artifactId>
                             <version>2.4</version>
                         </plugin>
-                        <plugin><!-- automatic code analysis -->
+                        <!-- automatic code analysis -->
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-pmd-plugin</artifactId>
                             <version>2.7.1</version>
@@ -136,7 +141,8 @@
                                 <targetjdk>1.6</targetjdk>
                             </configuration>
                         </plugin>
-                        <plugin><!-- check-style rules for Java formatting -->
+                        <!-- check-style rules for Java formatting -->
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-checkstyle-plugin</artifactId>
                             <version>2.9</version>
@@ -144,17 +150,20 @@
                                 <configLocation>config/sun_checks.xml</configLocation>
                             </configuration>
                         </plugin>
-                        <plugin><!-- indexed and cross-referenced HTML version of source code -->
+                        <!-- indexed and cross-referenced HTML version of source code -->
+                        <plugin>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>jxr-maven-plugin</artifactId>
                             <version>2.0-beta-1</version>
                         </plugin>
-                        <plugin><!-- changelog reports from src/changes/changes.xml -->
+                        <!-- changelog reports from src/changes/changes.xml -->
+                        <plugin>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>changelog-maven-plugin</artifactId>
                             <version>2.0-beta-1</version>
                         </plugin>
-                        <plugin><!-- generate a list of all the items marked @todo or TODO -->
+                        <!-- generate a list of all the items marked @todo or TODO -->
+                        <plugin>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>taglist-maven-plugin</artifactId>
                             <version>2.4</version>
@@ -163,6 +172,14 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+            <!-- Enabling the use of SCPexe -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>2.2</version>
+            </extension>
+        </extensions>
     </build>
 
     <!-- Build Environment -->
@@ -183,11 +200,11 @@
             <name>Geoloc4D repository (eu.esonia.but.geoloc4d and its extraordinary dependencies)</name>
             <url>http://www.fit.vutbr.cz/homes/rychly/geoloc4d/mvn-repo</url>
         </repository>
-        <repository>  
-            <id>maven-restlet</id>  
-            <name>Public online Restlet repository</name>  
-            <url>http://maven.restlet.org</url>  
-        </repository>      
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
+        </repository>
     </repositories>
     <distributionManagement>
         <site>

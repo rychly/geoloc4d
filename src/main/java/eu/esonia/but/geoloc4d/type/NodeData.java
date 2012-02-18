@@ -1,5 +1,6 @@
 package eu.esonia.but.geoloc4d.type;
 
+import java.util.Objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -20,37 +21,37 @@ public class NodeData implements JSONString {
      */
     private Vector3D locationAbsolute;
 
-    /**
-     * Constructor of a node from its identificator and string representation.
-     *
-     * @param id identificator of the node properties
-     * @param representation string representation of the node properties
-     * @throws NodeParsingException fail to parse the string representation
-     */
-    public NodeData(final String id, final String representation) throws NodeParsingException {
-        this.set(representation);
-        this.id = id;
+    protected NodeData() {
+        // empty constructor for an initiation from subclasses
     }
 
     /**
-     * Constructor of a node from its string representation.
+     * Constructor of a node from its string representation in JSON.
      *
      * @param representation string representation of the node properties
-     * @throws NodeParsingException fail to parse the string representation
-     */
-    public NodeData(final String representation) throws NodeParsingException {
-        this.set(representation);
-    }
-
-    /**
-     * Constructor of a node from its representation in JSON.
-     *
-     * @param representation representation of the node properties in JSON
      * @throws NodeParsingException fail to parse the string representation
      * @throws JSONException fail to parse the string representation in JSON
      */
+    public NodeData(final String representation) throws NodeParsingException, JSONException {
+        this(new JSONObject(representation));
+    }
+
+    /**
+     * Constructor of a node from its representation as JSONObject.
+     *
+     * @param representation representation of the node properties in JSONObject
+     * @throws NodeParsingException fail to parse the string representation
+     * @throws JSONException fail to parse the representation in JSON
+     */
     public NodeData(final JSONObject representation) throws NodeParsingException, JSONException {
-        this.set(representation);
+        if (representation.length() != 1) {
+            throw new NodeParsingException("Unset or multiple ID!");
+        }
+        this.setID((String) representation.keys().next());
+        JSONObject properties = representation.getJSONObject(this.getID());
+        if (properties.has("locationAbsolute")) {
+            this.setLocationAbsolute(new Vector3D(properties.getJSONArray("locationAbsolute")));
+        }
     }
 
     /**
@@ -69,7 +70,7 @@ public class NodeData implements JSONString {
      *
      * @param id the identificator to set
      */
-    protected void setID(final String id) {
+    protected final void setID(final String id) {
         this.id = id;
     }
 
@@ -78,25 +79,17 @@ public class NodeData implements JSONString {
      *
      * @return identificator of the node
      */
-    public String getID() {
+    public final String getID() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        String result = this.getID() + " { ";
-        if (this.getLocationAbsolute() != null) {
-            result = result.concat("locationAbsolute=" + this.getLocationAbsolute().toString() + "; ");
-        }
-        return result.concat("}");
-    }
-
-    @Override
-    public String toJSONString() {
+    public JSONObject toJSONObject() {
         try {
             JSONObject resultProps = new JSONObject();
-            resultProps.putOpt("locationAbsolute", (JSONString) this.getLocationAbsolute());
-            return new JSONObject().put(this.getID(), resultProps).toString();
+            if (this.getLocationAbsolute() != null) {
+                resultProps.put("locationAbsolute", this.getLocationAbsolute().toJSONArray());
+            }
+            return new JSONObject().put(this.getID(), resultProps);
             // e.g. "SecondNode":{"locationAbsolute":[0,1000,0]}
         }
         catch (JSONException ex) {
@@ -104,45 +97,40 @@ public class NodeData implements JSONString {
         }
     }
 
-    /**
-     * Set node properties from its string representation. It's reverese
-     * operation to toString method.
-     *
-     * @param representation string representation of the node properties
-     * @throws NodeParsingException fail to parse the string representation
-     */
-    public void set(final String representation) throws NodeParsingException {
-        String[] tokens = representation.split("\\s*([{=;}]\\s*)+");
-        if (!tokens[0].isEmpty()) {
-            this.setID(tokens[0]);
+    @Override
+    public String toString() {
+        try {
+            return this.toJSONObject().toString(1);
         }
-        for (int i = 1; i < tokens.length; i += 2) {
-            if (tokens[i].equalsIgnoreCase("locationAbsolute")) {
-                this.setLocationAbsolute(new Vector3D(tokens[i + 1]));
-            } else {
-                throw new NodeParsingException("Unknown property " + tokens[i]);
-            }
+        catch (JSONException ex) {
+            throw new RuntimeException("Impossible, the value cannot be an invalid number!", ex);
         }
     }
 
-    /**
-     * Set node properties from its representation in JSON. It's reverese
-     * operation to toJSONString method and JSONObject constructor.
-     *
-     * @param representation representation of the node properties in JSON
-     * @throws NodeParsingException fail to parse a structure of the
-     * representation
-     * @throws JSONException fail to parse the string representation in JSON
-     */
-    public void set(final JSONObject representation) throws JSONException, NodeParsingException {
-        if (representation.length() != 1) {
-            throw new NodeParsingException("Unset or multiple ID!");
+    @Override
+    public String toJSONString() {
+        return this.toJSONObject().toString();
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        } else if (!( object instanceof NeighbourProperties )) {
+            return false;
+        } else {
+            NeighbourProperties neighbourProperties = (NeighbourProperties) object;
+            return ( ( this.getID() == null && neighbourProperties.getID() == null ) || this.getID().equals(neighbourProperties.getID()) )
+                    && ( ( this.getLocationAbsolute() == null && neighbourProperties.getLocationAbsolute() == null ) || this.getLocationAbsolute().equals(neighbourProperties.getLocationAbsolute()) );
         }
-        this.setID((String) representation.keys().next());
-        JSONObject properties = representation.getJSONObject(this.getID());
-        if (properties.has("locationAbsolute")) {
-            this.setLocationAbsolute(new Vector3D(properties.getJSONArray("locationAbsolute")));
-        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.getID());
+        hash = 97 * hash + Objects.hashCode(this.getLocationAbsolute());
+        return hash;
     }
 
     /**
@@ -150,21 +138,21 @@ public class NodeData implements JSONString {
      *
      * @return true iff the node has defined its absolute location
      */
-    public boolean isAbsolutelyLocalised() {
+    public final boolean isAbsolutelyLocalised() {
         return ( this.getLocationAbsolute() != null ) && this.getLocationAbsolute().isDefined();
     }
 
     /**
      * @return the locationAbsolute
      */
-    public Vector3D getLocationAbsolute() {
+    public final Vector3D getLocationAbsolute() {
         return locationAbsolute;
     }
 
     /**
      * @param locationAbsolute the locationAbsolute to set
      */
-    public void setLocationAbsolute(Vector3D locationAbsolute) {
+    public final void setLocationAbsolute(Vector3D locationAbsolute) {
         this.locationAbsolute = locationAbsolute;
     }
 }

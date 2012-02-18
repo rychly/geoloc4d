@@ -51,7 +51,7 @@ public class StrategyWithRSSI extends TrilaterationStrategy {
         // walk through mapOfNodes
         for (Node node : mapOfNodes.values()) {
             // select neighbours with set distance and RSSI values
-            MapOfNeighbours mapOfNeighbours = node.scan.getNodesWithDistance(node.self.getLocationAbsolute(), true, false);
+            MapOfNeighbours mapOfNeighbours = node.getScan().getNodesWithDistance(node.getSelf().getLocationAbsolute(), true, false);
             // if there exist at the least two such nodes, sort them by distance (the most distant are last) and for compute constants from two most closed
             if (mapOfNeighbours.size() >= 2) {
                 NeighbourProperties arrayOfNeighbours[] =

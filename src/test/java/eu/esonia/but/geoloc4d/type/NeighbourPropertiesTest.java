@@ -1,7 +1,6 @@
 package eu.esonia.but.geoloc4d.type;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -22,7 +21,8 @@ public class NeighbourPropertiesTest {
 
     @Before
     public void setUp() {
-        this.nodeProperties = new NeighbourProperties(nodeID);
+        this.nodeProperties = new NeighbourProperties();
+        this.nodeProperties.setID(nodeID);
         this.nodeProperties.setDistance(1.23);
         this.nodeProperties.setLocationAbsolute(new Vector3D(1.2, 3.4, 5.6));
         this.nodeProperties.setLocationRelative(new Vector3D(7.8, 9.0, 1.2));
@@ -45,43 +45,24 @@ public class NeighbourPropertiesTest {
 
     /**
      * Test of toString method, of class NeighbourProperties.
+     *
+     * @throws JSONException unable to parse toString result as a JSON
+     * representation of the map
      */
     @Test
-    public void testToString() {
-        assertEquals(nodeID + " { "
-                + "distance=" + this.nodeProperties.getDistance().toString() + "; "
-                + "locationAbsolute=" + this.nodeProperties.getLocationAbsolute().toString() + "; "
-                + "locationRelative=" + this.nodeProperties.getLocationRelative().toString() + "; "
-                + "rssi=" + this.nodeProperties.getRssi().toString() + "; "
-                + "rtt=" + this.nodeProperties.getRtt().toString() + "; "
-                + "}",
-                this.nodeProperties.toString());
+    public void testToString() throws JSONException {
+        NeighbourProperties newNodeProperties = new NeighbourProperties(this.nodeProperties.toString());
+        assertEquals(this.nodeProperties, newNodeProperties);
     }
 
     /**
-     * Test of set method, of class NeighbourProperties.
+     * Test of toJSONObject method, of class NeighbourProperties.
+     *
+     * @throws JSONException fail to parse the properties in JSON
      */
     @Test
-    public void testSet_String() {
-        NeighbourProperties newNodeProperties = new NeighbourProperties(nodeID);
-        newNodeProperties.set(nodeID + " { "
-                + "distance=" + this.nodeProperties.getDistance().toString() + "; "
-                + "locationAbsolute=" + this.nodeProperties.getLocationAbsolute().toString() + "; "
-                + "locationRelative=" + this.nodeProperties.getLocationRelative().toString() + "; "
-                + "rssi=" + this.nodeProperties.getRssi().toString() + "; "
-                + "rtt=" + this.nodeProperties.getRtt().toString() + "; "
-                + "}");
-        assertEquals(this.nodeProperties.toString(), newNodeProperties.toString());
-    }
-
-    /**
-     * Test of set method, of class NeighbourProperties.
-     * @throws JSONException fail to parse a neighbour's representation in JSON
-     */
-    @Test
-    public void testSet_JSONObject() throws JSONException {
-        NeighbourProperties newNodeProperties = new NeighbourProperties(nodeID);
-        newNodeProperties.set(new JSONObject(this.nodeProperties.toJSONString()));
-        assertEquals(this.nodeProperties.toString(), newNodeProperties.toString());
+    public void testToJSONObject() throws JSONException {
+        NeighbourProperties newNodeProperties = new NeighbourProperties(this.nodeProperties.toJSONObject());
+        assertEquals(this.nodeProperties, newNodeProperties);
     }
 }

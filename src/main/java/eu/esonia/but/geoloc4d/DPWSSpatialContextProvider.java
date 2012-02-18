@@ -23,13 +23,13 @@ import org.ws4d.java.util.Log;
  *
  * @author rychly
  */
-public class SpatialContextProvider {
+public class DPWSSpatialContextProvider {
 
     public static void main(String[] args) throws InterruptedException, JSONException {
         // Check parameters
         // To enable multicast on loopback interface do "ifconfig lo multicast"
         if (args.length != 3) {
-            System.err.println("Usage: java " + SpatialContextProvider.class.getName() + " SpatialContextProvider <hostname> <port> <path/>");
+            System.err.println("Usage: java " + DPWSSpatialContextProvider.class.getName() + " SpatialContextProvider <hostname> <port> <path/>");
             System.exit(-1);
         }
 
@@ -55,7 +55,7 @@ public class SpatialContextProvider {
             try {
                 MapOfNodes mapOfNodes = nodeServiceDetector.getMapOfNodesForDetectedServices();
                 System.out.println("=== the calibration will be performed for nodes:\n"
-                        + mapOfNodes.toJSONString());
+                        + mapOfNodes.toString());
                 trilaterationStrategy.calibrateMetric(mapOfNodes);
             }
             catch (InvocationException ex) {
@@ -105,17 +105,17 @@ public class SpatialContextProvider {
                     System.out.println("=== the service represents node: " + nodeData.getID());
                     if (nodeData.isAbsolutelyLocalised()) {
                         // if it is localised, print its location
-                        System.out.println("=== the node is localised as: " + nodeData.getLocationAbsolute().toJSONString());
+                        System.out.println("=== the node is localised as: " + nodeData.getLocationAbsolute().toString());
                     } else {
                         // if not, get scan of its neighbours and perform trilateration
                         System.out.println("=== the node is not localised, preparing for its trilateration...");
                         MapOfNeighbours nodeNeighbours = new MapOfNeighbours(new JSONArray(service.getNeighbours()));
                         MapOfNeighbours selectedNeighbours =
                                 trilaterationStrategy.prepareNodesForTrilateration(nodeData, nodeNeighbours);
-                        System.out.println("=== the trilateration will be performed with nodes: " + selectedNeighbours.toJSONString());
+                        System.out.println("=== the trilateration will be performed with nodes: " + selectedNeighbours.toString());
                         Vector3D newLocation =
                                 trilaterationStrategy.doTrilateration(selectedNeighbours);
-                        System.out.println("=== the node's location will be set to the trilateration's result: " + newLocation.toJSONString());
+                        System.out.println("=== the node's location will be set to the trilateration's result: " + newLocation.toString());
                         // finally, set trilateration result as the node's location
                         service.setNodeLocation(newLocation.toJSONString());
                     }
@@ -141,7 +141,7 @@ public class SpatialContextProvider {
         try {
             // Print all nodes including their locations
             System.out.println("=== Localised nodes:\n"
-                    + nodeServiceDetector.getMapOfNodesForDetectedServices().toJSONString());
+                    + nodeServiceDetector.getMapOfNodesForDetectedServices().toString());
         }
         catch (InvocationException ex) {
             System.err.println("!!! exception: " + ex.toString());

@@ -1,5 +1,5 @@
 PROJECT=geoloc4d
-MAVEN=mvn-2.2
+MAVEN=mvn-3.0
 
 test:
 	$(MAVEN) test

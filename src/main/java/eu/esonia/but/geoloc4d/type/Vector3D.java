@@ -20,6 +20,9 @@ public final class Vector3D implements JSONString {
      */
     public static final Vector3D NULL = new Vector3D(0, 0, 0);
 
+    /**
+     * Create an undefined vector.
+     */
     public Vector3D() {
         this.undefined = true;
         this.x = 0;
@@ -27,20 +30,55 @@ public final class Vector3D implements JSONString {
         this.z = 0;
     }
 
+    /**
+     * Create a vector fro its coordinates.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     */
     public Vector3D(double x, double y, double z) {
         this.set(x, y, z);
     }
 
+    /**
+     * Create a copy of a given vector.
+     *
+     * @param vector vector of original coordinates
+     */
     public Vector3D(final Vector3D vector) {
-        this.set(vector);
+        if (( vector == null ) || vector.isUndefined()) {
+            this.undefined = true;
+        } else {
+            this.set(vector.getX(), vector.getY(), vector.getZ());
+        }
     }
 
-    public Vector3D(final String vector) {
-        this.set(vector);
+    /**
+     * Create a vector from coordinates JSON array string (e.g.
+     * "[1.23,4.56,7.89]").
+     *
+     * @param vector string with coordinates of vector
+     * @throws JSONException fail to parse the vector in JSON
+     */
+    public Vector3D(final String vector) throws JSONException {
+        this(new JSONArray(vector));
     }
 
+    /**
+     * Create a vector from coordinates in JSONArray.
+     *
+     * @param vector JSONArray with coordinates of vector
+     * @throws JSONException fail to parse the vector in JSON
+     */
     public Vector3D(final JSONArray vector) throws JSONException {
-        this.set(vector);
+        if (vector.length() != 3) {
+            this.undefined = true;
+        } else {
+            this.set(vector.getDouble(0),
+                    vector.getDouble(1),
+                    vector.getDouble(2));
+        }
     }
 
     public boolean isDefined() {
@@ -93,71 +131,28 @@ public final class Vector3D implements JSONString {
     }
 
     /**
-     * Copy coordinates of vector from another.
+     * Create JSONArray from the vector.
      *
-     * @param vector vector of original coordinates
+     * @return the JSONArray representing the vector
      */
-    public void set(final Vector3D vector) {
-        if (( vector == null ) || vector.isUndefined()) {
-            this.undefined = true;
-        } else {
-            this.set(vector.getX(), vector.getY(), vector.getZ());
-        }
-    }
-
-    /**
-     * Set vector coordinates from string (e.g. "(1.23,4.56,7.89)").
-     *
-     * @param vector string with coordinates of vector
-     */
-    public void set(final String vector) {
-        String[] tokens = vector.split("\\s*[(,)]\\s*", 5);
-        if (tokens.length != 5) {
-            this.undefined = true;
-        } else {
-            this.set(Double.parseDouble(tokens[1]),
-                    Double.parseDouble(tokens[2]),
-                    Double.parseDouble(tokens[3]));
-        }
-    }
-
-    /**
-     * Set vector coordinates from JSON.
-     *
-     * @param vector JSON with coordinates of vector
-     * @throws JSONException fail to parse the vector in JSON
-     */
-    public void set(final JSONArray vector) throws JSONException {
-        if (vector.length() != 3) {
-            this.undefined = true;
-        } else {
-            this.set(vector.getDouble(0),
-                    vector.getDouble(1),
-                    vector.getDouble(2));
-        }
-    }
-
-    @Override
-    public String toString() {
-        if (this.isUndefined()) {
-            return "N/A";
-        } else {
-            return "(" + this.getX().toString()
-                    + "," + this.getY().toString()
-                    + "," + this.getZ().toString()
-                    + ")";
-        }
-    }
-
-    @Override
-    public String toJSONString() {
+    public JSONArray toJSONArray() {
         JSONArray result = new JSONArray();
         if (!this.isUndefined()) {
             result.put(this.getX());
             result.put(this.getY());
             result.put(this.getZ());
         }
-        return result.toString();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return this.toJSONArray().toString();
+    }
+
+    @Override
+    public String toJSONString() {
+        return this.toJSONArray().toString();
     }
 
     @Override
