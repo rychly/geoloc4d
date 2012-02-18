@@ -1,6 +1,7 @@
 package eu.esonia.but.geoloc4d.util;
 
 import eu.esonia.but.geoloc4d.type.*;
+import java.util.Arrays;
 
 /**
  * Abstract class of algorithms for selection of neighbouring nodes and
@@ -71,7 +72,7 @@ public abstract class TrilaterationStrategy {
      */
     public Vector3D doTrilateration(final MapOfNeighbours preparedNodes)
             throws TrilaterationStrategyException {
-        NeighbourProperties nodes[] = (NeighbourProperties[]) preparedNodes.values().toArray();
+        NeighbourProperties nodes[] = Arrays.copyOf(preparedNodes.values().toArray(), preparedNodes.size(), NeighbourProperties[].class);
         // we need at the leatest four prepared nodes
         if (( nodes.length < 4 )
                 || ( nodes[0].getLocationAbsolute() == null ) || ( nodes[0].getLocationAbsolute().isUndefined() )

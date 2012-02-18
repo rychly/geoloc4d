@@ -1,9 +1,9 @@
 package eu.esonia.but.geoloc4d;
 
-import eu.esonia.but.geoloc4d.service.NodeServiceDetector;
-import eu.esonia.but.geoloc4d.service.NodeServiceDetectorHeartbeat;
-import eu.esonia.but.geoloc4d.service.NodeServiceInterface;
-import eu.esonia.but.geoloc4d.service.NodeServiceProxy;
+import eu.esonia.but.geoloc4d.dpws.NodeServiceDetector;
+import eu.esonia.but.geoloc4d.dpws.NodeServiceDetectorHeartbeat;
+import eu.esonia.but.geoloc4d.dpws.NodeServiceInterface;
+import eu.esonia.but.geoloc4d.dpws.NodeServiceProxy;
 import eu.esonia.but.geoloc4d.type.MapOfNeighbours;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.NodeData;
@@ -25,11 +25,11 @@ import org.ws4d.java.util.Log;
  */
 public class DPWSSpatialContextProvider {
 
-    public static void main(String[] args) throws InterruptedException, JSONException {
+    public static void main(final String[] args) throws InterruptedException, JSONException {
         // Check parameters
         // To enable multicast on loopback interface do "ifconfig lo multicast"
-        if (args.length != 3) {
-            System.err.println("Usage: java " + DPWSSpatialContextProvider.class.getName() + " SpatialContextProvider <hostname> <port> <path/>");
+        if (args.length != 1) {
+            System.err.println("Usage: java " + DPWSSpatialContextProvider.class.getName() + " [rssi-startegy|rtt-strategy]");
             System.exit(-1);
         }
 
@@ -46,14 +46,23 @@ public class DPWSSpatialContextProvider {
         nodeServiceDetectorHeartbeat.schedule(10000);
 
         // Create a trilateration strategy
-        TrilaterationStrategy trilaterationStrategy = TrilaterationStrategyFactory.newStrategyWithRSSI();
+        System.out.println("=== Selecting a trilateration strategy...");
+        TrilaterationStrategy trilaterationStrategy = null;
+        if (args[0].equalsIgnoreCase("rssi-strategy")) {
+            trilaterationStrategy = TrilaterationStrategyFactory.newStrategyWithRSSI();
+        } else if (args[0].equalsIgnoreCase("rtt-strategy")) {
+            trilaterationStrategy = TrilaterationStrategyFactory.newStrategyWithRTT();
+        } else {
+            System.err.println("!!! Unknown trilateration strategy '" + args[0] + "'!");
+            System.exit(-2);
+        }
 
         // Calibrate the strategy's metric
         while (!trilaterationStrategy.isCalibrated()) {
-            System.out.println("=== Calibrate a trilateration strategy's metric...");
+            System.out.println("=== Calibrate the trilateration strategy's metric...");
             Thread.sleep(1000);
             try {
-                MapOfNodes mapOfNodes = nodeServiceDetector.getMapOfNodesForDetectedServices();
+                MapOfNodes mapOfNodes = nodeServiceDetector.getMapOfNodesForDetectedServices(true);
                 System.out.println("=== the calibration will be performed for nodes:\n"
                         + mapOfNodes.toString());
                 trilaterationStrategy.calibrateMetric(mapOfNodes);
@@ -108,11 +117,13 @@ public class DPWSSpatialContextProvider {
                         System.out.println("=== the node is localised as: " + nodeData.getLocationAbsolute().toString());
                     } else {
                         // if not, get scan of its neighbours and perform trilateration
-                        System.out.println("=== the node is not localised, preparing for its trilateration...");
+                        System.out.println("=== the node is not localised, locating its neighbours...");
                         MapOfNeighbours nodeNeighbours = new MapOfNeighbours(new JSONArray(service.getNeighbours()));
+                        nodeNeighbours.setLocationsFromNodes(nodeServiceDetector.getMapOfNodesForDetectedServices(false));
+                        System.out.println("=== preparing for the node's trilateration with neighbours:\n" + nodeNeighbours.toString());
                         MapOfNeighbours selectedNeighbours =
                                 trilaterationStrategy.prepareNodesForTrilateration(nodeData, nodeNeighbours);
-                        System.out.println("=== the trilateration will be performed with nodes: " + selectedNeighbours.toString());
+                        System.out.println("=== the trilateration will be performed with nodes:\n" + selectedNeighbours.toString());
                         Vector3D newLocation =
                                 trilaterationStrategy.doTrilateration(selectedNeighbours);
                         System.out.println("=== the node's location will be set to the trilateration's result: " + newLocation.toString());
@@ -140,8 +151,8 @@ public class DPWSSpatialContextProvider {
         } while (!completelyLocalised);
         try {
             // Print all nodes including their locations
-            System.out.println("=== Localised nodes:\n"
-                    + nodeServiceDetector.getMapOfNodesForDetectedServices().toString());
+            System.out.println("=== Localised nodes (without scan of their neighbours):\n"
+                    + nodeServiceDetector.getMapOfNodesForDetectedServices(false).toString());
         }
         catch (InvocationException ex) {
             System.err.println("!!! exception: " + ex.toString());

@@ -28,7 +28,9 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
      */
     public MapOfNeighbours(final MapOfNeighbours source) {
         super();
-        this.putAll(source);
+        if (source != null) {
+            this.putAll(source);
+        }
     }
 
     /**
@@ -79,6 +81,22 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
     @Override
     public String toJSONString() {
         return this.toJSONArray().toString();
+    }
+
+    /**
+     * Set absolute locations of such neighbouring nodes which have already
+     * known absolute locations in global context (in a map of all nodes).
+     *
+     * @param nodes the map of all nodes where the locations will be obtained
+     */
+    public void setLocationsFromNodes(final MapOfNodes nodes) {
+        MapOfNodes localisedNodes = nodes.getNodesByLocation(true);
+        for (Map.Entry<String, Node> pair : localisedNodes.entrySet()) {
+            if (this.containsKey(pair.getKey())) {
+                this.get(pair.getKey()).setLocationAbsolute(
+                        pair.getValue().getSelf().getLocationAbsolute());
+            }
+        }
     }
 
     /**

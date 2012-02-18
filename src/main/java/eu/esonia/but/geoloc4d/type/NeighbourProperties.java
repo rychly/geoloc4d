@@ -115,21 +115,6 @@ public final class NeighbourProperties extends NodeData {
     }
 
     @Override
-    public String toString() {
-        try {
-            return this.toJSONObject().toString(1);
-        }
-        catch (JSONException ex) {
-            throw new RuntimeException("Impossible, the value cannot be an invalid number!", ex);
-        }
-    }
-
-    @Override
-    public String toJSONString() {
-        return this.toJSONObject().toString();
-    }
-
-    @Override
     public boolean equals(final Object object) {
         if (this == object) {
             return true;

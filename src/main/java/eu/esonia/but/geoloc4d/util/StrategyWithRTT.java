@@ -35,6 +35,8 @@ public class StrategyWithRTT extends TrilaterationStrategy {
         double correctionFactorSum = 0;
         // walk through mapOfNodes
         for (Node node : mapOfNodes.values()) {
+            // set location of neighbours that are yet known in the map of nodes
+            node.getScan().setLocationsFromNodes(mapOfNodes);
             // walk through neighbours with set distance and RTT values
             for (NeighbourProperties neighbourProperties : node.getScan().getNodesWithDistance(node.getSelf().getLocationAbsolute(), false, true).values()) {
                 try {

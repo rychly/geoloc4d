@@ -1,6 +1,6 @@
 package eu.esonia.but.geoloc4d;
 
-import eu.esonia.but.geoloc4d.service.NodeService;
+import eu.esonia.but.geoloc4d.dpws.NodeService;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.Node;
 import java.io.FileNotFoundException;
@@ -20,7 +20,7 @@ import org.ws4d.java.util.Log;
  */
 public class DPWSAssetServiceSimulator {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         // Check parameters
         // To enable multicast on loopback interface do "ifconfig lo multicast"
         if (args.length != 4) {
