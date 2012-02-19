@@ -15,7 +15,7 @@ public class Node implements JSONString {
     /**
      * Data about the node (itself).
      */
-    private NodeData self;
+    private NodeData info;
     /**
      * Data about neighbouring nodes (from scan).
      */
@@ -40,29 +40,29 @@ public class Node implements JSONString {
      * @throws JSONException fail to parse the representation in JSON
      */
     public Node(final JSONObject representation) throws NodeParsingException, JSONException {
-        if (!representation.has("self") || !representation.has("scan")) {
-            throw new NodeParsingException("The representation of a node must have 'self' and 'scan' attributes!");
+        if (!representation.has("info") || !representation.has("scan")) {
+            throw new NodeParsingException("The representation of a node must have 'info' and 'scan' attributes!");
         }
-        this.self = new NodeData(representation.getJSONObject("self"));
+        this.info = new NodeData(representation.getJSONObject("info"));
         this.scan = new MapOfNeighbours(representation.getJSONArray("scan"));
     }
 
     /**
      * Constructor of a node from its components.
      *
-     * @param self the NodeData component
+     * @param info the NodeData component
      * @param scan the MapOfNeighbours component
      */
-    public Node(final NodeData self, final MapOfNeighbours scan) {
-        this.self = new NodeData(self);
+    public Node(final NodeData info, final MapOfNeighbours scan) {
+        this.info = new NodeData(info);
         this.scan = new MapOfNeighbours(scan);
     }
 
     /**
-     * @return the NodeData component (self)
+     * @return the NodeData component (info)
      */
-    public NodeData getSelf() {
-        return self;
+    public NodeData getInfo() {
+        return info;
     }
 
     /**
@@ -75,7 +75,7 @@ public class Node implements JSONString {
     public JSONObject toJSONObject() {
         JSONObject result = new JSONObject();
         try {
-            result.put("self", this.getSelf().toJSONObject());
+            result.put("info", this.getInfo().toJSONObject());
             result.put("scan", this.getScan().toJSONArray());
             return result;
         }
@@ -107,7 +107,7 @@ public class Node implements JSONString {
             return false;
         } else {
             Node node = (Node) object;
-            return ( ( this.getSelf() == null && node.getSelf() == null ) || this.getSelf().equals(node.getSelf()) )
+            return ( ( this.getInfo() == null && node.getInfo() == null ) || this.getInfo().equals(node.getInfo()) )
                     && ( ( this.getScan() == null && node.getScan() == null ) || this.getScan().equals(node.getScan()) );
         }
     }
@@ -115,7 +115,7 @@ public class Node implements JSONString {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.getSelf());
+        hash = 29 * hash + Objects.hashCode(this.getInfo());
         hash = 29 * hash + Objects.hashCode(this.getScan());
         return hash;
     }

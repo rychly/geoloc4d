@@ -86,8 +86,16 @@ public abstract class TrilaterationStrategy {
             throw new TrilaterationStrategyException("Not enought neighbouring nodes for 3D trilateration! "
                     + "We need at the least four prepared nodes with absolute locations and set distances.");
         }
-        // perform 3D trilateration
-        return WirelessMetric.trilateration3D(
-                nodes[0].getLocationAbsolute(), nodes[0].getDistance(), nodes[1].getLocationAbsolute(), nodes[1].getDistance(), nodes[2].getLocationAbsolute(), nodes[2].getDistance(), nodes[3].getLocationAbsolute(), nodes[3].getDistance());
+        try {
+            // perform 3D trilateration
+            return WirelessMetric.trilateration3D(
+                    nodes[0].getLocationAbsolute(), nodes[0].getDistance(),
+                    nodes[1].getLocationAbsolute(), nodes[1].getDistance(),
+                    nodes[2].getLocationAbsolute(), nodes[2].getDistance(),
+                    nodes[3].getLocationAbsolute(), nodes[3].getDistance());
+        }
+        catch (WirelessMetricException ex) {
+            throw new TrilaterationStrategyException(ex.getMessage());
+        }
     }
 }

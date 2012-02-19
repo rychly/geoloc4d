@@ -1,0 +1,51 @@
+[
+{
+	"info": {
+		"id": "nodeA",
+		"locationAbsolute": [10, 00, 00]
+	},
+	"scan": []
+},
+{
+	"info": {
+		"id": "nodeB",
+		"locationAbsolute": [00, 20, 00]
+	},
+	"scan": []
+},
+{
+	"info": {
+		"id": "nodeC",
+		"locationAbsolute": [00, 00, 10]
+	},
+	"scan": []
+},
+{
+	"info": {
+		"id": "nodeD",
+		"locationAbsolute": [20, 00, 00]
+	},
+	"scan": []
+},
+{
+	"info": {
+		"id": "node0"
+	},
+	"scan": [
+		{ "id": "nodeA", "rssi":-70, "rtt":0.025 },
+		{ "id": "nodeB", "rssi":-79, "rtt":0.050 },
+		{ "id": "nodeC", "rssi":-70, "rtt":0.025 },
+		{ "id": "nodeD", "rssi":-79, "rtt":0.050 }
+	]
+},
+{
+	"info": {
+		"id": "nodeR",
+		"locationAbsolute": [10, 20, 00]
+	},
+	"scan": [
+		{ "id": "nodeA", "rssi":-79, "rtt":0.050 },
+		{ "id": "nodeB", "rssi":-70, "rtt":0.025 }
+	]
+}
+]

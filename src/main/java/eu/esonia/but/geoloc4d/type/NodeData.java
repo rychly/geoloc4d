@@ -13,13 +13,18 @@ import org.json.JSONString;
 public class NodeData implements JSONString {
 
     /**
-     * Identificator of the node (e.g. its name).
+     * Identificator of the node, its name or URI (required).
      */
     private String id;
     /**
-     * Absolute location of the node.
+     * Absolute location of the node (optional).
      */
     private Vector3D locationAbsolute;
+    /**
+     * IPv4 or IPv6 address of the node (optional). For example, it can be
+     * 1.2.3.4 or [2001:db8:bbbb:abcd:280:e102:11:e080].
+     */
+    private String ip;
 
     protected NodeData() {
         // empty constructor for an initiation from subclasses
@@ -44,13 +49,18 @@ public class NodeData implements JSONString {
      * @throws JSONException fail to parse the representation in JSON
      */
     public NodeData(final JSONObject representation) throws NodeParsingException, JSONException {
-        if (representation.length() != 1) {
-            throw new NodeParsingException("Unset or multiple ID!");
+        // id
+        if (!representation.has("id")) {
+            throw new NodeParsingException("Unset 'id'!");
         }
-        this.setID((String) representation.keys().next());
-        JSONObject properties = representation.getJSONObject(this.getID());
-        if (properties.has("locationAbsolute")) {
-            this.setLocationAbsolute(new Vector3D(properties.getJSONArray("locationAbsolute")));
+        this.setID(representation.getString("id"));
+        // ip
+        if (representation.has("ip")) {
+            this.setIP(representation.getString("ip"));
+        }
+        // locationAbsolute
+        if (representation.has("locationAbsolute")) {
+            this.setLocationAbsolute(new Vector3D(representation.getJSONArray("locationAbsolute")));
         }
     }
 
@@ -60,9 +70,16 @@ public class NodeData implements JSONString {
      * @param source source to copy from
      */
     public NodeData(final NodeData source) {
-        this.id = source.getID();
-        this.locationAbsolute = ( source.getLocationAbsolute() != null )
-                ? new Vector3D(source.getLocationAbsolute()) : null;
+        // String constructors are necessary in the copy constructor
+        this.setID(new String(source.getID()));
+        String string = source.getIP();
+        if (string != null) {
+            this.setIP(new String(string));
+        }
+        Vector3D vector = source.getLocationAbsolute();
+        if (vector != null) {
+            this.setLocationAbsolute(new Vector3D(vector));
+        }
     }
 
     /**
@@ -83,14 +100,71 @@ public class NodeData implements JSONString {
         return this.id;
     }
 
+    /**
+     * Set IPv4 or IPv6 address of the node.
+     *
+     * @param ip the IPv4 or IPv6 address
+     */
+    protected final void setIP(final String ip) {
+        this.ip = ip;
+    }
+
+    /**
+     * Get IPv4 or IPv6 address from ID (is URI) or "IP" attribute.
+     *
+     * @return the IPv4 or IPv6 address
+     */
+    public final String getIP() {
+        // IP is defined in the attribute
+        if (( this.ip != null ) && !this.ip.isEmpty()) {
+            return this.ip;
+        }
+        // IP can be in ID, if ID is URI
+        String result = this.getID();
+        if (result.startsWith("http://")) {
+            result = result.substring(7);
+        } else if (result.startsWith("https://")) {
+            result = result.substring(8);
+        } else {
+            return null;
+        }
+        // IP is before the first slash
+        int pos = result.indexOf('/');
+        if (( pos ) > 0) {
+            result = result.substring(0, pos);
+        }
+        // IP is before a port number
+        pos = result.indexOf(':');
+        if (( pos ) > 0) {
+            result = result.substring(0, pos);
+        }
+        // it will be stored in the attribute for further usage
+        this.setIP(result);
+        return result;
+    }
+
+    /**
+     * Get URI in the case ID is the URI, null otherwise. For example, ID can be
+     * http://[2001:db8:bbbb:abcd:280:e102:11:e080]/myservice.
+     *
+     * @return the URI in the case ID is the URI, null otherwise
+     */
+    public final String getURI() {
+        String result = this.getID();
+        return ( result.startsWith("http://") || result.startsWith("https://") )
+                ? result : null;
+    }
+
     public JSONObject toJSONObject() {
         try {
-            JSONObject resultProps = new JSONObject();
+            JSONObject result = new JSONObject();
+            result.put("id", this.getID());
+            result.putOpt("ip", this.getIP());
             if (this.getLocationAbsolute() != null) {
-                resultProps.put("locationAbsolute", this.getLocationAbsolute().toJSONArray());
+                result.put("locationAbsolute", this.getLocationAbsolute().toJSONArray());
             }
-            return new JSONObject().put(this.getID(), resultProps);
-            // e.g. "SecondNode":{"locationAbsolute":[0,1000,0]}
+            return result;
+            // e.g. "{id:"SecondNode","locationAbsolute":[0,1000,0]}
         }
         catch (JSONException ex) {
             throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);
@@ -121,6 +195,7 @@ public class NodeData implements JSONString {
         } else {
             NeighbourProperties neighbourProperties = (NeighbourProperties) object;
             return ( ( this.getID() == null && neighbourProperties.getID() == null ) || this.getID().equals(neighbourProperties.getID()) )
+                    && ( ( this.getIP() == null && neighbourProperties.getIP() == null ) || this.getIP().equals(neighbourProperties.getIP()) )
                     && ( ( this.getLocationAbsolute() == null && neighbourProperties.getLocationAbsolute() == null ) || this.getLocationAbsolute().equals(neighbourProperties.getLocationAbsolute()) );
         }
     }
@@ -129,6 +204,7 @@ public class NodeData implements JSONString {
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.getID());
+        hash = 97 * hash + Objects.hashCode(this.getIP());
         hash = 97 * hash + Objects.hashCode(this.getLocationAbsolute());
         return hash;
     }

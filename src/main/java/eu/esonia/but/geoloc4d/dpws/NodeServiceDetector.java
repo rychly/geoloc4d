@@ -129,7 +129,7 @@ public class NodeServiceDetector extends DefaultClient {
         // detectedServices cannot be accessed direcly due to cuncurrency, so we use thread-safe getDetectedServices()
         for (NodeServiceProxy nodeServiceProxy : this.getDetectedServices()) {
             Node node = nodeServiceProxy.getNodeObject(includingNeighbours);
-            result.put(node.getSelf().getID(), node);
+            result.put(node.getInfo().getID(), node);
         }
         return result;
     }

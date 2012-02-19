@@ -54,25 +54,34 @@ public final class NeighbourProperties extends NodeData {
      * @throws JSONException fail to parse the representation in JSON
      */
     public NeighbourProperties(final JSONObject representation) throws NodeParsingException, JSONException {
-        if (representation.length() != 1) {
-            throw new NodeParsingException("Unset or multiple ID!");
+        // id
+        if (!representation.has("id")) {
+            throw new NodeParsingException("Unset 'id'!");
         }
-        this.setID((String) representation.keys().next());
-        JSONObject properties = representation.getJSONObject(this.getID());
-        if (properties.has("distance")) {
-            this.setDistance(properties.getDouble("distance"));
+        this.setID(representation.getString("id"));
+        // ip
+        if (representation.has("ip")) {
+            this.setIP(representation.getString("ip"));
         }
-        if (properties.has("locationAbsolute")) {
-            this.setLocationAbsolute(new Vector3D(properties.getJSONArray("locationAbsolute")));
+        // distance
+        if (representation.has("distance")) {
+            this.setDistance(representation.getDouble("distance"));
         }
-        if (properties.has("locationRelative")) {
-            this.setLocationRelative(new Vector3D(properties.getJSONArray("locationRelative")));
+        // locationAbsolute
+        if (representation.has("locationAbsolute")) {
+            this.setLocationAbsolute(new Vector3D(representation.getJSONArray("locationAbsolute")));
         }
-        if (properties.has("rssi")) {
-            this.setRssi((short) properties.getInt("rssi"));
+        // locationRelative
+        if (representation.has("locationRelative")) {
+            this.setLocationRelative(new Vector3D(representation.getJSONArray("locationRelative")));
         }
-        if (properties.has("rtt")) {
-            this.setRtt(properties.getDouble("rtt"));
+        // rssi
+        if (representation.has("rssi")) {
+            this.setRssi((short) representation.getInt("rssi"));
+        }
+        // rtt
+        if (representation.has("rtt")) {
+            this.setRtt(representation.getDouble("rtt"));
         }
     }
 
@@ -83,31 +92,41 @@ public final class NeighbourProperties extends NodeData {
      */
     public NeighbourProperties(final NeighbourProperties source) {
         super(source);
-        this.distance = ( source.getDistance() != null )
-                ? new Double(source.getDistance()) : null;
-        this.locationRelative = ( source.getLocationRelative() != null )
-                ? new Vector3D(source.getLocationRelative()) : null;
-        this.rssi = ( source.getRssi() != null )
-                ? new Short(source.getRssi()) : null;
-        this.rtt = ( source.getRtt() != null )
-                ? new Double(source.getRtt()) : null;
+        Double doubleNumber = source.getDistance();
+        if (doubleNumber != null) {
+            this.setDistance(new Double(doubleNumber));
+        }
+        Vector3D vector = source.getLocationRelative();
+        if (vector != null) {
+            this.setLocationRelative(new Vector3D(vector));
+        }
+        Short shortNumber = source.getRssi();
+        if (shortNumber != null) {
+            this.setRssi(new Short(shortNumber));
+        }
+        doubleNumber = source.getRtt();
+        if (doubleNumber != null) {
+            this.setRtt(new Double(doubleNumber));
+        }
     }
 
     @Override
     public JSONObject toJSONObject() {
         try {
-            JSONObject resultProps = new JSONObject();
-            resultProps.putOpt("distance", this.getDistance());
+            JSONObject result = new JSONObject();
+            result.put("id", this.getID());
+            result.putOpt("ip", this.getIP());
+            result.putOpt("distance", this.getDistance());
             if (this.getLocationAbsolute() != null) {
-                resultProps.put("locationAbsolute", this.getLocationAbsolute().toJSONArray());
+                result.put("locationAbsolute", this.getLocationAbsolute().toJSONArray());
             }
             if (this.getLocationRelative() != null) {
-                resultProps.put("locationRelative", this.getLocationRelative().toJSONArray());
+                result.put("locationRelative", this.getLocationRelative().toJSONArray());
             }
-            resultProps.putOpt("rssi", this.getRssi());
-            resultProps.putOpt("rtt", this.getRtt());
-            return new JSONObject().put(this.getID(), resultProps);
-            // e.g. "FirstNode":{"distance":1414.2,"rssi":175}
+            result.putOpt("rssi", this.getRssi());
+            result.putOpt("rtt", this.getRtt());
+            return result;
+            // e.g. "{id:"SecondNode","locationAbsolute":[0,1000,0]}
         }
         catch (JSONException ex) {
             throw new RuntimeException("Impossible, the value cannot be a non-finite number!", ex);
@@ -123,6 +142,7 @@ public final class NeighbourProperties extends NodeData {
         } else {
             NeighbourProperties neighbourProperties = (NeighbourProperties) object;
             return ( ( this.getID() == null && neighbourProperties.getID() == null ) || this.getID().equals(neighbourProperties.getID()) )
+                    && ( ( this.getIP() == null && neighbourProperties.getIP() == null ) || this.getIP().equals(neighbourProperties.getIP()) )
                     && ( ( this.getDistance() == null && neighbourProperties.getDistance() == null ) || this.getDistance().equals(neighbourProperties.getDistance()) )
                     && ( ( this.getLocationAbsolute() == null && neighbourProperties.getLocationAbsolute() == null ) || this.getLocationAbsolute().equals(neighbourProperties.getLocationAbsolute()) )
                     && ( ( this.getLocationRelative() == null && neighbourProperties.getLocationRelative() == null ) || this.getLocationRelative().equals(neighbourProperties.getLocationRelative()) )
@@ -135,6 +155,7 @@ public final class NeighbourProperties extends NodeData {
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.getID());
+        hash = 97 * hash + Objects.hashCode(this.getIP());
         hash = 97 * hash + Objects.hashCode(this.getDistance());
         hash = 97 * hash + Objects.hashCode(this.getLocationAbsolute());
         hash = 97 * hash + Objects.hashCode(this.getLocationRelative());

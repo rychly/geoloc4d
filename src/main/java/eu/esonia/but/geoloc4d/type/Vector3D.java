@@ -62,7 +62,7 @@ public final class Vector3D implements JSONString {
      * @throws JSONException fail to parse the vector in JSON
      */
     public Vector3D(final String vector) throws JSONException {
-        this(new JSONArray(vector));
+        this(vector.isEmpty() ? null : new JSONArray(vector));
     }
 
     /**
@@ -72,7 +72,7 @@ public final class Vector3D implements JSONString {
      * @throws JSONException fail to parse the vector in JSON
      */
     public Vector3D(final JSONArray vector) throws JSONException {
-        if (vector.length() != 3) {
+        if (( vector == null ) || ( vector.length() != 3 )) {
             this.undefined = true;
         } else {
             this.set(vector.getDouble(0),
@@ -329,10 +329,14 @@ public final class Vector3D implements JSONString {
         double minDistance = Double.MAX_VALUE;
         for (int i = 0; i < vectors.length; i++) {
             for (int j = i + 1; j < vectors.length; j++) {
-                if (!vectors[i].isUndefined() && !vectors[j].isUndefined()
-                        && ( vectors[i].distance(vectors[j]) < minDistance )) {
-                    result[0] = vectors[i];
-                    result[1] = vectors[j];
+                if (!( ( vectors[i] == null ) || vectors[i].isUndefined()
+                        || ( vectors[j] == null ) || vectors[j].isUndefined() )) {
+                    double distance = vectors[i].distance(vectors[j]);
+                    if (distance < minDistance) {
+                        result[0] = vectors[i];
+                        result[1] = vectors[j];
+                        minDistance = distance;
+                    }
                 }
             }
         }
@@ -351,10 +355,14 @@ public final class Vector3D implements JSONString {
         double maxDistance = Double.MIN_VALUE;
         for (int i = 0; i < vectors.length; i++) {
             for (int j = i + 1; j < vectors.length; j++) {
-                if (!vectors[i].isUndefined() && !vectors[j].isUndefined()
-                        && ( vectors[i].distance(vectors[j]) > maxDistance )) {
-                    result[0] = vectors[i];
-                    result[1] = vectors[j];
+                if (!( ( vectors[i] == null ) || vectors[i].isUndefined()
+                        || ( vectors[j] == null ) || vectors[j].isUndefined() )) {
+                    double distance = vectors[i].distance(vectors[j]);
+                    if (distance > maxDistance) {
+                        result[0] = vectors[i];
+                        result[1] = vectors[j];
+                        maxDistance = distance;
+                    }
                 }
             }
         }

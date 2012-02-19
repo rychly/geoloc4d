@@ -95,7 +95,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
 
     @Override
     public String getNodeData() {
-        return this.node.getSelf().toJSONString();
+        return this.node.getInfo().toJSONString();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
 
     @Override
     public void setNodeLocation(String location) throws JSONException {
-        this.node.getSelf().setLocationAbsolute(new Vector3D(location));
+        this.node.getInfo().setLocationAbsolute(new Vector3D(location));
     }
 
     /**

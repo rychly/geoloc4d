@@ -52,7 +52,7 @@ public class DPWSAssetServiceSimulator {
                 //service.addBinding(new HTTPBinding(new URI(args[0] + "/" + NodeService.class.getSimpleName() + "/" + serviceDescription.name))); // BUG
                 service.addBinding(new HTTPBinding(args[0],
                         Integer.parseInt(args[1]),
-                        args[2] + NodeService.class.getSimpleName() + "/" + node.getSelf().getID()));
+                        args[2] + NodeService.class.getSimpleName() + "/" + node.getInfo().getID()));
                 System.out.println("=== the created service will be added to the device as: "
                         + service.toString());
                 // Add the service to the device

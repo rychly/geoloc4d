@@ -156,11 +156,21 @@ public final class WirelessMetric {
      * @param nodeC location of node C
      * @param distanceC distance of node C and the blind node
      * @return location of the blind node
+     * @throws WirelessMetricException cannot perform trilateration for such
+     * nodes
      */
     public static Vector3D[] trilateration3D(final Vector3D nodeA, final double distanceA,
             final Vector3D nodeB, final double distanceB,
-            final Vector3D nodeC, final double distanceC) {
+            final Vector3D nodeC, final double distanceC) throws WirelessMetricException {
+        // we need exactly three diferent vectors, check it
+        if (( nodeA == null ) || nodeA.isUndefined()
+                || ( nodeB == null ) || nodeB.isUndefined()
+                || ( nodeC == null ) || nodeC.isUndefined()
+                || nodeA.equals(nodeB) || nodeA.equals(nodeC) || nodeB.equals(nodeC)) {
+            throw new WirelessMetricException("Three diferent vectors are needed for the trilateration!");
+        }
         // step 1: we have Cartesian coordinates, so no transformation from lat/long coordinates is needed
+        //System.out.println(distanceA + " from " + nodeA + ", " + distanceB + " from " + nodeB + ", " + distanceC + " from " + nodeC);
         // step 2: translating the points to nodeA be at the origin
         Vector3D tmpB = nodeB.sub(nodeA);
         Vector3D tmpC = nodeC.sub(nodeA);
@@ -173,13 +183,21 @@ public final class WirelessMetric {
         double j = ey.dot(tmpC);
         Vector3D ez = ex.cross(ey);
         // step 4: derivation from distances
+        // (we have three diferent vectors so zPlus^2 have to be a positive number,
+        // however this may not be true due to the double precision and
+        // therefore we will use an absolute value of the zPlus^2)
         double x = ( Math.pow(distanceA, 2) - Math.pow(distanceB, 2) + Math.pow(d, 2) ) / ( 2 * d );
         double y = ( ( Math.pow(distanceA, 2) - Math.pow(distanceC, 2) + Math.pow(i, 2) + Math.pow(j, 2) ) / ( 2 * j ) ) - ( ( i * x ) / j );
-        double zPlus = Math.sqrt(Math.pow(distanceA, 2) - Math.pow(x, 2) - Math.pow(y, 2));
+        double zPlus = Math.sqrt(Math.abs(Math.pow(distanceA, 2) - Math.pow(x, 2) - Math.pow(y, 2)));
         // step 5: translating the points in the original coordinate system
-        return new Vector3D[]{
-                    nodeA.add(ex.scale(x)).add(ey.scale(y)).add(ez.scale(zPlus)),
-                    nodeA.add(ex.scale(x)).add(ey.scale(y)).add(ez.scale(-1 * zPlus))};
+        Vector3D[] results = new Vector3D[]{
+            nodeA.add(ex.scale(x)).add(ey.scale(y)).add(ez.scale(zPlus)),
+            nodeA.add(ex.scale(x)).add(ey.scale(y)).add(ez.scale(-1 * zPlus))};
+        if (( results[0] == null ) || ( results[1] == null )) {
+            throw new WirelessMetricException("Something goes wrong in the trilateration's comuputation!");
+        }
+        //System.out.println("tmpB=" + tmpB + ",tmpC" + tmpC + ",d=" + d + ",ex=" + ex + ",i=" + i + ",ey=" + ey + ",j=" + j + ",ez=" + ez + ",x=" + x + ",y=" + y + ",zPlus=" + zPlus + "=>" + results[0] + "," + results[1]);
+        return results;
         // step 6: we have Cartesian coordinates, so no transformation to lat/long coordinates is needed
     }
 
@@ -196,11 +214,13 @@ public final class WirelessMetric {
      * @param nodeD location of node D
      * @param distanceD distance of node D and the blind node
      * @return location of the blind node
+     * @throws WirelessMetricException cannot perform trilateration for such
+     * nodes
      */
     public static Vector3D trilateration3D(final Vector3D nodeA, final double distanceA,
             final Vector3D nodeB, final double distanceB,
             final Vector3D nodeC, final double distanceC,
-            final Vector3D nodeD, final double distanceD) {
+            final Vector3D nodeD, final double distanceD) throws WirelessMetricException {
         // perform trilateration on two triplets of nodes
         Vector3D[] trilateratedABC = WirelessMetric.trilateration3D(
                 nodeA, distanceA, nodeB, distanceB, nodeC, distanceC);

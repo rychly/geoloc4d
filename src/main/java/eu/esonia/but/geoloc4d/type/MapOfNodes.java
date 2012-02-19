@@ -57,7 +57,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
         super();
         for (int i = 0; i < representation.length(); i++) {
             Node node = new Node(representation.getJSONObject(i));
-            this.put(node.getSelf().getID(), node);
+            this.put(node.getInfo().getID(), node);
         }
     }
 
@@ -152,7 +152,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
      */
     public boolean isCompletelyLocalised() {
         for (Node node : this.values()) {
-            if (!node.getSelf().isAbsolutelyLocalised()) {
+            if (!node.getInfo().isAbsolutelyLocalised()) {
                 return false;
             }
         }
@@ -169,7 +169,7 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
     public MapOfNodes getNodesByLocation(final boolean localised) {
         MapOfNodes result = new MapOfNodes();
         for (Map.Entry<String, Node> pair : this.entrySet()) {
-            boolean isAbsolutelyLocalised = pair.getValue().getSelf().isAbsolutelyLocalised();
+            boolean isAbsolutelyLocalised = pair.getValue().getInfo().isAbsolutelyLocalised();
             if (( localised && isAbsolutelyLocalised ) || ( !localised && !isAbsolutelyLocalised )) {
                 result.put(pair.getKey(), pair.getValue());
             }

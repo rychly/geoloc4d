@@ -24,12 +24,12 @@ public class MapOfNodesTest {
     @Before
     public void setUp() throws JSONException {
         this.mapOfNodes = new MapOfNeighbours();
-        this.mapOfNodes.put(nodeID1, new NeighbourProperties("{" + nodeID1
-                + ": { locationAbsolute:[1,2,3], locationRelative:[3,2,1] } }"));
-        this.mapOfNodes.put(nodeID2, new NeighbourProperties("{" + nodeID2
-                + ": { locationRelative:[1,2,3] } }"));
-        this.mapOfNodes.put(nodeID3, new NeighbourProperties("{" + nodeID3
-                + ": { distance:123; } }"));
+        this.mapOfNodes.put(nodeID1, new NeighbourProperties(
+                "{id:\"" + nodeID1 + "\", locationAbsolute:[1,2,3], locationRelative:[3,2,1] }"));
+        this.mapOfNodes.put(nodeID2, new NeighbourProperties(
+                "{id:\"" + nodeID2 + "\", locationRelative:[1,2,3] }"));
+        this.mapOfNodes.put(nodeID3, new NeighbourProperties(
+                "{id:\"" + nodeID3 + "\", distance:123 }"));
     }
 
     @After

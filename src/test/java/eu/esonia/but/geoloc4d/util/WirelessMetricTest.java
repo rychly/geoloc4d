@@ -125,9 +125,12 @@ public class WirelessMetricTest {
 
     /**
      * Test of trilateration3D method, of class WirelessMetric.
+     *
+     * @throws WirelessMetricException cannot perform trilateration for such
+     * nodes
      */
     @Test
-    public void testTrilateration3D_6args() {
+    public void testTrilateration3D_6args() throws WirelessMetricException {
         Vector3D[] result = WirelessMetric.trilateration3D(
                 this.nodeA, this.nodeA.distance(this.node0),
                 this.nodeB, this.nodeB.distance(this.node0),
@@ -137,9 +140,12 @@ public class WirelessMetricTest {
 
     /**
      * Test of trilateration3D method, of class WirelessMetric.
+     *
+     * @throws WirelessMetricException cannot perform trilateration for such
+     * nodes
      */
     @Test
-    public void testTrilateration3D_8args() {
+    public void testTrilateration3D_8args() throws WirelessMetricException {
         assertEquals(0, this.node0.distance(
                 WirelessMetric.trilateration3D(
                 this.nodeA, this.nodeA.distance(this.node0),

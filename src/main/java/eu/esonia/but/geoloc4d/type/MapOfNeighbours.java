@@ -94,7 +94,7 @@ public final class MapOfNeighbours extends LinkedHashMap<String, NeighbourProper
         for (Map.Entry<String, Node> pair : localisedNodes.entrySet()) {
             if (this.containsKey(pair.getKey())) {
                 this.get(pair.getKey()).setLocationAbsolute(
-                        pair.getValue().getSelf().getLocationAbsolute());
+                        pair.getValue().getInfo().getLocationAbsolute());
             }
         }
     }
