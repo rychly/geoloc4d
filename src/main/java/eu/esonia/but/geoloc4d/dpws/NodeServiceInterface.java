@@ -13,7 +13,7 @@ import org.ws4d.java.service.InvocationException;
 public interface NodeServiceInterface {
 
     /**
-     * Get basic data of a node as a string.
+     * Get basic data of a node as a JSONObject string.
      *
      * @return the basic data of a node as a toJSONString result
      * @throws InvocationException thrown to indicate that a declared fault
@@ -23,10 +23,10 @@ public interface NodeServiceInterface {
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
      */
-    public String getNodeData() throws InvocationException, TimeoutException;
+    public String getInfo() throws InvocationException, TimeoutException;
 
     /**
-     * Get neighbouring nodes (from scan) as a string.
+     * Get neighbouring nodes (from scan) as a JSONArray string.
      *
      * @return a list of the neighbouring nodes as a toJSONString result
      * @throws InvocationException thrown to indicate that a declared fault
@@ -36,10 +36,10 @@ public interface NodeServiceInterface {
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
      */
-    public String getNeighbours() throws InvocationException, TimeoutException;
+    public String getScan() throws InvocationException, TimeoutException;
 
     /**
-     * Set node's location from given string.
+     * Set node's location from given JSONArray[3] string.
      *
      * @param location the node's location to set in a string representation
      * @throws InvocationException thrown to indicate that a declared fault
@@ -50,7 +50,7 @@ public interface NodeServiceInterface {
      * service times out
      * @throws JSONException fail to parse the location's vector in JSON
      */
-    public void setNodeLocation(String location) throws InvocationException, TimeoutException, JSONException;
+    public void setLocationAbsolute(String location) throws InvocationException, TimeoutException, JSONException;
 
     /**
      * Returns a string representation of the service.

@@ -110,7 +110,7 @@ public class DPWSSpatialContextProvider {
                 System.out.println("=== found a node's service: " + service.toString());
                 try {
                     // get data of node and check if it is localised
-                    NodeData nodeData = new NodeData(new JSONObject(service.getNodeData()));
+                    NodeData nodeData = new NodeData(new JSONObject(service.getInfo()));
                     System.out.println("=== the service represents node: " + nodeData.getID());
                     if (nodeData.isAbsolutelyLocalised()) {
                         // if it is localised, print its location
@@ -118,7 +118,7 @@ public class DPWSSpatialContextProvider {
                     } else {
                         // if not, get scan of its neighbours and perform trilateration
                         System.out.println("=== the node is not localised, locating its neighbours...");
-                        MapOfNeighbours nodeNeighbours = new MapOfNeighbours(new JSONArray(service.getNeighbours()));
+                        MapOfNeighbours nodeNeighbours = new MapOfNeighbours(new JSONArray(service.getScan()));
                         nodeNeighbours.setLocationsFromNodes(nodeServiceDetector.getMapOfNodesForDetectedServices(false));
                         System.out.println("=== preparing for the node's trilateration with neighbours:\n" + nodeNeighbours.toString());
                         MapOfNeighbours selectedNeighbours =
@@ -128,7 +128,7 @@ public class DPWSSpatialContextProvider {
                                 trilaterationStrategy.doTrilateration(selectedNeighbours);
                         System.out.println("=== the node's location will be set to the trilateration's result: " + newLocation.toString());
                         // finally, set trilateration result as the node's location
-                        service.setNodeLocation(newLocation.toJSONString());
+                        service.setLocationAbsolute(newLocation.toJSONString());
                     }
                 }
                 catch (InvocationException ex) {

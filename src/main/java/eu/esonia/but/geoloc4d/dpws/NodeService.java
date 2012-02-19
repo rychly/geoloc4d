@@ -23,9 +23,9 @@ import org.ws4d.java.util.ParameterUtil;
 public class NodeService extends DefaultService implements NodeServiceInterface {
 
     public static final String NAMESPACE = "http://geoloc4d.sf.net/";
-    public static final String OPERATION_getNodeData = "getNodeData";
-    public static final String OPERATION_getNeighbours = "getNeighbours";
-    public static final String OPERATION_setNodeLocation = "setNodeLocation";
+    public static final String OPERATION_getInfo = "getInfo";
+    public static final String OPERATION_getScan = "getScan";
+    public static final String OPERATION_setLocationAbsolute = "setLocationAbsolute";
     /**
      * Data of node where is service
      */
@@ -56,33 +56,33 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
         this.node = serviceNode;
         // add operations
         Type xsString = SchemaUtil.getSchemaType(SchemaUtil.TYPE_STRING);
-        Operation getNodeData = new NodeServiceOperation<NodeService>(OPERATION_getNodeData, this) {
+        Operation getNodeData = new NodeServiceOperation<NodeService>(OPERATION_getInfo, this) {
 
             @Override
             public ParameterValue invoke(ParameterValue parameterValue)
                     throws InvocationException, TimeoutException {
-                return this.getImplementation().getNodeData(this, parameterValue);
+                return this.getImplementation().getInfo(this, parameterValue);
             }
         };
         getNodeData.setOutput(new Element(NodeData.class.getSimpleName(), NodeService.NAMESPACE, xsString));
         this.addOperation(getNodeData);
-        Operation getNeighbours = new NodeServiceOperation<NodeService>(OPERATION_getNeighbours, this) {
+        Operation getNeighbours = new NodeServiceOperation<NodeService>(OPERATION_getScan, this) {
 
             @Override
             public ParameterValue invoke(ParameterValue parameterValue)
                     throws InvocationException, TimeoutException {
-                return this.getImplementation().getNeighbours(this, parameterValue);
+                return this.getImplementation().getScan(this, parameterValue);
             }
         };
         getNeighbours.setOutput(new Element(MapOfNeighbours.class.getSimpleName(), NodeService.NAMESPACE, xsString));
         this.addOperation(getNeighbours);
-        Operation setNodeLocation = new NodeServiceOperation<NodeService>(OPERATION_setNodeLocation, this) {
+        Operation setNodeLocation = new NodeServiceOperation<NodeService>(OPERATION_setLocationAbsolute, this) {
 
             @Override
             public ParameterValue invoke(ParameterValue parameterValue)
                     throws InvocationException, TimeoutException {
                 try {
-                    return this.getImplementation().setNodeLocation(this, parameterValue);
+                    return this.getImplementation().setLocationAbsolute(this, parameterValue);
                 }
                 catch (JSONException ex) {
                     throw new InvocationException(this.getFault(ex.getMessage()));
@@ -94,17 +94,17 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
     }
 
     @Override
-    public String getNodeData() {
+    public String getInfo() {
         return this.node.getInfo().toJSONString();
     }
 
     @Override
-    public String getNeighbours() {
+    public String getScan() {
         return this.node.getScan().toJSONString();
     }
 
     @Override
-    public void setNodeLocation(String location) throws JSONException {
+    public void setLocationAbsolute(String location) throws JSONException {
         this.node.getInfo().setLocationAbsolute(new Vector3D(location));
     }
 
@@ -117,11 +117,11 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
      * @throws InvocationException when the operation cannot be performed
      * @throws TimeoutException when the operation time-outs
      */
-    protected ParameterValue getNodeData(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
+    protected ParameterValue getInfo(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
             throws InvocationException, TimeoutException {
 
         ParameterValue result = operation.createOutputValue();
-        ParameterUtil.setString(result, null, this.getNodeData());
+        ParameterUtil.setString(result, null, this.getInfo());
         return result;
     }
 
@@ -134,10 +134,10 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
      * @throws InvocationException when the operation cannot be performed
      * @throws TimeoutException when the operation time-outs
      */
-    protected ParameterValue getNeighbours(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
+    protected ParameterValue getScan(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
             throws InvocationException, TimeoutException {
         ParameterValue result = operation.createOutputValue();
-        ParameterUtil.setString(result, null, this.getNeighbours());
+        ParameterUtil.setString(result, null, this.getScan());
         return result;
     }
 
@@ -151,9 +151,9 @@ public class NodeService extends DefaultService implements NodeServiceInterface 
      * @throws TimeoutException when the operation time-outs
      * @throws JSONException fail to parse the location's vector in JSON
      */
-    protected ParameterValue setNodeLocation(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
+    protected ParameterValue setLocationAbsolute(NodeServiceOperation<NodeService> operation, ParameterValue parameterValue)
             throws InvocationException, TimeoutException, JSONException {
-        this.setNodeLocation(ParameterUtil.getString(parameterValue, null));
+        this.setLocationAbsolute(ParameterUtil.getString(parameterValue, null));
         return null;
     }
 }

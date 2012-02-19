@@ -38,12 +38,12 @@ public class NodeServiceProxy implements NodeServiceInterface {
     }
 
     @Override
-    public String getNodeData() throws InvocationException, TimeoutException {
+    public String getInfo() throws InvocationException, TimeoutException {
         // We need to get the related operation from the service.
         // getAnyOperation returns the first Operation that fits the specification in the parameters.
         Operation operation = this.remoteService.getAnyOperation(
                 new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE),
-                NodeService.OPERATION_getNodeData);
+                NodeService.OPERATION_getInfo);
         // now lets invoke the operation (without any input parameters)
         ParameterValue result = operation.invoke(null);
         // return result from the operation's output
@@ -62,17 +62,17 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * service times out
      * @throws JSONException fail to parse the string representation in JSON
      */
-    public NodeData getNodeDataObject() throws InvocationException, TimeoutException, JSONException {
-        return new NodeData(new JSONObject(this.getNodeData()));
+    public NodeData getInfoObject() throws InvocationException, TimeoutException, JSONException {
+        return new NodeData(new JSONObject(this.getInfo()));
     }
 
     @Override
-    public String getNeighbours() throws InvocationException, TimeoutException {
+    public String getScan() throws InvocationException, TimeoutException {
         // We need to get the related operation from the service.
         // getAnyOperation returns the first Operation that fits the specification in the parameters.
         Operation operation = this.remoteService.getAnyOperation(
                 new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE),
-                NodeService.OPERATION_getNeighbours);
+                NodeService.OPERATION_getScan);
         // now lets invoke the operation (without any input parameters)
         ParameterValue result = operation.invoke(null);
         // return result from the operation's output
@@ -91,17 +91,17 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * service times out
      * @throws JSONException fail to parse a neighbour's representation in JSON
      */
-    public MapOfNeighbours getNeighboursObject() throws InvocationException, TimeoutException, JSONException {
-        return new MapOfNeighbours(new JSONArray(this.getNeighbours()));
+    public MapOfNeighbours getScanObject() throws InvocationException, TimeoutException, JSONException {
+        return new MapOfNeighbours(new JSONArray(this.getScan()));
     }
 
     @Override
-    public void setNodeLocation(String location) throws InvocationException, TimeoutException {
+    public void setLocationAbsolute(String location) throws InvocationException, TimeoutException {
         // We need to get the related operation from the service.
         // getAnyOperation returns the first Operation that fits the specification in the parameters.
         Operation operation = this.remoteService.getAnyOperation(
                 new QName(NodeService.class.getSimpleName(), NodeService.NAMESPACE),
-                NodeService.OPERATION_setNodeLocation);
+                NodeService.OPERATION_setLocationAbsolute);
         // prepare an input parameter's value
         ParameterValue input = operation.createInputValue();
         ParameterUtil.setString(input, null, location);
@@ -120,8 +120,8 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * @throws TimeoutException in case invoking an operation of a remote
      * service times out
      */
-    public void setNodeLocation(Vector3D location) throws InvocationException, TimeoutException {
-        this.setNodeLocation(location.toJSONString());
+    public void setLocationAbsolute(Vector3D location) throws InvocationException, TimeoutException {
+        this.setLocationAbsolute(location.toJSONString());
     }
 
     @Override
@@ -145,8 +145,8 @@ public class NodeServiceProxy implements NodeServiceInterface {
     public Node getNodeObject(boolean includingNeighbours) throws InvocationException, TimeoutException, JSONException {
         MapOfNeighbours neighbours = null;
         if (includingNeighbours) {
-            neighbours = this.getNeighboursObject();
+            neighbours = this.getScanObject();
         }
-        return new Node(this.getNodeDataObject(), neighbours);
+        return new Node(this.getInfoObject(), neighbours);
     }
 }
