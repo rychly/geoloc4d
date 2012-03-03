@@ -14,7 +14,7 @@ import org.ws4d.java.types.LocalizedString;
 import org.ws4d.java.util.Log;
 
 /**
- * Asset Service(s) Simulator.
+ * Asset DPWS Service(s) Simulator.
  *
  * @author rychly
  */

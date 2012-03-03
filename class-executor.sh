@@ -15,4 +15,7 @@ if [ "${CLASS}" == "class-executor" ]; then
 	exit 1
 fi
 
-exec java -classpath "${CLASSDIR}:${LIBS}" "${PACKAGE}.${CLASS}" $*
+VM=oracle-jdk-bin-1.7
+JAVA=$(java-config --select-vm=${VM} -J)
+
+exec ${JAVA:-java} -classpath "${CLASSDIR}:${LIBS}" "${PACKAGE}.${CLASS}" $*
