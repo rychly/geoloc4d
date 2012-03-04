@@ -34,7 +34,7 @@ public class NodeRestlet extends Restlet implements NodeRestletInterface {
      *
      * @param restletNode the node to construct from
      */
-    public NodeRestlet(Node restletNode) {
+    public NodeRestlet(final Node restletNode) {
         super();
         this.node = restletNode;
     }
@@ -46,7 +46,7 @@ public class NodeRestlet extends Restlet implements NodeRestletInterface {
      * @param restletNode the node to construct from
      * @param context the context of the Restlet
      */
-    public NodeRestlet(Node restletNode, Context context) {
+    public NodeRestlet(final Node restletNode, final Context context) {
         super(context);
         this.node = restletNode;
     }
@@ -72,7 +72,7 @@ public class NodeRestlet extends Restlet implements NodeRestletInterface {
     }
 
     @Override
-    public void postLocationAbsolute(String location) throws JSONException {
+    public void postLocationAbsolute(final String location) throws JSONException {
         this.node.getInfo().setLocationAbsolute(new Vector3D(location));
     }
 
@@ -83,7 +83,7 @@ public class NodeRestlet extends Restlet implements NodeRestletInterface {
      * @param response the response to update
      */
     @Override
-    public void handle(Request request, Response response) {
+    public void handle(final Request request, Response response) {
         // call super before adding our own logic
         super.handle(request, response);
         // check attributes of the RESTlet

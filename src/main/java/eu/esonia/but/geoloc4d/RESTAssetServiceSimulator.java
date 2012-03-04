@@ -1,6 +1,6 @@
 package eu.esonia.but.geoloc4d;
 
-import eu.esonia.but.geoloc4d.rest.NodeApplication;
+import eu.esonia.but.geoloc4d.rest.NodeRestletApplication;
 import eu.esonia.but.geoloc4d.type.MapOfNodes;
 import eu.esonia.but.geoloc4d.type.Node;
 import java.io.FileNotFoundException;
@@ -34,11 +34,15 @@ public class RESTAssetServiceSimulator {
         // Read services.properties for services, prepare and add the services to the device
         System.out.println("=== Loading nodes' definitions from file...");
         try {
-            for (Node node : MapOfNodes.loadNodes(args[2]).values()) {
-                System.out.println("=== a RESTlet will be created for node:\n" + node.toString());
+            for (Node node : MapOfNodes.loadNodes(args[2],
+                    "http://" + args[0] + ":" + args[1] + "/%/" + NodeRestletApplication.ROOTPATH).values()) {
+                String path = node.getInfo().getURI().getPath();
+                int firstSlash = path.indexOf('/', 1);
+                path = path.substring(0, firstSlash > 0 ? firstSlash : path.length());
+                System.out.println("=== a RESTlet will be created for node '"
+                        + path + "':\n" + node.toString());
                 // attach the RESTlet application for the node to the component
-                component.getDefaultHost().attach("/" + node.getInfo().getID(),
-                        new NodeApplication(node));
+                component.getDefaultHost().attach(path, new NodeRestletApplication(node));
             }
         }
         catch (FileNotFoundException fnfe) {

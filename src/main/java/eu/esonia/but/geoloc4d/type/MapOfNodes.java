@@ -3,6 +3,7 @@ package eu.esonia.but.geoloc4d.type;
 import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONString;
@@ -101,6 +102,25 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
     }
 
     /**
+     * Loads a map of nodes from a file with its JSON representation and the
+     * nodes' IDs modified by given replacement.
+     *
+     * @param filename the file to read from
+     * @param idReplacement the replacement string where a node's ID will be
+     * inserted instead of "%" character
+     * @throws FileNotFoundException the file not found
+     * @throws IOException a read error of the file
+     * @throws JSONException parsing error in the JSON represenatation
+     * @return the map of nodes
+     */
+    public static MapOfNodes loadNodes(final String filename, final String idReplacement)
+            throws FileNotFoundException, IOException, JSONException {
+        try (FileInputStream stream = new FileInputStream(filename)) {
+            return loadNodes(stream, idReplacement);
+        }
+    }
+
+    /**
      * Loads a map of nodes from an input stream with its JSON representation.
      *
      * @param stream the input stream to read from
@@ -113,6 +133,28 @@ public final class MapOfNodes extends LinkedHashMap<String, Node> implements JSO
         try (InputStreamReader streamReader = new InputStreamReader(stream)) {
             return new MapOfNodes(new JSONArray(new JSONTokener(streamReader)));
         }
+    }
+
+    /**
+     * Loads a map of nodes from an input stream with its JSON representation
+     * and the nodes' IDs modified by given replacement.
+     *
+     * @param stream the input stream to read from
+     * @param idReplacement the replacement string where a node's ID will be
+     * inserted instead of "%" character
+     * @return the map of nodes
+     * @throws IOException a read error of the input stream
+     * @throws JSONException parsing error in the JSON represenatation
+     */
+    public static MapOfNodes loadNodes(final InputStream stream, final String idReplacement)
+            throws IOException, JSONException {
+        // convert the input stream into UTF-8 encoded string
+        Scanner scanner = new Scanner(stream, "UTF-8").useDelimiter("\\A");
+        String jsonString = scanner.hasNext() ? scanner.next() : "";
+        // create a map of the nodes from the string with regexp replaced the nodes' IDs
+        return new MapOfNodes(new JSONArray(jsonString.replaceAll(
+                "(?i)(\"id\"\\s*:\\s*)\"([^\"])*\"",
+                "$1\"" + idReplacement.replace("%", "$2") + "\"")));
     }
 
     /**

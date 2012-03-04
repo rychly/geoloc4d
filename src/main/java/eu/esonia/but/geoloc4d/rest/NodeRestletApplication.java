@@ -12,9 +12,9 @@ import org.restlet.routing.Router;
  *
  * @author rychly
  */
-public class NodeApplication extends Application {
+public class NodeRestletApplication extends Application {
 
-    public static final String ROOTPATH = "/geoloc4d";
+    public static final String ROOTPATH = "geoloc4d";
     /**
      * Data of node where is restlet
      */
@@ -26,7 +26,7 @@ public class NodeApplication extends Application {
      *
      * @param restletNode the node to construct from
      */
-    public NodeApplication(Node restletNode) {
+    public NodeRestletApplication(Node restletNode) {
         super();
         this.nodeRestlet = new NodeRestlet(restletNode);
     }
@@ -38,7 +38,7 @@ public class NodeApplication extends Application {
      * @param restletNode the node to construct from
      * @param context the context to use based on parent component context
      */
-    public NodeApplication(Node restletNode, Context context) {
+    public NodeRestletApplication(Node restletNode, Context context) {
         super(context);
         this.nodeRestlet = new NodeRestlet(restletNode, context);
     }
@@ -53,9 +53,9 @@ public class NodeApplication extends Application {
         // create a root router Restlet that routes each call to our RESTlet
         Router router = new Router(getContext());
         // attach the handlers to the root router
-        router.attach(NodeApplication.ROOTPATH,
+        router.attach("/" + NodeRestletApplication.ROOTPATH,
                 this.nodeRestlet);
-        router.attach(NodeApplication.ROOTPATH + "/{" + NodeRestlet.ATTRIBUTE + "}",
+        router.attach("/" + NodeRestletApplication.ROOTPATH + "/{" + NodeRestlet.ATTRIBUTE + "}",
                 this.nodeRestlet);
         return router;
     }

@@ -1,6 +1,10 @@
 package eu.esonia.but.geoloc4d.type;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -120,27 +124,12 @@ public class NodeData implements JSONString {
             return this.ip;
         }
         // IP can be in ID, if ID is URI
-        String result = this.getID();
-        if (result.startsWith("http://")) {
-            result = result.substring(7);
-        } else if (result.startsWith("https://")) {
-            result = result.substring(8);
+        URI uri = this.getURI();
+        if (uri != null) {
+            return uri.getHost();
         } else {
             return null;
         }
-        // IP is before the first slash
-        int pos = result.indexOf('/');
-        if (( pos ) > 0) {
-            result = result.substring(0, pos);
-        }
-        // IP is before a port number
-        pos = result.indexOf(':');
-        if (( pos ) > 0) {
-            result = result.substring(0, pos);
-        }
-        // it will be stored in the attribute for further usage
-        this.setIP(result);
-        return result;
     }
 
     /**
@@ -149,10 +138,18 @@ public class NodeData implements JSONString {
      *
      * @return the URI in the case ID is the URI, null otherwise
      */
-    public final String getURI() {
-        String result = this.getID();
-        return ( result.startsWith("http://") || result.startsWith("https://") )
-                ? result : null;
+    public final URI getURI() {
+        String uriString = this.getID();
+        if ( uriString.startsWith("http://") || uriString.startsWith("https://") ) {
+            try {
+                return new URI(uriString).normalize();
+            }
+            catch (URISyntaxException ex) {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public JSONObject toJSONObject() {

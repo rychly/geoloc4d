@@ -132,7 +132,7 @@ public class NodeServiceProxy implements NodeServiceInterface {
     /**
      * Get a whole nodes as a Node object.
      *
-     * @param includingNeighbours query also neighbours of the node
+     * @param includingScan query also neighbours of the node
      * @return a Node object
      * @throws InvocationException thrown to indicate that a declared fault
      * occurred during execution of this operation's business logic; clients can
@@ -142,9 +142,9 @@ public class NodeServiceProxy implements NodeServiceInterface {
      * service times out
      * @throws JSONException error in parsing of JSON string representation
      */
-    public Node getNodeObject(boolean includingNeighbours) throws InvocationException, TimeoutException, JSONException {
+    public Node getNodeObject(boolean includingScan) throws InvocationException, TimeoutException, JSONException {
         MapOfNeighbours neighbours = null;
-        if (includingNeighbours) {
+        if (includingScan) {
             neighbours = this.getScanObject();
         }
         return new Node(this.getInfoObject(), neighbours);
