@@ -4,9 +4,10 @@ CLASS=$(basename $0 .sh)
 DIR=$(dirname $0)
 CLASSDIR=${DIR}/target/classes
 MAVENREPODIR=~/.m2/repository
-LIBS=\
-:${MAVENREPODIR}/org/json/org.json/2.0/org.json-2.0.jar\
-:${MAVENREPODIR}/org/restlet/jse/org.restlet/2.1-RC3/org.restlet-2.1-RC3.jar"
+LIBS="\
+${MAVENREPODIR}/org/json/org.json/2.0/org.json-2.0.jar\
+:${MAVENREPODIR}/org/restlet/jse/org.restlet/2.1-RC3/org.restlet-2.1-RC3.jar\
+:${DIR}/../geoloc4d-lib/target/classes"
 PACKAGE=eu.esonia.but.geoloc4d
 
 if [ "${CLASS}" == "class-executor" ]; then

@@ -3,6 +3,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
+	<!-- Project Information -->
+	<name>geoloc4d-lib</name>
+	<inceptionYear>2010</inceptionYear>
+
 	<!-- POM Relationships -->
 	<parent>
 		<groupId>eu.esonia.but</groupId>

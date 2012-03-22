@@ -69,12 +69,38 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<!-- unit-test (reports will be later) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12</version>
+				<configuration>
+					<!-- JDK 1.7, workaround for new type checker with StackMapTable attributes and cobertura -->
+					<argLine>-XX:-UseSplitVerifier</argLine>
+				</configuration>
+			</plugin>
+			<!-- site generation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.0-beta-3</version>
+				<version>3.0</version>
+				<executions>
+					<!-- add execution of site:attach-descriptor even into the built-in lifecycle bindings for projects with packaging "pom" -->
+					<execution>
+						<id>attach-descriptor</id>
+						<goals>
+							<goal>attach-descriptor</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<reportPlugins>
+						<!-- changelog reports from src/changes/changes.xml -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-changelog-plugin</artifactId>
+							<version>2.2</version>
+						</plugin>
 						<!-- tracker at sourceforge -->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
@@ -87,23 +113,26 @@
 								<report>changes-report</report>
 							</reports>
 						</plugin>
+						<!-- check-style rules for Java formatting -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+							<version>2.9</version>
+							<configuration>
+								<configLocation>config/sun_checks.xml</configLocation>
+							</configuration>
+						</plugin>
 						<!-- classes Javadocs -->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-javadoc-plugin</artifactId>
 							<version>2.8.1</version>
 						</plugin>
-						<!-- unit-test reports -->
+						<!-- indexed and cross-referenced HTML version of source code -->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-surefire-plugin</artifactId>
-							<version>2.9</version>
-						</plugin>
-						<!-- test coverage -->
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-clover-plugin</artifactId>
-							<version>2.4</version>
+							<artifactId>maven-jxr-plugin</artifactId>
+							<version>2.3</version>
 						</plugin>
 						<!-- automatic code analysis -->
 						<plugin>
@@ -117,32 +146,38 @@
 								<targetjdk>1.6</targetjdk>
 							</configuration>
 						</plugin>
-						<!-- check-style rules for Java formatting -->
+						<!-- generate reports information about the project -->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-checkstyle-plugin</artifactId>
-							<version>2.9</version>
-							<configuration>
-								<configLocation>config/sun_checks.xml</configLocation>
-							</configuration>
-						</plugin>
-						<!-- indexed and cross-referenced HTML version of source code -->
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>jxr-maven-plugin</artifactId>
-							<version>2.0-beta-1</version>
-						</plugin>
-						<!-- changelog reports from src/changes/changes.xml -->
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>changelog-maven-plugin</artifactId>
-							<version>2.0-beta-1</version>
-						</plugin>
-						<!-- generate a list of all the items marked @todo or TODO -->
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>taglist-maven-plugin</artifactId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
 							<version>2.4</version>
+							<configuration>
+								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+							</configuration>
+							<reports>
+								<report>dependencies</report>
+								<report>index</report>
+								<report>issue-tracking</report>
+								<report>license</report>
+								<report>modules</report>
+								<report>plugins</report>
+								<report>project-team</report>
+								<report>scm</report>
+								<report>summary</report>
+							</reports>
+						</plugin>
+						<!-- unit-test reports -->
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-report-plugin</artifactId>
+							<version>2.12</version>
+						</plugin>
+						<!-- how well the unit testing efforts have been and identify parts which are lacking test coverage -->
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>cobertura-maven-plugin</artifactId>
+							<version>2.5.1</version>
 						</plugin>
 					</reportPlugins>
 				</configuration>
