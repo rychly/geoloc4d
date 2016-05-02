@@ -1,0 +1,22 @@
+# http://doc.gitlab.com/ce/ci/yaml/README.html
+# https://hub.docker.com/_/maven/
+
+image: maven:latest
+
+variables:
+  PUBLIC: "public"
+
+stages:
+  - build
+
+pages:
+  stage: build
+  only:
+    - master
+  script:
+    - mvn --batch-mode package | sed '/^\[INFO\] Download/d'
+    - mkdir -p "${PUBLIC}"
+    - mv -v ./*/target/*.jar "${PUBLIC}/"
+  artifacts:
+    paths:
+      - ${PUBLIC}

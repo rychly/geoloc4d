@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<modelVersion>4.0.0</modelVersion>
+<groupId>org.ws4d.java</groupId>
+<artifactId>ws4d-java-se-full</artifactId>
+<packaging>jar</packaging>
+<version>2.0.0-beta5</version>
+<name>JMEDS (Java Multi Edition DPWS Stack) Framework for Java SE</name>
+
+<dependencies>
+</dependencies>
+
+<build>
+	<finalName>${project.groupId}-${project.artifactId}</finalName>
+	<extensions>
+		<extension>
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-ssh</artifactId>
+			<version>1.0-beta-7</version>
+		</extension>
+	</extensions>
+</build>
+
+</project>

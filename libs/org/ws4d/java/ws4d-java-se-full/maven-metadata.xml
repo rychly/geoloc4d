@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.ws4d.java</groupId>
+  <artifactId>ws4d-java-se-full</artifactId>
+  <version>2.0.0-beta5</version>
+  <versioning>
+    <versions>
+      <version>2.0.0-beta5</version>
+    </versions>
+    <lastUpdated>20120216200000</lastUpdated>
+  </versioning>
+</metadata>
